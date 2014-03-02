@@ -99,6 +99,7 @@ $(function() {
 			<ul>
 				<li><a href="#tab1">Main</a></li>
 				<li><a href="#tab2">BBcode</a></li>
+				<li><a href="#tab3">Best Hit</a></li>
 			</ul>
 			<div id="tab1">
 				<div class="table"><table id="myTable1" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
@@ -207,5 +208,10 @@ $(function() {
 </pre>
 	{{pass}}			
 	</div>
+				<div id="tab3" align=left>
+					{{for item in max_hit:}} 
+					{{=item}}<br>
+					{{pass}}
+				</div>
 </div>
 </center>
