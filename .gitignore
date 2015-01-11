@@ -5,6 +5,7 @@ errors
 sessions
 private
 uploads
+cron
 .hg
 parameters_443.py 
 # inherit https://github.com/github/gitignore/blob/master/Python.gitignore
