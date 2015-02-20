@@ -4,7 +4,6 @@ def form():
 	#don't display form items that are part of table, but not facing end user
 	db.raw_log.uuid.readable = db.raw_log.uuid.writable = False
 	db.raw_log.date.readable = db.raw_log.date.writable = False
-	form = SQLFORM(db.raw_log, showid=False, formstyle='divs').process()
 	if form.accepted:
 		redirect(URL('dotd', 'parsed', args=db.raw_log.uuid.default))
 	return dict(form=form)
