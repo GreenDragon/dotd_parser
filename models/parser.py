@@ -10,39 +10,49 @@ def parser(input):
 	general_translation = {}
 	mount_translation = {}
 	item_translation = {}
+	troop_translation = {}
+	legion_translation = {}
 	experience = {"user":"", "critical": 0, "regular":0, "crit_damage": 0, "damage": 0, "health": 0, "gold":0, "exp": 0}
 	glist= db().select(db.general.name,db.general.proc_name)
 	mlist = db().select(db.mount.name,db.mount.proc_name)
 	ilist = db().select(db.item.name,db.item.proc_name)
+	tlist = db().select(db.troop.name,db.troop.proc_name)
+	llist = db().select(db.legion.name,db.legion.proc_name)
 	for row in glist:
 		general_translation[row.proc_name] = row.name
 	for row in mlist:
 		mount_translation[row.proc_name] = row.name
 	for row in ilist:	
 		item_translation[row.proc_name] = row.name
-	translation = [ general_translation, mount_translation, item_translation]
+	for row in tlist:
+		troop_translation[row.proc_name] = row.name
+	for row in llist:
+		legion_translation[row.proc_name] = row.name
+	translation = [ general_translation, mount_translation, item_translation, troop_translation, legion_translation]
 	log_file = {}
 	hit_list = {}
 	experience_lines = []
 	highest_damage_lines = []
 	max_hit = ""
+	element = int()
 	listing = [ obtained_items, proc_items, found_items, experience ]
 	log_file = input.split('\n')
 	enumerate_hit = list(log_file)	
 	best_hit = list(log_file)
-#	for num, line in enumerate(enumerate_hit):
-#		if "experience!" in line:
-#			object = line.split()
-#			amount = int(object[2].replace(',', ''))
-#			hit_list[num] = amount
-#	for a in sorted(hit_list.keys()):
-#		experience_lines.append(a)
-#		end_line = max(hit_list, key=hit_list.get)
-#		element = experience_lines.index(end_line) - 1
-#		beginning_line = sorted(hit_list.keys())[element] + 1
-#		for i in range(beginning_line, end_line + 1):
-#			highest_damage_lines.append(best_hit[i])
-#		max_hit =  highest_damage_lines
+        for num, line in enumerate(enumerate_hit):
+                if "experience!" in line:
+                        object = line.split()
+                        amount = int(object[2].replace(',', ''))
+                        hit_list[num] = amount
+        for a in sorted(hit_list.keys()):
+                experience_lines.append(a)
+                end_line = max(hit_list, key=hit_list.get)
+                if end_line in experience_lines:
+                        element = int(experience_lines.index(end_line)) -1
+                beginning_line = sorted(hit_list.keys())[element] + 1
+        for i in range(beginning_line, end_line + 1):
+                highest_damage_lines.append(best_hit[i])
+        max_hit =  highest_damage_lines
 
 	for line in log_file:
 		        if "Found" in line:

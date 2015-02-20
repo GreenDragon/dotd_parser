@@ -7,7 +7,6 @@ def form():
 	form = SQLFORM(db.raw_log, showid=False, formstyle='divs').process()
 	if form.accepted:
 		redirect(URL('dotd', 'parsed', args=db.raw_log.uuid.default))
-	records = SQLTABLE(db().select(db.raw_log.ALL),headers='fieldname:capitalize')
 	return dict(form=form)
 def parsed():
 	if request.args:
