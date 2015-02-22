@@ -58,11 +58,11 @@ def parser(input):
     #
     proc_to_names = load_proc_to_names()
 
-    log_entries = {}
+    # DRY
+    log_file = []
     log_file = input.split('\n')
-    log_entries = list(log_file)
 
-    for num, line in enumerate(log_entries):
+    for num, line in enumerate(list(log_file)):
         if "Found" in line:
             object = line.split('Found')[1][:-2]
 
