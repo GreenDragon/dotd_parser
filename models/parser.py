@@ -137,6 +137,19 @@ def parser(input):
         #   # Master of Monsters has created a Blue Manticore!
         #   # Master of Monsters has created a Floating Eye!
 
+        # LoTS mode
+        # if "experience!" in line:
+        #   # Earned 1,897 credits and 93 experience!
+        # if "health damage" in line:
+        #   # KwanSai dealt 154,442,731 health damage! Lost 16 health.
+        # if "has granted you" in line:
+        #   # Take a Chance has granted you additional credits!
+        #   # Take a Chance has granted you additional experience!
+        # if "obtained" in line:
+        #   # You have obtained: Little Devil.
+        #
+        # vs DotD mode
+        #   # Veritas dealt 38,371,884 damage! Lost 9 health. Earned 3,234 gold and 35 experience!
 
     # find the biggest hit
     biggest_hit = max(hit_list, key=hit_list.get)
