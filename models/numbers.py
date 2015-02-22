@@ -1,17 +1,21 @@
 from __future__ import division
 import time
-def dbdate():
-	return int(time.time())
 
-def percentage(x,y):
-	if y == 0:
-		return	
-	else:
-		percentage = (float(x)/y)*100
-	return percentage	
-	
+
+def dbdate():
+    return int(time.time())
+
+
+def percentage(x, y):
+    if y == 0:
+        return
+    else:
+        percentage = (float(x) / y) * 100
+    return percentage
+
+
 def number_format(x):
-#	return locale.format('%d', num, grouping=True)
+    # return locale.format('%d', num, grouping=True)
     if type(x) not in [type(0), type(0L)]:
         raise TypeError("Parameter must be an integer.")
     if x < 0:
@@ -22,5 +26,6 @@ def number_format(x):
         result = ",%03d%s" % (r, result)
     return "%d%s" % (x, result)
 
+
 def rounding(num):
-	return format(num, '.2f')
+    return format(num, '.2f')
