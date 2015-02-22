@@ -142,18 +142,18 @@ def parser(input):
     biggest_hit = max(hit_list, key=hit_list.get)
 
     # build out a history of biggest hit indexes
-    experience_lines = []
+    hit_indexes = []
     for a in sorted(hit_list.keys()):
-        experience_lines.append(a)
+        hit_indexes.append(a)
 
     # find the previous hit before the biggest hit, or just map the current hit
     try:
-        previous_hit = experience_lines[experience_lines.index(biggest_hit) - 1]
+        previous_hit = hit_indexes[hit_indexes.index(biggest_hit) - 1]
     except ValueError:
         previous_hit = biggest_hit
 
     # build out the last biggest hit history
     for hits in range(previous_hit + 1, biggest_hit + 1):
-        max_hit.append(log_entries[hits])
+        max_hit.append(log_file[hits])
 
     return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list
