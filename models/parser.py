@@ -133,6 +133,11 @@ def parser(input):
         #   # *DEV* Mouse applied Magic: Begone, Fiends!
         #   # *DEV* ryanSMASH applied Magic: Hell's Knell
 
+        # if "created" in line:
+        #   # Master of Monsters has created a Steed of the Western Wold!
+        #   # Master of Monsters has created a Blue Manticore!
+        #   # Master of Monsters has created a Floating Eye!
+
 
     # build out history of biggest hit
     max_hit = max(hit_list, key=hit_list.get)
