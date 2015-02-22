@@ -52,13 +52,11 @@ def parser(input):
     proc_items = {}
     found_items = {}
 
-    max_hit = ""
+    max_hit = []
     hit_list = {}
 
-    #
     proc_to_names = load_proc_to_names()
 
-    # DRY
     log_file = []
     log_file = input.split('\n')
 
@@ -99,7 +97,7 @@ def parser(input):
             object = line.split()
             experience["user"] = object[0]
 
-            # store damage dealt hit_list history
+            # store damage dealt in hit_list history line #: damage
             damage = int(object[2].replace(',', ''))
             hit_list[num] = damage
 
@@ -140,24 +138,22 @@ def parser(input):
         #   # Master of Monsters has created a Floating Eye!
 
 
-    # build out history of biggest hit
-    max_hit = max(hit_list, key=hit_list.get)
+    # find the biggest hit
+    biggest_hit = max(hit_list, key=hit_list.get)
 
+    # build out a history of biggest hit indexes
     experience_lines = []
-
     for a in sorted(hit_list.keys()):
         experience_lines.append(a)
 
+    # find the previous hit before the biggest hit, or just map the current hit
     try:
-        previous_hit = experience_lines[experience_lines.index(max_hit) - 1]
+        previous_hit = experience_lines[experience_lines.index(biggest_hit) - 1]
     except ValueError:
-        previous_hit = max_hit
+        previous_hit = biggest_hit
 
-    highest_damage_lines = []
-
-    for hits in range(previous_hit + 1, max_hit + 1):
-        highest_damage_lines.append(log_entries[hits])
-
-    max_hit = highest_damage_lines
+    # build out the last biggest hit history
+    for hits in range(previous_hit + 1, biggest_hit + 1):
+        max_hit.append(log_entries[hits])
 
     return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list
