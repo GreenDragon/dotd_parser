@@ -56,19 +56,19 @@ for platform in kongregate armor facebook newgrounds; do
     if [ ! -d ${platform}/${game} ]; then 
       mkdir -p ${platform}/${game}
     fi
-    get_url "equipment" "$platform" "${game}"
-    get_url "mount" "$platform" "${game}"
-    get_url "collection" "$platform" "${game}"
-    get_url "general" "$platform" "${game}"
-    get_url "troop" "$platform" "${game}"
-    get_url "legion" "$platform" "${game}"
-    get_url "consumable" "$platform" "${game}"
-    get_url "magic" "$platform" "${game}"
-    get_url "tactic" "$platform" "${game}"
-    get_url "enchant" "$platform" "${game}"
-    get_url "itemset" "$platform" "${game}"
-    get_url "pet" "$platform" "${game}"
-    get_url "recipe" "$platform" "${game}"
-    get_url "achievement" "$platform" "${game}"
+    get_url "equipment"   "${platform}" "${game}"
+    get_url "mount"       "${platform}" "${game}"
+    get_url "collection"  "${platform}" "${game}"
+    get_url "general"     "${platform}" "${game}"
+    get_url "troop"       "${platform}" "${game}"
+    get_url "legion"      "${platform}" "${game}"
+    get_url "consumable"  "${platform}" "${game}"
+    get_url "magic"       "${platform}" "${game}"
+    get_url "tactic"      "${platform}" "${game}"
+    get_url "enchant"     "${platform}" "${game}"
+    get_url "itemset"     "${platform}" "${game}"
+    get_url "pet"         "${platform}" "${game}"
+    get_url "recipe"      "${platform}" "${game}"
+    get_url "achievement" "${platform}" "${game}"
   done
 done
