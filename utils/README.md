@@ -9,9 +9,7 @@ Store your UgUp API key in a secret file in your home directory
 With the format:
 
 API_KEY="_Your_UgUp_API_Key_Value"
-...
 
-~~~
 
 **get_base_data_sets/get-base-data-sets.sh**
 
