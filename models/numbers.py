@@ -3,7 +3,7 @@ import time
 
 
 def dbdate():
-    return int(time.time())
+    return time.strftime('%Y-%m-%d %H:%M:%S')
 
 
 def percentage(x, y):

@@ -1,6 +1,4 @@
 import uuid
 
 def uuid_generator():
-    uuid = str(uuid.uuid1())
-    return uuid
-
+    return str(uuid.uuid1())
