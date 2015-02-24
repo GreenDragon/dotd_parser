@@ -223,4 +223,10 @@ db.define_table('troops',
 
 
 ## after defining tables, uncomment below to enable auditing
-auth.enable_record_versioning(db)
+# Maybe not quite yet, I don't think we need to track all record changes yet
+# auth.enable_record_versioning(db)
+
+# From previous db.py file, not sure what this accomplishes yet IRT Lazy Loading
+# Or some sort of form validation?
+
+db.raw_log.data.requires = IS_NOT_EMPTY()
