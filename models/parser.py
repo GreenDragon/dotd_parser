@@ -5,34 +5,34 @@ import locale
 locale.setlocale(locale.LC_ALL, '')
 
 def load_proc_to_names():
-    general_translation = {}
-    mount_translation = {}
-    item_translation = {}
-    troop_translation = {}
-    legion_translation = {}
+    generals_translation = {}
+    mounts_translation = {}
+    equipment_translation = {}
+    troops_translation = {}
+    legions_translation = {}
 
-    glist = db().select(db.general.name, db.general.proc_name)
-    mlist = db().select(db.mount.name, db.mount.proc_name)
-    ilist = db().select(db.item.name, db.item.proc_name)
-    tlist = db().select(db.troop.name, db.troop.proc_name)
-    llist = db().select(db.legion.name, db.legion.proc_name)
+    glist = db().select(db.generals.name, db.generals.proc_name)
+    mlist = db().select(db.mounts.name, db.mounts.proc_name)
+    ilist = db().select(db.equipment.name, db.equipment.proc_name)
+    tlist = db().select(db.troops.name, db.troops.proc_name)
+    llist = db().select(db.legions.name, db.legions.proc_name)
 
     for row in glist:
-        general_translation[row.proc_name] = row.name
+        generals_translation[row.proc_name] = row.name
 
     for row in mlist:
-        mount_translation[row.proc_name] = row.name
+        mounts_translation[row.proc_name] = row.name
 
     for row in ilist:
-        item_translation[row.proc_name] = row.name
+        equipment_translation[row.proc_name] = row.name
 
     for row in tlist:
-        troop_translation[row.proc_name] = row.name
+        troops_translation[row.proc_name] = row.name
 
     for row in llist:
-        legion_translation[row.proc_name] = row.name
+        legions_translation[row.proc_name] = row.name
 
-    translation = [general_translation, mount_translation, item_translation, troop_translation, legion_translation]
+    translation = [generals_translation, mounts_translation, equipment_translation, troops_translation, legions_translation]
     return translation
 
 
@@ -83,7 +83,7 @@ def parser(input):
 
             for proc_name in proc_to_names:
                 if object in proc_name:
-                    object = proc_name[str(object)]
+                    object = str(proc_name[object])
 
             amount = int(amount.split()[0].replace(',', ''))
 

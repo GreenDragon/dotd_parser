@@ -110,9 +110,9 @@ auth.settings.reset_password_requires_verification = True
 # DAL -> MySQL does boolean fields as char(1)
 
 db.define_table('raw_log',
-                Field('uuid', 'string', length=48, notnull=True, unique=True),
-                Field('date', 'datetime'),
-                Field('data', 'text'),
+                Field('uuid', 'string', length=48, unique=True, readable=False, writable=False),
+                Field('date', 'datetime', readable=False, writable=False, default=request.now),
+                Field('data', 'text', requires=IS_NOT_EMPTY()),
 )
 
 db.define_table('enchantments',
@@ -230,8 +230,3 @@ db.define_table('troops',
 ## after defining tables, uncomment below to enable auditing
 # Maybe not quite yet, I don't think we need to track all record changes yet
 # auth.enable_record_versioning(db)
-
-# From previous db.py file, not sure what this accomplishes yet IRT Lazy Loading
-# Or some sort of form validation?
-
-db.raw_log.data.requires = IS_NOT_EMPTY()

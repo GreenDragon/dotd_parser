@@ -1,10 +1,4 @@
 from __future__ import division
-import time
-
-
-def dbdate():
-    return time.strftime('%Y-%m-%d %H:%M:%S')
-
 
 def percentage(x, y):
     if y == 0:
