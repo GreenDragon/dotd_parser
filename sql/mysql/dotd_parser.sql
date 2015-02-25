@@ -1,3 +1,4 @@
+w
 -- MySQL dump 10.13  Distrib 5.6.23, for osx10.8 (x86_64)
 --
 -- Host: localhost    Database: test_dotd_parser
@@ -306,7 +307,7 @@ CREATE TABLE `legions` (
   `rarity` int(11) DEFAULT NULL,
   `value_gold` int(11) DEFAULT NULL,
   `value_credits` int(11) DEFAULT NULL,
-  `canpurchase` int(11) DEFAULT NULL,
+  `canPurchase` int(11) DEFAULT NULL,
   `questReq` int(11) DEFAULT NULL,
   `lore` longtext,
   `proc_name` varchar(512) DEFAULT NULL,
@@ -413,7 +414,7 @@ CREATE TABLE `troops` (
   `rarity` int(11) DEFAULT NULL,
   `value_gold` int(11) DEFAULT NULL,
   `value_credits` int(11) DEFAULT NULL,
-  `canpurchase` int(11) DEFAULT NULL,
+  `canPurchase` int(11) DEFAULT NULL,
   `questReq` int(11) DEFAULT NULL,
   `source` int(11) DEFAULT NULL,
   `buffType` int(11) DEFAULT NULL,
