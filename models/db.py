@@ -19,11 +19,12 @@ connection = 'mysql://' + config['dbuser'] + ':' + config['dbpass'] + '@' + conf
 # driver_args is required by my dev environment
 # Mac OS X 10.9.5, MySQL CE 5.6.23, MacPorts Python 2.7.9_0+ucs4
 # Otherwise, MacPorts Python wants to bind to macports mariadb buildout
+#   driver_args={'unix_socket':'/tmp/mysql.sock'},
 
-db = DAL(connection,
-         driver_args={'unix_socket':'/tmp/mysql.sock'},
-         pool_size=5,
-         lazy_tables=True)
+db = DAL(connection, pool_size=5)
+
+# while lazy_tables is good for production, it's a PITA for development
+# lazy_tables=True
 
 #if not request.env.web2py_runtime_gae:
 #    ## if NOT running on Google App Engine use SQLite or other DB
@@ -104,10 +105,14 @@ auth.settings.reset_password_requires_verification = True
 #########################################################################
 
 
+# JSON UgUp API fields def and unique are problematic to python and mysql
+# Length for uuid field is required for MySQL InnoDB tables
+# DAL -> MySQL does boolean fields as char(1)
+
 db.define_table('raw_log',
-                Field('uuid', 'string', notnull=True, unique=True),
+                Field('uuid', 'string', length=48, notnull=True, unique=True),
                 Field('date', 'datetime'),
-                Field('data', 'text', default=''),
+                Field('data', 'text'),
 )
 
 db.define_table('enchantments',
@@ -125,15 +130,15 @@ db.define_table('equipment',
                 Field('value_gold', 'integer'),
                 Field('value_gtoken', 'integer'),
                 Field('questReq', 'integer'),
-                Field('unique', 'boolean'),
-                Field('canEnchant', 'boolean'),
+                Field('isUnique', 'integer'),
+                Field('canEnchant', 'integer'),
                 Field('equipType', 'integer'),
                 Field('hlt', 'integer'),
                 Field('eng', 'integer'),
                 Field('sta', 'integer'),
                 Field('hnr', 'integer'),
                 Field('atk', 'integer'),
-                Field('def', 'integer'),
+                Field('defn', 'integer'),
                 Field('power', 'integer'),
                 Field('dmg', 'integer'),
                 Field('deflect', 'integer'),
@@ -169,7 +174,7 @@ db.define_table('legions',
                 Field('rarity', 'integer'),
                 Field('value_gold', 'integer'),
                 Field('value_credits', 'integer'),
-                Field('canpurchase', 'boolean'),
+                Field('canPurchase', 'integer'),
                 Field('questReq', 'integer'),
                 Field('lore', 'text'),
                 Field('proc_name', 'string'),
@@ -188,13 +193,13 @@ db.define_table('mounts',
                 Field('value_gold', 'integer'),
                 Field('value_credits', 'integer'),
                 Field('questReq', 'integer'),
-                Field('unique', 'boolean'),
+                Field('isUnique', 'integer'),
                 Field('hlt', 'integer'),
                 Field('eng', 'integer'),
                 Field('sta', 'integer'),
                 Field('hnr', 'integer'),
                 Field('atk', 'integer'),
-                Field('def', 'integer'),
+                Field('defn', 'integer'),
                 Field('power', 'integer'),
                 Field('dmg', 'integer'),
                 Field('deflect', 'integer'),
@@ -212,7 +217,7 @@ db.define_table('troops',
                 Field('rarity', 'integer'),
                 Field('value_gold', 'integer'),
                 Field('value_credits', 'integer'),
-                Field('canpurchase', 'boolean'),
+                Field('canPurchase', 'integer'),
                 Field('questReq', 'integer'),
                 Field('source', 'integer'),
                 Field('buffType', 'integer'),

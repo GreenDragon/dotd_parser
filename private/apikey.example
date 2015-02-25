@@ -1,0 +1,8 @@
+apikey: S00p3rS3kR1T
+platform: facebook
+game: dawn
+dbhost: localhost
+dbuser: root
+dbpass: password
+db: dotd_parser
+verbose_mode: 0
