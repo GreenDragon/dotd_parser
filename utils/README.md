@@ -1,4 +1,5 @@
-2015.02.22  GreenDragon
+Utilities
+=========
 
 Some command line utilities to gather the base json files from the API server for caching and processing purposes.
 
@@ -26,7 +27,7 @@ following format: ./$platform/$game/$name.$platform.$game.json.
   - Is there going to be API calls for the Mobile platform?
     - Don't know...
 
-**get_base_data_sets/dotd_parser.sql**
+**../sql/mysql/dotd_parser.sql**
 
 This is an initial pass at a new schema for the parser. Many of the rows are currently not used, but why postpone for a later date?
 
