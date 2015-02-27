@@ -20,16 +20,16 @@ def index():
     redirect(URL('form'))
 
 def form():
-    form = SQLFORM(db.raw_log)
+    form = SQLFORM(db.raw_log, labels={'data':''}, formstyle='divs')
     form.vars.uuid = uuid_generator()
 
     if form.process().accepted:
-        response.flash = T("Form Accepted")
+        session.flash = T("Form Accepted")
         redirect(URL('parsed', args=form.vars.uuid))
     elif form.errors:
-        response.flash = T("Form has errors")
-    else:
-        response.flash = T("Please fill out the form")
+        response.flash = T("Form had errors. Did you forget to paste some data?")
+    #else:
+    #    response.flash = T("Please fill out the form")
     return dict(form=form)
 
 def parsed():
@@ -37,22 +37,22 @@ def parsed():
         uuid = request.args[0]
         row = db(db.raw_log.uuid==uuid).select()
         if len(row) == 0:
-            response.flash = T("UUID not found or purged from the DB")
+            session.flash = T("UUID not found or was purged from the DB")
             redirect(URL('form'))
         # We should never get here since uuid is a unique row in the table
         if len(row) > 1:
-            response.flash = T("Something wicked this way went")
+            session.flash = T("Something wicked this way went")
             redirect(URL('form'))
         # Leroy Jenkins! Let's do this!
         experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list=parser(row[0].data)
         return locals()
     else:
-        response.flash = T("Expected UUID")
+        session.flash = T("Expected a known or valid UUID")
         redirect(URL('form'))
 
 
-
-#def user():
+def user():
+    redirect(URL('form'))
 #    """
 #    exposes:
 #    http://..../[app]/default/user/login
