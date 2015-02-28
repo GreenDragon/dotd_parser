@@ -1,4 +1,4 @@
-#!/opt/local/bin/python
+#!/usr/bin/env python
 
 # Import equipment from ugup
 
@@ -14,7 +14,12 @@ config = yaml.load(open('../private/apikey').read())
 
 base = 'http://ugup.5thplanetgames.com/api/'
 
-conn = mdb.connect(host=config['dbhost'], user=config['dbuser'], passwd=config['dbpass'], db=config['db'])
+conn = mdb.connect(host=config['dbhost'],
+                   user=config['dbuser'],
+                   passwd=config['dbpass'],
+                   db=config['db'],
+                   charset='utf8',
+                   use_unicode=True)
 
 cursor = conn.cursor()
 
