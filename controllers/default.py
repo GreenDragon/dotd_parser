@@ -24,7 +24,7 @@ def form():
     form.vars.uuid = uuid_generator()
 
     if form.process().accepted:
-        session.flash = T("Form Accepted")
+        # session.flash = T("Form Accepted")
         redirect(URL('parsed', args=form.vars.uuid))
     elif form.errors:
         response.flash = T("Form had errors. Did you forget to paste some data?")
