@@ -28,6 +28,30 @@ response.menu = [
 
 DEVELOPMENT_MENU = False
 
+PRODUCTION_MENU = True
+
+def production_menu():
+    response.menu += [
+        ('', False,
+        A('DoTD Game Page',
+          _href='http://www.dawnofthedragons.com/game/',
+          _target='blank')),
+        ('', False,
+        A('Src/Bugs/Requests',
+          _href='https://github.com/GreenDragon/dotd_parser',
+          _target='blank')),
+        ('', False,
+        A('Known Issues',
+          _href='https://github.com/GreenDragon/dotd_parser/blob/master/KNOWN_ISSUES.md',
+          _target='blank')),
+        ('', False,
+        A('To Do',
+          _href='https://github.com/GreenDragon/dotd_parser/blob/master/TO-DO.md',
+          _target='blank')),
+    ]
+
+if PRODUCTION_MENU: production_menu()
+
 #########################################################################
 ## provide shortcuts for development. remove in production
 #########################################################################

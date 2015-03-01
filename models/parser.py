@@ -51,6 +51,10 @@ def parser(input):
     obtained_items = {}
     proc_items = {}
     found_items = {}
+    restored_items = {}
+    affected_items = {}
+    created_items = {}
+
 
     max_hit = []
     hit_list = {}
@@ -117,13 +121,21 @@ def parser(input):
                 else:
                     experience["exp"] = experience["exp"] + amount
 
-        # if "restored" in line:
+        if "has restored" in line:
         #   # Like a Book has restored some of your Health.
         #   # Tollo Darkgaze has restored 4 Honor.
+            if not line in restored_items:
+                restored_items[line] = 1
+            else:
+                restored_items[line] += 1
 
-        # if "affected" in line:
+        if "affected" in line:
         #   # Crystal Sight affected boss damage.
         #   # Bladezz' Blades affected boss damage.
+            if not line in affected_items:
+                affected_items[line] = 1
+            else:
+                affected_items[line] += 1
 
         # if "says" in line:
         #   # Vigbjorn the Crazed says: "You believe me, Veritas, don't you? We'll hunt the blue yetis together!"
@@ -132,10 +144,14 @@ def parser(input):
         #   # *DEV* Mouse applied Magic: Begone, Fiends!
         #   # *DEV* ryanSMASH applied Magic: Hell's Knell
 
-        # if "created" in line:
+        if "has created a" in line:
         #   # Master of Monsters has created a Steed of the Western Wold!
         #   # Master of Monsters has created a Blue Manticore!
         #   # Master of Monsters has created a Floating Eye!
+            if not line in created_items:
+                created_items[line] = 1
+            else:
+                created_items[line] += 1
 
         # LoTS mode
         # if "experience!" in line:
@@ -169,4 +185,5 @@ def parser(input):
     for hits in range(previous_hit + 1, biggest_hit + 1):
         max_hit.append(log_file[hits])
 
-    return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list
+    return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
+           affected_items, created_items

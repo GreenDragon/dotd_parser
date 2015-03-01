@@ -44,7 +44,9 @@ def parsed():
             session.flash = T("Something wicked this way went")
             redirect(URL('form'))
         # Leroy Jenkins! Let's do this!
-        experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list=parser(row[0].data)
+        experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
+           affected_items, created_items = parser(row[0].data)
+        # experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list=parser(row[0].data)
         return locals()
     else:
         session.flash = T("Expected a known or valid UUID")

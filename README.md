@@ -1,25 +1,237 @@
 Dawn of the Dragons Log Parser
+===
 
-Web2py webapp to parse 5th Planet Games combat logs into useful statistical information
+### About:
 
-Setup:
-Install and configure web2py based on web2py documentation.
+A Web2py web application to parse 5th Planet Games raid logs into useful statistical information.
 
-in a folder named private create a file called apikey.
-Into this file create the following key/values:
+### Development/Testing Environment:
 
-apikey: changeme
+    * Mac OS X 10.9.5
+        * web2py Version 2.9.12-stable+timestamp.2015.01.17.06.11.03
+        * MySQL Community Edition
+            * MySQL 5.6.23, for osx10.8 (x86_64)
+        * Python 2.7.9 via MacPorts
+            * python27 @2.7.9_0+ucs4
+            * py-mysql @1.2.3_1 (active)
+                * py27-mysql @1.2.3_1+mariadb55 (active)
+            * py-requests @2.5.1_0 (active)
+                * py27-requests @2.5.1_0 (active)
+            * py-yaml @3.11_0 (active)
+                * py27-yaml @3.11_0 (active)
+    
+    * Debian 7.8
+        * web2py Version 2.9.12-stable+timestamp.2015.01.17.06.11.03
+        * MySQL 
+            * mysql-server 5.5.41-0+wheezy1
+        * Python 2.7
+            * python2.7                            2.7.3-6+deb7u2
+            * python-mysqldb                       1.2.3-2
+            * python-requests                      0.12.1-1+deb7u1
+            * python-yaml                          3.10-4+deb7u1
+        * Apache 2.2.x
+            * apache2                              2.2.22-13+deb7u4
+            * apache2-mpm-prefork                  2.2.22-13+deb7u4 ( for PHP )
+            * libapache2-mod-wsgi                  3.3-4+deb7u1
 
-platform: kongregate
+### Requirements:
 
-game: dawn
+Prerequisites ( Unix only ):
 
-dbhost: localhost
+    * Python 2.7.x
+        * python-mysqldb  >= 1.2.3
+        * python-requests >= 0.12.1
+    * MySQL 5.5 or newer
+    * web2py
+    * Apache 2.2 or newer + mod-wsgi 3.3 or newer
+    * UgUp API Key from 5th Planet games: http://bit.ly/1jSdVoQ
 
-dbuser: changeme
+### Setup:
 
-dbpass: changeme
+Download web2py_src.zip from http://web2py.com/init/default/download and extract:
+```
+    $ cd <development_directory>
+    $ mv ~/Downloads/web2py_src.zip .
+    $ unzip -a web2py_src.zip
+```
 
-db: changeme
+Clone the application repository from github:
+```
+    $ cd <development_directory>/web2py/applications
+    $ git clone https://github.com/GreenDragon/dotd_parser.git
+```
 
-Replace any changeme variables to the appropriate values you're using.
+Create the application settings file:
+```
+    $ cd <development_directory>/web2py/private
+    $ cp apikey.example to apikey
+```
+
+Edit the apikey settings to reflect your environment
+```
+    apikey: <Super_Secret>
+    platform: facebook
+    game: dawn
+    dbhost: localhost
+    dbuser: root
+    dbpass: password
+    db: dotd_parser
+    verbose_mode: 0
+```
+Replace the hash variables to the appropriate values you're using.
+    game can be:        dawn or suns
+    platform can be:    armor, facebook, kongegate, or newgrounds
+    
+    Platforms have been observed to be equal across games during testing
+    
+    verbose_mode makes item_import.py chatty
+
+Create the application database:
+```
+    $ mysql
+    mysql> CREATE DATABASE dotd_parser;
+    mysql> GRANT ALL PRIVILEGES ON dotd_parser.* TO "dotd_parser"@"localhost" IDENTIFIED BY "password"; 
+    mysql> FLUSH PRIVILEGES;
+    mysql> EXIT
+```
+
+### Running the app:
+
+Start up the web2py application:
+```
+    $ cd <development_directory>/web2py
+    $ python web2py.py
+```
+
+Open the local instance to initialize the database:
+```
+    Open a browser to http://127.0.0.1:8000/
+    Access admin menu
+    Access dotd_parser app
+    You should see a form entry
+```
+
+Populate the database with content from the UgUp API Server:
+```
+    $ cd <development_directory>/web2py/cron
+    $ ./item_import.py
+```
+
+Go to your local instance and start testing:
+```
+    Open a browser to http://127.0.0.1:8000/
+    Submit some raid logs
+    You should see reports
+```
+
+### Production Installation:
+
+Prep the *dotd_parser* for your production server:
+```
+    Open a browser to http://127.0.0.1:800/
+    Switch to the admin mode
+    Compile add working code
+```
+
+On your production server, configure a web2py instance:
+```
+    Create mysql database and user
+    Extract web2py_src.zip to /content/${PROD.SERVER.TLD}/
+    Adjust /content/${PROD.SERVER.TLD}/web2py/private/apikey for mysql credentials
+    Copy <development_dir>/web2py/applications/dotd_parser/* to production server vhost dir
+    Copy /content/${PROD.SERVER.TLD}/web2py/applications/dotd_parser/routes.production-mode.py 
+        to /content/${PROD.SERVER.TLD}/web2py/routes.py
+    Copy /content/${PROD.SERVER.TLD}/web2py/handlers/wsgihandler.py 
+        to /content/${PROD.SERVER.TLD}/web2py/wsgihandler.py
+    $ sudo chown -R www-data:www-data /content/${PROD.SERVER.TLD}/web2py/
+```
+
+Create a vhost instance in apache2:
+```
+    $ cd /etc/apache/sites-enabled
+    $ sudo vi vhost-dotd-parser.conf
+```
+
+Apache VHost Entry:
+    Replace ${IP_ADDRESS} with your servers IP Address
+    Replace ${PROD.SERVER.TLD} with your vhost FQDN name
+
+```
+<VirtualHost ${IP_ADDRESS}:80>
+
+ServerAdmin     webmaster@${PROD.SERVER.TLD}
+ServerName      ${PROD.SERVER.TLD}
+
+CustomLog       logs/${PROD.SERVER.TLD}-access_log combined
+ErrorLog        logs/${PROD.SERVER.TLD}-error_log
+
+WSGIDaemonProcess ${PROD.SERVER.TLD} user=www-data group=www-data processes=5 threads=1
+
+WSGIProcessGroup ${PROD.SERVER.TLD}
+WSGIScriptAlias / /content/${PROD.SERVER.TLD}/web2py/wsgihandler.py
+
+# WSGIPassAuthorization On
+
+<Directory /content/${PROD.SERVER.TLD}/web2py>
+    AllowOverride None
+    Order Allow,Deny
+    Deny from all
+    <Files wsgihandler.py>
+      Allow from all
+    </Files>
+</Directory>
+
+  AliasMatch ^/([^/]+)/static/(?:_[\d]+.[\d]+.[\d]+/)?(.*) \
+        /content/${PROD.SERVER.TLD}/web2py/applications/$1/static/$2
+
+  <Directory /content/${PROD.SERVER.TLD}/web2py/applications/*/static/>
+    Options -Indexes
+    ExpiresActive On
+    ExpiresDefault "access plus 1 hour"
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+</VirtualHost>
+```
+
+Check to see if apache is happy:
+```
+    $ sudo apache2ctl configtest
+```
+
+If so, restart apache:
+```
+    $ sudo /etc/init.d/apache2 restart
+```
+
+Access your VHost site via a browser.
+```
+    Go to http://${PROD.SERVER.TLD}/.
+    You should see the dotd_parser app running with a prompt to enter log data
+```
+
+Populate the production server database with UgUp API content
+```
+    $ cd /content/${PROD.SERVER.TLD}/web2py/applications/dotd_parser/cron
+    $ ./item_import.py
+```
+
+Go to your server instance and start testing:
+```
+    Open a browser to http://${PROD.SERVER.TLD}/
+    Enter some log data and submit
+    You should see a report
+```
+
+### Bugs/Issues/Requests...:
+
+Please post an issue.
+
+Better yet, fork and offer a pull request!
+
+### Kudos:
+
+Initial application designed and shared by https://github.com/tsunam/dotd_parser. 
+
+Thanks!
