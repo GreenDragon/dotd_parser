@@ -7,7 +7,7 @@
 <!--[if IE 9]><html class="ie9 ie-lte9 no-js" lang="{{=T.accepted_language or 'en'}}"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
 <head>
-<title>Dawn of the Dragons Parser</title>
+<title>Dawn of the Dragons/Legacy of a Thousand Suns Raid Log Analyzer</title>
   <!--[if !HTML5]>
       <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
   <![endif]-->
@@ -97,7 +97,6 @@
         <div class="span12">
             <div class="page-header">
                 <h1>
-                    Dawn of the Dragons Log Parser
                     <small>{{=response.subtitle or ''}}</small>
                 </h1>
             </div>
@@ -136,7 +135,7 @@
         <footer class="footer span12" id="footer">
             <div class="footer-content">
                 {{block footer}} <!-- this is default footer -->
-                <div class="copyright pull-left">{{=T('Copyright')}} &#169; {{=request.now.year}}</div>
+                <div class="copyright pull-left">Version: 1.1.0, {{=T('Copyright')}} &#169; {{=request.now.year}}</div>
                 <div id="poweredBy" class="pull-right">
                     {{=T('Powered by')}}
                     <a href="http://www.web2py.com/">web2py</a>

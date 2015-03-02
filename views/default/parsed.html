@@ -12,6 +12,9 @@ $(document).ready(function() {
         },
         type: 'numeric'
     });
+
+    $("#totalsTable").tablesorter();
+
     $("#mainTable").tablesorter({
         headers: {
             1: {sorter: 'Comma_number'},
@@ -20,21 +23,37 @@ $(document).ready(function() {
             5: {sorter: 'Comma_number'}
         }
     });
-	$("#obtainedTable").tablesorter({
-		headers: {
-			1: {sorter: 'Comma_number'}
-		}
-	}); 
+
     $("#foundItemsTable").tablesorter({
         headers: {
             1: {sorter: 'Comma_number'}
         }
     });
-    $("#createdTable").tablesorter();
-    $("#affectedTable").tablesorter();
-    $("#restoredTable").tablesorter();
-    $("#totalsTable").tablesorter();
-    } 
+
+    $("#obtainedTable").tablesorter({
+		headers: {
+			1: {sorter: 'Comma_number'}
+		}
+	});
+
+    $("#restoredTable").tablesorter({
+		headers: {
+			1: {sorter: 'Comma_number'}
+		}
+	});
+
+    $("#affectedTable").tablesorter({
+		headers: {
+			1: {sorter: 'Comma_number'}
+		}
+	});
+
+    $("#createdTable").tablesorter({
+		headers: {
+			1: {sorter: 'Comma_number'}
+		}
+	});
+    }
 );
 </script>
 
@@ -95,7 +114,7 @@ $(function() {
 
 <div id="tabs">
     <ul>
-        <li><a href="#mainTab">Main</a></li>
+        <li><a href="#mainTab">Procs</a></li>
         <li><a href="#bestHitTab">Best Hit</a></li>
         <li><a href="#foundItemsTab">Found</a></li>
         <li><a href="#obtainedItemsTab">Obtained</a></li>

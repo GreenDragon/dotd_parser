@@ -8,11 +8,11 @@
 #response.logo = A(B('web',SPAN(2),'py'),XML('&trade;&nbsp;'),
 #                  _class="brand",_href="http://www.web2py.com/")
 response.title = request.application.replace('_',' ').title()
-response.subtitle = ''
+response.subtitle = 'DotD/LoTS Raid Log Analyzer'
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
-response.meta.author = 'Your Name <you@example.com>'
-response.meta.keywords = 'web2py, python, framework'
+response.meta.author = 'Green Dragon Systems'
+response.meta.keywords = 'Dawn of the Dragons, Legacy of a Thousand Suns, Raid Log Analyzer, 5th Planet Games'
 response.meta.generator = 'Web2py Web Framework'
 
 ## your http://google.com/analytics id
@@ -33,19 +33,23 @@ PRODUCTION_MENU = True
 def production_menu():
     response.menu += [
         ('', False,
-        A('DoTD Game Page',
+          A('DoTD Game Page',
           _href='http://www.dawnofthedragons.com/game/',
           _target='blank')),
         ('', False,
-        A('Src/Bugs/Requests',
+          A('LoTS Game Page',
+          _href='http://www.legacyofathousandsuns.com/game/',
+          _target='blank')),
+        ('', False,
+          A('Src/Bugs/Requests',
           _href='https://github.com/GreenDragon/dotd_parser',
           _target='blank')),
         ('', False,
-        A('Known Issues',
+          A('Known Issues',
           _href='https://github.com/GreenDragon/dotd_parser/blob/master/KNOWN_ISSUES.md',
           _target='blank')),
         ('', False,
-        A('To Do',
+          A('To Do',
           _href='https://github.com/GreenDragon/dotd_parser/blob/master/TO-DO.md',
           _target='blank')),
     ]

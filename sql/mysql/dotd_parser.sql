@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.23, for osx10.8 (x86_64)
 --
--- Host: localhost    Database: test_dotd_parser
+-- Host: localhost    Database: dotd_parser
 -- ------------------------------------------------------
 -- Server version	5.6.23
 
@@ -183,13 +183,13 @@ LOCK TABLES `auth_user` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `enchantments`
+-- Table structure for table `dawn_enchantments`
 --
 
-DROP TABLE IF EXISTS `enchantments`;
+DROP TABLE IF EXISTS `dawn_enchantments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `enchantments` (
+CREATE TABLE `dawn_enchantments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) DEFAULT NULL,
   `proc_name` varchar(512) DEFAULT NULL,
@@ -199,22 +199,22 @@ CREATE TABLE `enchantments` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `enchantments`
+-- Dumping data for table `dawn_enchantments`
 --
 
-LOCK TABLES `enchantments` WRITE;
-/*!40000 ALTER TABLE `enchantments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `enchantments` ENABLE KEYS */;
+LOCK TABLES `dawn_enchantments` WRITE;
+/*!40000 ALTER TABLE `dawn_enchantments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dawn_enchantments` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `equipment`
+-- Table structure for table `dawn_equipment`
 --
 
-DROP TABLE IF EXISTS `equipment`;
+DROP TABLE IF EXISTS `dawn_equipment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `equipment` (
+CREATE TABLE `dawn_equipment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) DEFAULT NULL,
   `attack` int(11) DEFAULT NULL,
@@ -222,6 +222,7 @@ CREATE TABLE `equipment` (
   `perception` int(11) DEFAULT NULL,
   `rarity` int(11) DEFAULT NULL,
   `value_gold` int(11) DEFAULT NULL,
+  `value_credits` int(11) DEFAULT NULL,
   `value_gtoken` int(11) DEFAULT NULL,
   `questReq` int(11) DEFAULT NULL,
   `isUnique` int(11) DEFAULT NULL,
@@ -244,22 +245,22 @@ CREATE TABLE `equipment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `equipment`
+-- Dumping data for table `dawn_equipment`
 --
 
-LOCK TABLES `equipment` WRITE;
-/*!40000 ALTER TABLE `equipment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `equipment` ENABLE KEYS */;
+LOCK TABLES `dawn_equipment` WRITE;
+/*!40000 ALTER TABLE `dawn_equipment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dawn_equipment` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `generals`
+-- Table structure for table `dawn_generals`
 --
 
-DROP TABLE IF EXISTS `generals`;
+DROP TABLE IF EXISTS `dawn_generals`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `generals` (
+CREATE TABLE `dawn_generals` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) DEFAULT NULL,
   `attack` int(11) DEFAULT NULL,
@@ -280,22 +281,22 @@ CREATE TABLE `generals` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `generals`
+-- Dumping data for table `dawn_generals`
 --
 
-LOCK TABLES `generals` WRITE;
-/*!40000 ALTER TABLE `generals` DISABLE KEYS */;
-/*!40000 ALTER TABLE `generals` ENABLE KEYS */;
+LOCK TABLES `dawn_generals` WRITE;
+/*!40000 ALTER TABLE `dawn_generals` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dawn_generals` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `legions`
+-- Table structure for table `dawn_legions`
 --
 
-DROP TABLE IF EXISTS `legions`;
+DROP TABLE IF EXISTS `dawn_legions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `legions` (
+CREATE TABLE `dawn_legions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) DEFAULT NULL,
   `num_gen` int(11) DEFAULT NULL,
@@ -319,22 +320,22 @@ CREATE TABLE `legions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `legions`
+-- Dumping data for table `dawn_legions`
 --
 
-LOCK TABLES `legions` WRITE;
-/*!40000 ALTER TABLE `legions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `legions` ENABLE KEYS */;
+LOCK TABLES `dawn_legions` WRITE;
+/*!40000 ALTER TABLE `dawn_legions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dawn_legions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `mounts`
+-- Table structure for table `dawn_mounts`
 --
 
-DROP TABLE IF EXISTS `mounts`;
+DROP TABLE IF EXISTS `dawn_mounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mounts` (
+CREATE TABLE `dawn_mounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) DEFAULT NULL,
   `attack` int(11) DEFAULT NULL,
@@ -362,48 +363,22 @@ CREATE TABLE `mounts` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `mounts`
+-- Dumping data for table `dawn_mounts`
 --
 
-LOCK TABLES `mounts` WRITE;
-/*!40000 ALTER TABLE `mounts` DISABLE KEYS */;
-/*!40000 ALTER TABLE `mounts` ENABLE KEYS */;
+LOCK TABLES `dawn_mounts` WRITE;
+/*!40000 ALTER TABLE `dawn_mounts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dawn_mounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `raw_log`
+-- Table structure for table `dawn_troops`
 --
 
-DROP TABLE IF EXISTS `raw_log`;
+DROP TABLE IF EXISTS `dawn_troops`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `raw_log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(48) NOT NULL,
-  `date` datetime DEFAULT NULL,
-  `data` longtext,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uuid` (`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `raw_log`
---
-
-LOCK TABLES `raw_log` WRITE;
-/*!40000 ALTER TABLE `raw_log` DISABLE KEYS */;
-/*!40000 ALTER TABLE `raw_log` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `troops`
---
-
-DROP TABLE IF EXISTS `troops`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `troops` (
+CREATE TABLE `dawn_troops` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) DEFAULT NULL,
   `attack` int(11) DEFAULT NULL,
@@ -425,12 +400,264 @@ CREATE TABLE `troops` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `troops`
+-- Dumping data for table `dawn_troops`
 --
 
-LOCK TABLES `troops` WRITE;
-/*!40000 ALTER TABLE `troops` DISABLE KEYS */;
-/*!40000 ALTER TABLE `troops` ENABLE KEYS */;
+LOCK TABLES `dawn_troops` WRITE;
+/*!40000 ALTER TABLE `dawn_troops` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dawn_troops` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `logs`
+--
+
+DROP TABLE IF EXISTS `logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(48) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `data` longtext,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `logs`
+--
+
+LOCK TABLES `logs` WRITE;
+/*!40000 ALTER TABLE `logs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `logs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `suns_enchantments`
+--
+
+DROP TABLE IF EXISTS `suns_enchantments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `suns_enchantments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) DEFAULT NULL,
+  `proc_name` varchar(512) DEFAULT NULL,
+  `proc_desc` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suns_enchantments`
+--
+
+LOCK TABLES `suns_enchantments` WRITE;
+/*!40000 ALTER TABLE `suns_enchantments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suns_enchantments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `suns_equipment`
+--
+
+DROP TABLE IF EXISTS `suns_equipment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `suns_equipment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) DEFAULT NULL,
+  `attack` int(11) DEFAULT NULL,
+  `defense` int(11) DEFAULT NULL,
+  `perception` int(11) DEFAULT NULL,
+  `rarity` int(11) DEFAULT NULL,
+  `value_gold` int(11) DEFAULT NULL,
+  `value_credits` int(11) DEFAULT NULL,
+  `value_gtoken` int(11) DEFAULT NULL,
+  `questReq` int(11) DEFAULT NULL,
+  `isUnique` int(11) DEFAULT NULL,
+  `canEnchant` int(11) DEFAULT NULL,
+  `equipType` int(11) DEFAULT NULL,
+  `hlt` int(11) DEFAULT NULL,
+  `eng` int(11) DEFAULT NULL,
+  `sta` int(11) DEFAULT NULL,
+  `hnr` int(11) DEFAULT NULL,
+  `atk` int(11) DEFAULT NULL,
+  `defn` int(11) DEFAULT NULL,
+  `power` int(11) DEFAULT NULL,
+  `dmg` int(11) DEFAULT NULL,
+  `deflect` int(11) DEFAULT NULL,
+  `lore` longtext,
+  `proc_name` varchar(512) DEFAULT NULL,
+  `proc_desc` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suns_equipment`
+--
+
+LOCK TABLES `suns_equipment` WRITE;
+/*!40000 ALTER TABLE `suns_equipment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suns_equipment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `suns_generals`
+--
+
+DROP TABLE IF EXISTS `suns_generals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `suns_generals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) DEFAULT NULL,
+  `attack` int(11) DEFAULT NULL,
+  `defense` int(11) DEFAULT NULL,
+  `race` int(11) DEFAULT NULL,
+  `role` int(11) DEFAULT NULL,
+  `rarity` int(11) DEFAULT NULL,
+  `value_gold` int(11) DEFAULT NULL,
+  `value_credits` int(11) DEFAULT NULL,
+  `questReq` int(11) DEFAULT NULL,
+  `source` int(11) DEFAULT NULL,
+  `buffType` int(11) DEFAULT NULL,
+  `lore` longtext,
+  `proc_name` varchar(512) DEFAULT NULL,
+  `proc_desc` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suns_generals`
+--
+
+LOCK TABLES `suns_generals` WRITE;
+/*!40000 ALTER TABLE `suns_generals` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suns_generals` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `suns_legions`
+--
+
+DROP TABLE IF EXISTS `suns_legions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `suns_legions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) DEFAULT NULL,
+  `num_gen` int(11) DEFAULT NULL,
+  `num_trp` int(11) DEFAULT NULL,
+  `bonus` int(11) DEFAULT NULL,
+  `bonusSpecial` int(11) DEFAULT NULL,
+  `bonusText` varchar(512) DEFAULT NULL,
+  `rarity` int(11) DEFAULT NULL,
+  `value_gold` int(11) DEFAULT NULL,
+  `value_credits` int(11) DEFAULT NULL,
+  `canPurchase` int(11) DEFAULT NULL,
+  `questReq` int(11) DEFAULT NULL,
+  `lore` longtext,
+  `proc_name` varchar(512) DEFAULT NULL,
+  `proc_desc` longtext,
+  `specification` varchar(512) DEFAULT NULL,
+  `general_format` longtext,
+  `troop_format` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suns_legions`
+--
+
+LOCK TABLES `suns_legions` WRITE;
+/*!40000 ALTER TABLE `suns_legions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suns_legions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `suns_mounts`
+--
+
+DROP TABLE IF EXISTS `suns_mounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `suns_mounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) DEFAULT NULL,
+  `attack` int(11) DEFAULT NULL,
+  `defense` int(11) DEFAULT NULL,
+  `perception` int(11) DEFAULT NULL,
+  `rarity` int(11) DEFAULT NULL,
+  `value_gold` int(11) DEFAULT NULL,
+  `value_credits` int(11) DEFAULT NULL,
+  `questReq` int(11) DEFAULT NULL,
+  `isUnique` int(11) DEFAULT NULL,
+  `hlt` int(11) DEFAULT NULL,
+  `eng` int(11) DEFAULT NULL,
+  `sta` int(11) DEFAULT NULL,
+  `hnr` int(11) DEFAULT NULL,
+  `atk` int(11) DEFAULT NULL,
+  `defn` int(11) DEFAULT NULL,
+  `power` int(11) DEFAULT NULL,
+  `dmg` int(11) DEFAULT NULL,
+  `deflect` int(11) DEFAULT NULL,
+  `lore` longtext,
+  `proc_name` varchar(512) DEFAULT NULL,
+  `proc_desc` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suns_mounts`
+--
+
+LOCK TABLES `suns_mounts` WRITE;
+/*!40000 ALTER TABLE `suns_mounts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suns_mounts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `suns_troops`
+--
+
+DROP TABLE IF EXISTS `suns_troops`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `suns_troops` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) DEFAULT NULL,
+  `attack` int(11) DEFAULT NULL,
+  `defense` int(11) DEFAULT NULL,
+  `race` int(11) DEFAULT NULL,
+  `role` int(11) DEFAULT NULL,
+  `rarity` int(11) DEFAULT NULL,
+  `value_gold` int(11) DEFAULT NULL,
+  `value_credits` int(11) DEFAULT NULL,
+  `canPurchase` int(11) DEFAULT NULL,
+  `questReq` int(11) DEFAULT NULL,
+  `source` int(11) DEFAULT NULL,
+  `buffType` int(11) DEFAULT NULL,
+  `lore` longtext,
+  `proc_name` varchar(512) DEFAULT NULL,
+  `proc_desc` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suns_troops`
+--
+
+LOCK TABLES `suns_troops` WRITE;
+/*!40000 ALTER TABLE `suns_troops` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suns_troops` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -442,4 +669,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-24 17:08:50
+-- Dump completed on 2015-03-01 18:13:48

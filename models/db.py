@@ -112,25 +112,38 @@ auth.settings.actions_disabled.append('register')
 # Length for uuid field is required for MySQL InnoDB tables
 # DAL -> MySQL does boolean fields as char(1)
 
-db.define_table('raw_log',
+db.define_table('logs',
                 Field('uuid', 'string', length=48, unique=True, readable=False, writable=False),
                 Field('date', 'datetime', readable=False, writable=False, default=request.now),
                 Field('data', 'text', requires=IS_NOT_EMPTY()),
 )
 
-db.define_table('enchantments',
+# All following tables propagated by cron utilities...
+
+db.define_table('dawn_enchantments',
                 Field('name', 'string'),
                 Field('proc_name', 'string'),
                 Field('proc_desc', 'text'),
 )
 
-db.define_table('equipment',
+#
+
+db.define_table('suns_enchantments',
+                Field('name', 'string'),
+                Field('proc_name', 'string'),
+                Field('proc_desc', 'text'),
+)
+
+#
+
+db.define_table('dawn_equipment',
                 Field('name', 'string'),
                 Field('attack', 'integer'),
                 Field('defense', 'integer'),
                 Field('perception', 'integer'),
                 Field('rarity', 'integer'),
                 Field('value_gold', 'integer'),
+                Field('value_credits', 'integer'),
                 Field('value_gtoken', 'integer'),
                 Field('questReq', 'integer'),
                 Field('isUnique', 'integer'),
@@ -150,7 +163,36 @@ db.define_table('equipment',
                 Field('proc_desc', 'text'),
 )
 
-db.define_table('generals',
+db.define_table('suns_equipment',
+                Field('name', 'string'),
+                Field('attack', 'integer'),
+                Field('defense', 'integer'),
+                Field('perception', 'integer'),
+                Field('rarity', 'integer'),
+                Field('value_gold', 'integer'),
+                Field('value_credits', 'integer'),
+                Field('value_gtoken', 'integer'),
+                Field('questReq', 'integer'),
+                Field('isUnique', 'integer'),
+                Field('canEnchant', 'integer'),
+                Field('equipType', 'integer'),
+                Field('hlt', 'integer'),
+                Field('eng', 'integer'),
+                Field('sta', 'integer'),
+                Field('hnr', 'integer'),
+                Field('atk', 'integer'),
+                Field('defn', 'integer'),
+                Field('power', 'integer'),
+                Field('dmg', 'integer'),
+                Field('deflect', 'integer'),
+                Field('lore', 'text'),
+                Field('proc_name', 'string'),
+                Field('proc_desc', 'text'),
+)
+
+#
+
+db.define_table('dawn_generals',
                 Field('name', 'string'),
                 Field('attack', 'integer'),
                 Field('defense', 'integer'),
@@ -167,7 +209,26 @@ db.define_table('generals',
                 Field('proc_desc', 'text'),
 )
 
-db.define_table('legions',
+db.define_table('suns_generals',
+                Field('name', 'string'),
+                Field('attack', 'integer'),
+                Field('defense', 'integer'),
+                Field('race', 'integer'),
+                Field('role', 'integer'),
+                Field('rarity', 'integer'),
+                Field('value_gold', 'integer'),
+                Field('value_credits', 'integer'),
+                Field('questReq', 'integer'),
+                Field('source', 'integer'),
+                Field('buffType', 'integer'),
+                Field('lore', 'text'),
+                Field('proc_name', 'string'),
+                Field('proc_desc', 'text'),
+)
+
+#
+
+db.define_table('dawn_legions',
                 Field('name', 'string'),
                 Field('num_gen', 'integer'),
                 Field('num_trp', 'integer'),
@@ -187,7 +248,29 @@ db.define_table('legions',
                 Field('troop_format', 'json'),
 )
 
-db.define_table('mounts',
+db.define_table('suns_legions',
+                Field('name', 'string'),
+                Field('num_gen', 'integer'),
+                Field('num_trp', 'integer'),
+                Field('bonus', 'integer'),
+                Field('bonusSpecial', 'integer'),
+                Field('bonusText', 'string'),
+                Field('rarity', 'integer'),
+                Field('value_gold', 'integer'),
+                Field('value_credits', 'integer'),
+                Field('canPurchase', 'integer'),
+                Field('questReq', 'integer'),
+                Field('lore', 'text'),
+                Field('proc_name', 'string'),
+                Field('proc_desc', 'text'),
+                Field('specification', 'string'),
+                Field('general_format', 'json'),
+                Field('troop_format', 'json'),
+)
+
+#
+
+db.define_table('dawn_mounts',
                 Field('name', 'string'),
                 Field('attack', 'integer'),
                 Field('defense', 'integer'),
@@ -211,7 +294,33 @@ db.define_table('mounts',
                 Field('proc_desc', 'text'),
 )
 
-db.define_table('troops',
+db.define_table('suns_mounts',
+                Field('name', 'string'),
+                Field('attack', 'integer'),
+                Field('defense', 'integer'),
+                Field('perception', 'integer'),
+                Field('rarity', 'integer'),
+                Field('value_gold', 'integer'),
+                Field('value_credits', 'integer'),
+                Field('questReq', 'integer'),
+                Field('isUnique', 'integer'),
+                Field('hlt', 'integer'),
+                Field('eng', 'integer'),
+                Field('sta', 'integer'),
+                Field('hnr', 'integer'),
+                Field('atk', 'integer'),
+                Field('defn', 'integer'),
+                Field('power', 'integer'),
+                Field('dmg', 'integer'),
+                Field('deflect', 'integer'),
+                Field('lore', 'text'),
+                Field('proc_name', 'string'),
+                Field('proc_desc', 'text'),
+)
+
+#
+
+db.define_table('dawn_troops',
                 Field('name', 'string'),
                 Field('attack', 'integer'),
                 Field('defense', 'integer'),
@@ -229,6 +338,23 @@ db.define_table('troops',
                 Field('proc_desc', 'text'),
 )
 
+db.define_table('suns_troops',
+                Field('name', 'string'),
+                Field('attack', 'integer'),
+                Field('defense', 'integer'),
+                Field('race', 'integer'),
+                Field('role', 'integer'),
+                Field('rarity', 'integer'),
+                Field('value_gold', 'integer'),
+                Field('value_credits', 'integer'),
+                Field('canPurchase', 'integer'),
+                Field('questReq', 'integer'),
+                Field('source', 'integer'),
+                Field('buffType', 'integer'),
+                Field('lore', 'text'),
+                Field('proc_name', 'string'),
+                Field('proc_desc', 'text'),
+)
 
 ## after defining tables, uncomment below to enable auditing
 # Maybe not quite yet, I don't think we need to track all record changes yet

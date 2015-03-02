@@ -1,40 +1,6 @@
-import os
-import itertools
 import locale
 
 locale.setlocale(locale.LC_ALL, '')
-
-def load_proc_to_names():
-    generals_translation = {}
-    mounts_translation = {}
-    equipment_translation = {}
-    troops_translation = {}
-    legions_translation = {}
-
-    glist = db().select(db.generals.name, db.generals.proc_name)
-    mlist = db().select(db.mounts.name, db.mounts.proc_name)
-    ilist = db().select(db.equipment.name, db.equipment.proc_name)
-    tlist = db().select(db.troops.name, db.troops.proc_name)
-    llist = db().select(db.legions.name, db.legions.proc_name)
-
-    for row in glist:
-        generals_translation[row.proc_name] = row.name
-
-    for row in mlist:
-        mounts_translation[row.proc_name] = row.name
-
-    for row in ilist:
-        equipment_translation[row.proc_name] = row.name
-
-    for row in tlist:
-        troops_translation[row.proc_name] = row.name
-
-    for row in llist:
-        legions_translation[row.proc_name] = row.name
-
-    translation = [generals_translation, mounts_translation, equipment_translation, troops_translation, legions_translation]
-    return translation
-
 
 def parser(input):
     experience = {
@@ -58,6 +24,7 @@ def parser(input):
 
     max_hit = []
     hit_list = {}
+    biggest_hit_suns_mode = 0
 
     proc_to_names = load_proc_to_names()
 
@@ -65,6 +32,9 @@ def parser(input):
     log_file = input.split('\n')
 
     for num, line in enumerate(list(log_file)):
+        # You Found Orange Scourge Scrap!
+        #
+        # nil
         if "Found" in line:
             object = line.split('Found')[1][:-2]
 
@@ -73,7 +43,10 @@ def parser(input):
             else:
                 found_items[object] += 1
 
-        if "obtained" in line:
+        # You have obtained: Rage of Vigbjorn.
+        #
+        # You have obtained: Orange Travel Journal.
+        if "obtained:" in line:
             object = line.split('obtained:')[1][:-2]
 
             if not object in obtained_items:
@@ -81,25 +54,84 @@ def parser(input):
             else:
                 obtained_items[object] += 1
 
+        # Murder Sanctify (Steed) contributed 51,961,730 damage.
+        #
+        # Art of War contributed 3,618,250 damage.
+        #
         if "contributed" in line:
+            #
+            # Evil! Take a Chance has contributed additional damage.
+            # Evil! Take a Chance has contributed extra damage!
+            # Evil! Take a Chance has granted you additional credits!
+            #
             object, amount = line.split('contributed')
             object = object.strip()
+            amount = amount.strip()
 
-            for proc_name in proc_to_names:
-                if object in proc_name:
-                    object = str(proc_name[object])
+            if amount not in [ 'additional damage.', 'extra damage!', 'additional credits!' ]:
+                for proc_name in proc_to_names:
+                    if object in proc_name:
+                        object = str(proc_name[object])
 
-            amount = int(amount.split()[0].replace(',', ''))
+                amount = int(amount.split()[0].replace(',', ''))
 
-            if not object in proc_items:
-                proc_items[object] = {'count': 1, 'damage': amount}
-            else:
-                proc_items[object]['count'] += 1
-                proc_items[object]['damage'] = proc_items[object]['damage'] + amount
+                if not object in proc_items:
+                    proc_items[object] = {'count': 1, 'damage': amount}
+                else:
+                    proc_items[object]['count'] += 1
+                    proc_items[object]['damage'] += amount
 
+        # Veritas dealt 44,309,515 damage! Lost 5 health. Earned 2,856 gold and 32 experience!
+        # Veritas crit 173,145,219 damage! Lost 9 health. Earned 2,968 gold and 35 experience!
+        #
+        # LoTS mode
+        #
+        # Earned 10,406 credits and 29 experience!
+        #
         if "experience!" in line:
+            # is this LoTS? No credits in the DotD world
+            if "credits" in line:
+                object = line.split()
+                for item in 1, 4:
+                    amount = int(object[item].replace(',', ''))
+                    if item == 1:
+                        experience["gold"] +=  amount
+                    else:
+                        experience["exp"] += amount
+            # DoTD mode
+            else:
+                # watch out for: Take a Chance has granted you additional experience!
+                if not "has granted you" in line:
+                    object = line.split()
+                    experience["user"] = object[0]
+
+                    # store damage dealt in hit_list history line #: damage
+                    damage = int(object[2].replace(',', ''))
+                    hit_list[num] = damage
+
+                    if "crit" in object[1]:
+                        experience["critical"] += 1
+                        experience["crit_damage"] += damage
+                    else:
+                        experience["regular"] += 1
+                        experience["damage"] += damage
+
+                    for item in 5, 8, 11:
+                        amount = int(object[item].replace(',', ''))
+                        if item == 5:
+                            experience["health"] += amount
+                        elif item == 8:
+                            experience["gold"] += amount
+                        else:
+                            experience["exp"] += amount
+
+        # LoTS Mode
+        #
+        # KwanSai dealt 154,442,731 health damage! Lost 16 health.
+        # KwanSai crit 27,538,998 health damage! Lost 48 health.
+        #
+        if "health damage" in line:
             object = line.split()
-            experience["user"] = object[0]
 
             # store damage dealt in hit_list history line #: damage
             damage = int(object[2].replace(',', ''))
@@ -107,65 +139,60 @@ def parser(input):
 
             if "crit" in object[1]:
                 experience["critical"] += 1
-                experience["crit_damage"] = experience["crit_damage"] + damage
+                experience["crit_damage"] += damage
             else:
                 experience["regular"] += 1
-                experience["damage"] = experience["damage"] + damage
+                experience["damage"] += damage
 
-            for item in 5, 8, 11:
-                amount = int(object[item].replace(',', ''))
-                if item == 5:
-                    experience["health"] = experience["health"] + amount
-                elif item == 8:
-                    experience["gold"] = experience["gold"] + amount
-                else:
-                    experience["exp"] = experience["exp"] + amount
+            amount = int(object[6].replace(',', ''))
+            experience["health"] += amount
+            biggest_hit_suns_mode = 1
 
+        # Like a Book has restored some of your Health.
+        # Tollo Darkgaze has restored 4 Honor.
+        #
+        # nil
         if "has restored" in line:
-        #   # Like a Book has restored some of your Health.
-        #   # Tollo Darkgaze has restored 4 Honor.
             if not line in restored_items:
                 restored_items[line] = 1
             else:
                 restored_items[line] += 1
 
+        # Take a Chance has granted you additional credits!
+        # Take a Chance has granted you additional experience!
+        if "has granted you" in line:
+            if not line in restored_items:
+                restored_items[line] = 1
+            else:
+                restored_items[line] += 1
+
+        # Crystal Sight affected boss damage.
+        # Bladezz' Blades affected boss damage.
+        #
+        # nil
         if "affected" in line:
-        #   # Crystal Sight affected boss damage.
-        #   # Bladezz' Blades affected boss damage.
             if not line in affected_items:
                 affected_items[line] = 1
             else:
                 affected_items[line] += 1
 
-        # if "says" in line:
-        #   # Vigbjorn the Crazed says: "You believe me, Veritas, don't you? We'll hunt the blue yetis together!"
-
-        # if "applied" in line:
-        #   # *DEV* Mouse applied Magic: Begone, Fiends!
-        #   # *DEV* ryanSMASH applied Magic: Hell's Knell
-
-        if "has created a" in line:
-        #   # Master of Monsters has created a Steed of the Western Wold!
-        #   # Master of Monsters has created a Blue Manticore!
-        #   # Master of Monsters has created a Floating Eye!
+        # Master of Monsters has created a Steed of the Western Wold!
+        #
+        # Legacy Forge created a Immortal!
+        if "created" in line:
             if not line in created_items:
                 created_items[line] = 1
             else:
                 created_items[line] += 1
 
-        # LoTS mode
-        # if "experience!" in line:
-        #   # Earned 1,897 credits and 93 experience!
-        # if "health damage" in line:
-        #   # KwanSai dealt 154,442,731 health damage! Lost 16 health.
-        # if "has granted you" in line:
-        #   # Take a Chance has granted you additional credits!
-        #   # Take a Chance has granted you additional experience!
-        # if "obtained" in line:
-        #   # You have obtained: Little Devil.
+        # Vigbjorn the Crazed says: "You believe me, Veritas, don't you? We'll hunt the blue yetis together!"
         #
-        # vs DotD mode
-        #   # Veritas dealt 38,371,884 damage! Lost 9 health. Earned 3,234 gold and 35 experience!
+        # nil
+        # if "says" in line:
+
+        # *DEV* Mouse applied Magic: Begone, Fiends!
+        # *DEV* ryanSMASH applied Magic: Hell's Knell
+        # if "applied" in line:
 
     # find the biggest hit
     biggest_hit = max(hit_list, key=hit_list.get)
@@ -182,6 +209,10 @@ def parser(input):
         previous_hit = biggest_hit
 
     # build out the last biggest hit history
+    if biggest_hit_suns_mode:
+        previous_hit = previous_hit + 1
+        biggest_hit = biggest_hit + 1
+
     for hits in range(previous_hit + 1, biggest_hit + 1):
         max_hit.append(log_file[hits])
 

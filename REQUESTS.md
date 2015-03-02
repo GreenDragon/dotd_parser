@@ -6,5 +6,3 @@ Doesn't really help out with data collection in here, but it would be neat to be
 
 http://www.dawnofthedragons.com/forums/forums/showthread.php?23212-Damage-Procs-Thread-(4th-gen)/page96
 
-
-Could you have it distinguish between on-hit drops (You Found X!) with proc-created drops (You have obtained: x.)?

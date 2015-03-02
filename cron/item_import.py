@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-# Import equipment from ugup
+# Import all tables from ugup that have proc_name mappings
 
 import yaml
 import re
 import json
-import os
 import requests
 import MySQLdb as mdb
 # from pprint import pprint
@@ -23,9 +22,9 @@ conn = mdb.connect(host=config['dbhost'],
 
 cursor = conn.cursor()
 
-def item_query(item):
+def api_call_path(item, game):
     path = base + item + "/definition/all?apikey=" + config["apikey"] \
-           + "&platform=" + config["platform"] + "&game=" + config["game"]
+           + "&platform=" + config["platform"] + "&game=" + game
     return path
 
 def ugup_request(path, table):
@@ -44,7 +43,7 @@ def ugup_request(path, table):
             proc_name = re.escape(item['proc_name'].strip())
             proc_desc = re.escape(item['proc_desc'].strip())
 
-            if table == 'enchantments':
+            if table in ['dawn_enchantments', 'suns_enchantments']:
                 sql = "INSERT INTO %s ( id, name, proc_name, proc_desc ) \
                     VALUES ( '%s', '%s', '%s', '%s') \
                     ON DUPLICATE KEY UPDATE name='%s',proc_name='%s',proc_desc='%s';" \
@@ -52,12 +51,13 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table == 'equipment':
+            if table in ['dawn_equipment', 'suns_equipment']:
                 attack = int(item['attack'])
                 defense = int(item['defense'])
                 perception = int(item['perception'])
                 rarity = int(item['rarity'])
                 value_gold = int(item['value_gold'])
+                value_credits = int(item['value_credits'])
                 value_gtoken = int(item['value_gtoken'])
                 questReq = int(item['questReq'])
                 isUnique = int(item['unique'])
@@ -74,24 +74,24 @@ def ugup_request(path, table):
                 deflect = int(item['deflect'])
                 lore = re.escape(item['lore'].strip())
 
-                sql = "INSERT INTO %s ( id, name, attack, defense, perception, rarity, value_gold, value_gtoken, \
-                       questReq, isUnique, canEnchant, equipType, hlt, eng, sta, hnr, atk, defn, power, dmg, deflect, \
-                       lore, proc_name, proc_desc ) \
+                sql = "INSERT INTO %s ( id, name, attack, defense, perception, rarity, value_gold, value_credits, \
+                       value_gtoken, questReq, isUnique, canEnchant, equipType, hlt, eng, sta, hnr, atk, defn, power, \
+                       dmg, deflect, lore, proc_name, proc_desc ) \
                        VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', \
-                       '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) \
+                       '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) \
                        ON DUPLICATE KEY UPDATE name='%s', attack='%s', defense='%s', perception='%s', rarity='%s', \
-                       value_gold='%s', value_gtoken='%s', questReq='%s', isUnique='%s', canEnchant='%s', \
-                       equipType='%s', hlt='%s', eng='%s', sta='%s', hnr='%s', atk='%s', defn='%s', power='%s', \
-                       dmg='%s', deflect='%s', lore='%s', proc_name='%s', proc_desc='%s';" \
-                       % ( table, id, name, attack, defense, perception, rarity, value_gold, value_gtoken, questReq,
-                           isUnique, canEnchant, equipType, hlt, eng, sta, hnr, atk, defn, power, dmg, deflect, lore,
-                           proc_name, proc_desc, name, attack, defense, perception, rarity, value_gold, value_gtoken,
-                           questReq, isUnique, canEnchant, equipType, hlt, eng, sta, hnr, atk, defn, power, dmg,
-                           deflect, lore, proc_name, proc_desc)
+                       value_gold='%s', value_credits='%s', value_gtoken='%s', questReq='%s', isUnique='%s', \
+                       canEnchant='%s', equipType='%s', hlt='%s', eng='%s', sta='%s', hnr='%s', atk='%s', defn='%s', \
+                       power='%s', dmg='%s', deflect='%s', lore='%s', proc_name='%s', proc_desc='%s';" \
+                       % ( table, id, name, attack, defense, perception, rarity, value_gold, value_credits,
+                           value_gtoken, questReq, isUnique, canEnchant, equipType, hlt, eng, sta, hnr, atk, defn,
+                           power, dmg, deflect, lore, proc_name, proc_desc, name, attack, defense, perception, rarity,
+                           value_gold, value_credits, value_gtoken, questReq, isUnique, canEnchant, equipType, hlt,
+                           eng, sta, hnr, atk, defn, power, dmg, deflect, lore, proc_name, proc_desc)
 
                 cursor.execute(sql)
 
-            if table == 'generals':
+            if table in ['dawn_generals', 'suns_generals']:
                 attack = int(item['attack'])
                 defense = int(item['defense'])
                 race = int(item['race'])
@@ -117,7 +117,7 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table == 'legions':
+            if table in ['dawn_legions', 'suns_legions']:
                 num_gen = int(item['num_gen'])
                 num_trp = int(item['num_trp'])
                 bonus = int(item['bonus'])
@@ -151,7 +151,7 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table == 'mounts':
+            if table in ['dawn_mounts', 'suns_mounts']:
                 attack = int(item['attack'])
                 defense = int(item['defense'])
                 perception = int(item['perception'])
@@ -187,7 +187,7 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table == 'troops':
+            if table in ['dawn_troops', 'suns_troops']:
                 attack = int(item['attack'])
                 defense = int(item['defense'])
                 race = int(item['race'])
@@ -217,25 +217,21 @@ def ugup_request(path, table):
 
     conn.commit()
 
+# main
 
+ugup_request(api_call_path('enchant', 'dawn'), 'dawn_enchantments')
+ugup_request(api_call_path('equipment', 'dawn'), 'dawn_equipment')
+ugup_request(api_call_path('general', 'dawn'), 'dawn_generals')
+ugup_request(api_call_path('legion', 'dawn'), 'dawn_legions')
+ugup_request(api_call_path('mount', 'dawn'), 'dawn_mounts')
+ugup_request(api_call_path('troop', 'dawn'), 'dawn_troops')
 
-rurl = item_query('enchant')
-r = ugup_request(rurl, 'enchantments')
-
-rurl = item_query('equipment')
-r = ugup_request(rurl, 'equipment')
-
-rurl = item_query('general')
-r = ugup_request(rurl, 'generals')
-
-rurl = item_query('legion')
-r = ugup_request(rurl, 'legions')
-
-rurl = item_query('mount')
-r = ugup_request(rurl, 'mounts')
-
-rurl = item_query('troop')
-r = ugup_request(rurl, 'troops')
+ugup_request(api_call_path('enchant', 'suns'), 'suns_enchantments')
+ugup_request(api_call_path('equipment', 'suns'), 'suns_equipment')
+ugup_request(api_call_path('general', 'suns'), 'suns_generals')
+ugup_request(api_call_path('legion', 'suns'), 'suns_legions')
+ugup_request(api_call_path('mount', 'suns'), 'suns_mounts')
+ugup_request(api_call_path('troop', 'suns'), 'suns_troops')
 
 cursor.close()
 conn.close()

@@ -20,22 +20,19 @@ def index():
     redirect(URL('form'))
 
 def form():
-    form = SQLFORM(db.raw_log, labels={'data':''}, formstyle='divs')
+    form = SQLFORM(db.logs, labels={'data':''}, formstyle='divs')
     form.vars.uuid = uuid_generator()
 
     if form.process().accepted:
-        # session.flash = T("Form Accepted")
         redirect(URL('parsed', args=form.vars.uuid))
     elif form.errors:
         response.flash = T("Form had errors. Did you forget to paste some data?")
-    #else:
-    #    response.flash = T("Please fill out the form")
     return dict(form=form)
 
 def parsed():
     if request.args:
         uuid = request.args[0]
-        row = db(db.raw_log.uuid==uuid).select()
+        row = db(db.logs.uuid==uuid).select()
         if len(row) == 0:
             session.flash = T("UUID not found or was purged from the DB")
             redirect(URL('form'))
@@ -46,7 +43,6 @@ def parsed():
         # Leroy Jenkins! Let's do this!
         experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
            affected_items, created_items = parser(row[0].data)
-        # experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list=parser(row[0].data)
         return locals()
     else:
         session.flash = T("Expected a known or valid UUID")
