@@ -68,7 +68,13 @@ def parser(input):
             object = object.strip()
             amount = amount.strip()
 
-            if amount not in [ 'additional damage.', 'extra damage!', 'additional credits!' ]:
+            if amount in [ 'additional damage.', 'extra damage!', 'additional credits!' ]:
+                # Treat LoTS contributed events as DotD restored events
+                if not line in restored_items:
+                    restored_items[line] = 1
+                else:
+                    restored_items[line] += 1
+            else:
                 for proc_name in proc_to_names:
                     if object in proc_name:
                         object = str(proc_name[object])
@@ -84,9 +90,7 @@ def parser(input):
         # Veritas dealt 44,309,515 damage! Lost 5 health. Earned 2,856 gold and 32 experience!
         # Veritas crit 173,145,219 damage! Lost 9 health. Earned 2,968 gold and 35 experience!
         #
-        # LoTS mode
-        #
-        # Earned 10,406 credits and 29 experience!
+        # LoTS mode: Earned 10,406 credits and 29 experience!
         #
         if "experience!" in line:
             # is this LoTS? No credits in the DotD world
@@ -158,6 +162,8 @@ def parser(input):
             else:
                 restored_items[line] += 1
 
+        # LoTS
+        #
         # Take a Chance has granted you additional credits!
         # Take a Chance has granted you additional experience!
         if "has granted you" in line:
