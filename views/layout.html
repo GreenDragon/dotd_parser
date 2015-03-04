@@ -46,6 +46,7 @@
   response.files.insert(2,URL('static','css/bootstrap-responsive.min.css'))
   response.files.insert(3,URL('static','css/web2py_bootstrap.css'))
   response.files.insert(4,URL('static','css/table.css'))
+  response.files.insert(4,URL('static','css/c3.css'))
   }}
 
   {{include 'web2py_ajax.html'}}
@@ -62,6 +63,8 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
   <noscript><link href="{{=URL('static', 'css/web2py_bootstrap_nojs.css')}}" rel="stylesheet" type="text/css" /></noscript>
   <script src="{{=URL('static', 'js/jquery.tablesorter.js')}}" type="text/javascript"></script>
+  <script src="{{=URL('static', 'js/d3.min.js')}}" type="text/javascript"></script>
+  <script src="{{=URL('static', 'js/c3.min.js')}}" type="text/javascript"></script>
   {{block head}}{{end}}
 </head>
 
@@ -135,7 +138,7 @@
         <footer class="footer span12" id="footer">
             <div class="footer-content">
                 {{block footer}} <!-- this is default footer -->
-                <div class="copyright pull-left">Version: 1.1.2, {{=T('Copyright')}} &#169; {{=request.now.year}}</div>
+                <div class="copyright pull-left">Version: 1.2.0, {{=T('Copyright')}} &#169; {{=request.now.year}}</div>
                 <div id="poweredBy" class="pull-right">
                     {{=T('Powered by')}}
                     <a href="http://www.web2py.com/">web2py</a>

@@ -83,6 +83,32 @@ $(function() {
 {{total_damage = tot_reg_dmg + tot_crit_dmg}}
 {{base_damage = total_damage - tot_proc_dmg}}
 
+<div id="chart"></div>
+<script>
+var chart = c3.generate({
+    bindto: '#chart',
+        data: {
+            columns: [
+                ['Base Damage', {{=base_damage}} ],
+                ['Proc Damage', {{=tot_proc_dmg}} ],
+                ['Regular Damage', {{=tot_reg_dmg}} ],
+                ['Critical Damage', {{=tot_crit_dmg}} ]
+            ],
+            type : 'bar',
+            groups: [
+                ['Base Damage', 'Proc Damage'],
+                ['Regular Damage','Critical Damage']
+            ]
+        },
+        axis : {
+            y : {
+                tick : {
+                    format: d3.format(',')
+                }
+            }
+        }
+});
+</script>
 
 
 <center>
