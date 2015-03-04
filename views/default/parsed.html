@@ -1,3 +1,4 @@
+{{from __future__ import division}}
 {{extend 'layout.html'}}
 
 <script>
@@ -66,48 +67,58 @@ $(function() {
 
 {{dotd_wiki = 'http://dotd.wikia.com/wiki/Special:Search?search='}}
 
-{{valid_data = experience['regular']}}
+{{valid_data = experience['regular_hits']}}
+
+{{reg_hits = experience['regular_hits']}}
+{{crit_hits = experience['critical_hits']}}
+
+{{total_hits = reg_hits + crit_hits}}
+
+{{tot_proc_count = experience['total_procs']}}
+
+{{tot_reg_dmg = experience['total_reg_dmg']}}
+{{tot_crit_dmg = experience['total_crit_dmg']}}
+{{tot_proc_dmg = experience['total_proc_dmg']}}
+
+{{total_damage = tot_reg_dmg + tot_crit_dmg}}
+{{base_damage = total_damage - tot_proc_dmg}}
+
+
 
 <center>
 <table id="totalsTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
     <thead>
         <tr>
             <th>Total Hits</th>
-            <th>Total DMG.</th>
-            <th>Avg. DMG.</th>
-            <th>Total Crits</th>
-            <th>Crit Chance</th>
+            <th>Total DMG</th>
+            <th>Regular DMG</th>
+            <th>Crit DMG</th>
+            <th>Proc DMG</th>
+            <th>Base DMG</th>
+            <th>Reg Hits</th>
+            <th>Crit Hits</th>
+            <th>Crit Rate</th>
+            <th>Procs</th>
+            <th>Procs/Hit</th>
             <th>Total XP</th>
-            <th>Avg. XP</th>
             <th>Gold Gained</th>
-            <th>Avg. Gold</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            {{hits=experience['regular']}}{{crits=experience['critical']}}{{total_hits = hits + crits}}
-
-            <td>{{=number_format(total_hits)}}</td>
-            <td>{{=number_format(experience['damage'])}}</td>
-
-            {{avg_damage = experience['damage'] / total_hits}}
-
-            <td>{{=number_format(avg_damage)}}</td>
-            <td>{{=number_format(experience['critical'])}}</td>
-
-            {{crit_percent = percentage(crits, hits)}}
-
-            <td>{{=rounding(crit_percent)}}%</td>
-            <td>{{=number_format(experience['exp'])}}</td>
-
-            {{avg_exp = experience['exp'] / total_hits }}
-
-            <td>{{=number_format(avg_exp)}}</td>
-            <td>{{=number_format(experience['gold'])}}</td>
-
-            {{avg_gold = experience['gold'] / total_hits }}
-
-            <td>{{=number_format(avg_gold)}}</td>
+            <td>{{=commify(total_hits)}}</td>
+            <td>{{=commify(total_damage)}}</td>
+            <td>{{=commify(tot_reg_dmg)}}</td>
+            <td>{{=commify(tot_crit_dmg)}}</td>
+            <td>{{=commify(tot_proc_dmg)}}</td>
+            <td>{{=commify(base_damage)}}</td>
+            <td>{{=commify(reg_hits)}}</td>
+            <td>{{=commify(crit_hits)}}</td>
+            <td>{{=commify(percentage(crit_hits, total_hits))}} %</td>
+            <td>{{=commify(tot_proc_count)}}</td>
+            <td>{{=commify((tot_proc_count / total_hits))}}</td>
+            <td>{{=commify(experience['exp'])}}</td>
+            <td>{{=commify(experience['gold'])}}</td>
         </tr>
     </tbody>
 </table>
@@ -131,35 +142,23 @@ $(function() {
                 <tr>
                     <th>Item</th>
                     <th>Proc Count</th>
-                    <th>Proc %</th>
-                    <th>Avg. DMG / Proc</th>
-                    <th>Avg. DMG / Hit</th>
+                    <th>Proc/Hit Rate</th>
+                    <th>Avg. DMG/Proc Rate</th>
+                    <th>Avg. DMG/Hit Rate</th>
                     <th>Total DMG</th>
-                    <th>% DMG</th>
+                    <th>Proc DMG/Total DMG Rate</th>
                    </tr>
             </thead>
             <tbody>
                 {{for item,value in proc_items.iteritems():}}
                 <tr>
                     <td>{{=item}}</a></td>
-                    <td>{{=number_format(proc_items[item]['count'])}}</td>
-
-                    {{proc_percent = percentage(proc_items[item]['count'], total_hits)}}
-
-                    <td>{{=rounding(proc_percent)}}%</td>
-
-                    {{avg_damage = proc_items[item]['damage'] / proc_items[item]['count']}}
-
-                    <td>{{=number_format(avg_damage)}}</td>
-
-                    {{avg_damage_hit = proc_items[item]['damage'] / total_hits}}
-
-                    <td>{{=number_format(avg_damage_hit)}}</td>
-                    <td>{{=number_format(proc_items[item]['damage'])}}</td>
-
-                    {{total_percent = percentage(proc_items[item]['damage'], experience['damage'])}}
-
-                    <td>{{=rounding(total_percent)}}%</td>
+                    <td>{{=commify(proc_items[item]['count'])}}</td>
+                    <td>{{=commify(percentage(proc_items[item]['count'], total_hits))}}%</td>
+                    <td>{{=commify((proc_items[item]['damage'] / proc_items[item]['count']))}}</td>
+                    <td>{{=commify((proc_items[item]['damage'] / total_hits))}}</td>
+                    <td>{{=commify(proc_items[item]['damage'])}}</td>
+                    <td>{{=commify(percentage(proc_items[item]['damage'], total_damage))}}%</td>
                 </tr>
                 {{pass}}
             </tbody>
@@ -179,15 +178,15 @@ $(function() {
                 <tr>
                     <th>Found Item Name</th>
                     <th>Count</th>
-                    <th>Found/Hit %</th>
+                    <th>Found/Hit Rate</th>
                 </tr>
             </thead>
             <tbody>
                 {{for key,value in found_items.iteritems():}}
                 <tr>
                     <td>{{=key}}</td>
-                    <td>{{=number_format(value)}}</td>
-                    <td>{{drop_per = percentage(value,total_hits)}}{{=rounding(drop_per)}}%</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=commify(percentage(value, total_hits))}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
@@ -195,21 +194,22 @@ $(function() {
         </div>
     </div>
 
+
     <div id="obtainedItemsTab" align="left">
         <div class="table"><table id="obtainedTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
                     <th>Obtained Item Name</th>
                     <th>Count</th>
-                    <th>Obtained/Hit %</th>
+                    <th>Obtained/Hit Rate</th>
                 </tr>
             </thead>
             <tbody>
                 {{for key,value in obtained_items.iteritems():}}
                 <tr>
                     <td>{{=key}}</td>
-                    <td>{{=number_format(value)}}</td>
-                    <td>{{drop_per = percentage(value,total_hits)}}{{=rounding(drop_per)}}%</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=commify(percentage(value, total_hits))}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
@@ -223,15 +223,15 @@ $(function() {
                 <tr>
                     <th>Restored Item Name</th>
                     <th>Count</th>
-                    <th>Restored/Hit %</th>
+                    <th>Restored/Hit Rate</th>
                 </tr>
             </thead>
             <tbody>
                 {{for key,value in restored_items.iteritems():}}
                 <tr>
                     <td>{{=key}}</td>
-                    <td>{{=number_format(value)}}</td>
-                    <td>{{drop_per = percentage(value,total_hits)}}{{=rounding(drop_per)}} %</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=commify(percentage(value, total_hits))}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
@@ -245,15 +245,15 @@ $(function() {
                 <tr>
                     <th>Affected Item Name</th>
                     <th>Count</th>
-                    <th>Affected/Hit %</th>
+                    <th>Affected/Hit Rate</th>
                 </tr>
             </thead>
             <tbody>
                 {{for key,value in affected_items.iteritems():}}
                 <tr>
                     <td>{{=key}}</td>
-                    <td>{{=number_format(value)}}</td>
-                    <td>{{drop_per = percentage(value,total_hits)}}{{=rounding(drop_per)}}%</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=commify(percentage(value, total_hits))}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
@@ -267,15 +267,15 @@ $(function() {
                 <tr>
                     <th>Created Item Name</th>
                     <th>Count</th>
-                    <th>Created/Hit %</th>
+                    <th>Created/Hit Rate</th>
                 </tr>
             </thead>
             <tbody>
                 {{for key,value in created_items.iteritems():}}
                 <tr>
                     <td>{{=key}}</td>
-                    <td>{{=number_format(value)}}</td>
-                    <td>{{drop_per = percentage(value,total_hits)}}{{=rounding(drop_per)}}%</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=commify(percentage(value, total_hits))}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
@@ -294,26 +294,31 @@ $(function() {
             [TABLE="class: grid, width: 800"]
                 [tr]
                     [td]Total Hits[/td]
-                    [td]Total Crits[/td]
+                    [td]Total Reg Hits[/td]
+                    [td]Total Critical Hits[/td]
+                    [td]Total Procs[/td]
                 [/tr]
-
-                [tr]{{hits=experience['regular']}}{{crits=experience['critical']}}{{total_hits = hits + crits}}
-                    [td]{{=number_format(total_hits)}}[/td]
-                    [td]{{=number_format(experience['critical'])}}[/td]
+                [tr]
+                    [td]{{=commify(total_hits)}}[/td]
+                    [td]{{=commify(reg_hits)}}[/td]
+                    [td]{{=commify(crit_hits)}}[/td]
+                    [td]{{=commify(tot_proc_count)}}[/td]
                 [/tr]
             [/table]
             [TABLE="class: grid, width: 800"]
                 [tr]
                     [td]Item[/td]
                     [td]Proc Count[/td]
-                    [td]Proc %[/td]
+                    [td]Proc Damage[/td]
+                    [td]Proc/Hit Rate[/td]
                 [/tr]
 
                 {{for item,value in proc_items.iteritems():}}
                 [tr]
                     [td]{{=item}}[/td]
-                    [td]{{=number_format(proc_items[item]['count'])}}[/td]
-                    {{proc_percent = percentage(proc_items[item]['count'], total_hits)}}[td]{{=rounding(proc_percent)}}%[/td]
+                    [td]{{=commify(proc_items[item]['count'])}}[/td]
+                    [td]{{=commify(proc_items[item]['damage'])}}[/td]
+                    [td]{{=commify(percentage(proc_items[item]['count'], total_hits))}}%[/td]
                 [/tr]
                 {{pass}}
             [/table]
@@ -321,5 +326,6 @@ $(function() {
     </div>
 
 </div>
+
 
 </center>

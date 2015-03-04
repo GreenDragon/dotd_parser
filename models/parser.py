@@ -5,10 +5,12 @@ locale.setlocale(locale.LC_ALL, '')
 def parser(input):
     experience = {
         "user": "",
-        "critical": 0,
-        "regular": 0,
-        "crit_damage": 0,
-        "damage": 0,
+        "critical_hits": 0,
+        "regular_hits": 0,
+        "total_crit_dmg": 0,
+        "total_reg_dmg": 0,
+        "total_procs": 0,
+        "total_proc_dmg": 0,
         "health": 0,
         "gold": 0,
         "exp": 0,
@@ -87,6 +89,9 @@ def parser(input):
                     proc_items[object]['count'] += 1
                     proc_items[object]['damage'] += amount
 
+                experience['total_procs'] += 1
+                experience['total_proc_dmg'] += amount
+
         # Veritas dealt 44,309,515 damage! Lost 5 health. Earned 2,856 gold and 32 experience!
         # Veritas crit 173,145,219 damage! Lost 9 health. Earned 2,968 gold and 35 experience!
         #
@@ -99,35 +104,35 @@ def parser(input):
                 for item in 1, 4:
                     amount = int(object[item].replace(',', ''))
                     if item == 1:
-                        experience["gold"] +=  amount
+                        experience['gold'] +=  amount
                     else:
-                        experience["exp"] += amount
+                        experience['exp'] += amount
             # DoTD mode
             else:
                 # watch out for: Take a Chance has granted you additional experience!
                 if not "has granted you" in line:
                     object = line.split()
-                    experience["user"] = object[0]
+                    experience['user'] = object[0]
 
                     # store damage dealt in hit_list history line #: damage
                     damage = int(object[2].replace(',', ''))
                     hit_list[num] = damage
 
                     if "crit" in object[1]:
-                        experience["critical"] += 1
-                        experience["crit_damage"] += damage
+                        experience['critical_hits'] += 1
+                        experience['total_crit_dmg'] += damage
                     else:
-                        experience["regular"] += 1
-                        experience["damage"] += damage
+                        experience['regular_hits'] += 1
+                        experience['total_reg_dmg'] += damage
 
                     for item in 5, 8, 11:
                         amount = int(object[item].replace(',', ''))
                         if item == 5:
-                            experience["health"] += amount
+                            experience['health'] += amount
                         elif item == 8:
-                            experience["gold"] += amount
+                            experience['gold'] += amount
                         else:
-                            experience["exp"] += amount
+                            experience['exp'] += amount
 
         # LoTS Mode
         #
@@ -142,14 +147,14 @@ def parser(input):
             hit_list[num] = damage
 
             if "crit" in object[1]:
-                experience["critical"] += 1
-                experience["crit_damage"] += damage
+                experience['critical_hits'] += 1
+                experience['total_crit_dmg'] += damage
             else:
-                experience["regular"] += 1
-                experience["damage"] += damage
+                experience['regular_hits'] += 1
+                experience['total_reg_dmg'] += damage
 
             amount = int(object[6].replace(',', ''))
-            experience["health"] += amount
+            experience['health'] += amount
             biggest_hit_suns_mode = 1
 
         # Like a Book has restored some of your Health.
