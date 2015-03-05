@@ -113,15 +113,15 @@ def parser(input):
             if "credits" in line:
                 object = line.split()
                 if len(object) == 6:
-                for item in 1, 4:
-                    if isnum(object.item):
-                        amount = int(object[item].replace(',', ''))
-                        if item == 1:
-                            experience['gold'] +=  amount
+                    for item in 1, 4:
+                        if isnum(object[item]):
+                            amount = int(object[item].replace(',', ''))
+                            if item == 1:
+                                experience['gold'] +=  amount
+                            else:
+                                experience['exp'] += amount
                         else:
-                            experience['exp'] += amount
-                    else:
-                        syslog.syslog(line)
+                            syslog.syslog(line)
             # DoTD mode
             else:
                 # watch out for: Take a Chance has granted you additional experience!
@@ -142,7 +142,7 @@ def parser(input):
                             experience['total_reg_dmg'] += damage
 
                         for item in 5, 8, 11:
-                            if isnum(object.item):
+                            if isnum(object[item]):
                                 amount = int(object[item].replace(',', ''))
                                 if item == 5:
                                     experience['health'] += amount
