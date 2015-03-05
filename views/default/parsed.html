@@ -67,7 +67,14 @@ $(function() {
 
 {{dotd_wiki = 'http://dotd.wikia.com/wiki/Special:Search?search='}}
 
-{{valid_data = experience['regular_hits']}}
+
+{{if not len(experience['user']):}}
+
+<div id="dataError" align="left">
+    <p>Apologies. The parser did not return any valid data. Please try copying and pasting your raid again.</p>
+</div>
+
+{{else:}}
 
 {{reg_hits = experience['regular_hits']}}
 {{crit_hits = experience['critical_hits']}}
@@ -356,3 +363,4 @@ var chart = c3.generate({
 
 
 </center>
+{{pass}}

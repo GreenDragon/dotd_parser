@@ -164,6 +164,7 @@ def parser(input):
             object = line.split()
 
             if len(object) >= 7:
+                experience['user'] = object[0]
                 biggest_hit_suns_mode = 1
 
                 # store damage dealt in hit_list history line #: damage
@@ -244,28 +245,30 @@ def parser(input):
             continue
 
         # If you made it this far, it's either an unknown log line, or garbage
+        syslog.syslog(line)
 
-    # find the biggest hit
-    biggest_hit = max(hit_list, key=hit_list.get)
+    if len(hit_list):
+        # find the biggest hit
+        biggest_hit = max(hit_list, key=hit_list.get)
 
-    # build out a history of biggest hit indexes
-    hit_indexes = []
-    for a in sorted(hit_list.keys()):
-        hit_indexes.append(a)
+        # build out a history of biggest hit indexes
+        hit_indexes = []
+        for a in sorted(hit_list.keys()):
+            hit_indexes.append(a)
 
-    # find the previous hit before the biggest hit, or just map the current hit
-    try:
-        previous_hit = hit_indexes[hit_indexes.index(biggest_hit) - 1]
-    except ValueError:
-        previous_hit = biggest_hit
+        # find the previous hit before the biggest hit, or just map the current hit
+        try:
+            previous_hit = hit_indexes[hit_indexes.index(biggest_hit) - 1]
+        except ValueError:
+            previous_hit = biggest_hit
 
-    # build out the last biggest hit history
-    if biggest_hit_suns_mode:
-        previous_hit = previous_hit + 1
-        biggest_hit = biggest_hit + 1
+        # build out the last biggest hit history
+        if biggest_hit_suns_mode:
+            previous_hit = previous_hit + 1
+            biggest_hit = biggest_hit + 1
 
-    for hits in range(previous_hit + 1, biggest_hit + 1):
-        max_hit.append(log_file[hits])
+        for hits in range(previous_hit + 1, biggest_hit + 1):
+            max_hit.append(log_file[hits])
 
     # close out syslog
     syslog.closelog()
