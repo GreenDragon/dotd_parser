@@ -1,4 +1,5 @@
 from __future__ import division
+from string import digits
 
 def percentage(x, y):
     if y == 0:
@@ -15,3 +16,10 @@ def commify(x):
         return format(x, ',.2f')
     else:
         return x
+
+
+def isnum(s):
+    if s.translate(None, digits).translate(None, ','):
+        return False
+    else:
+        return True

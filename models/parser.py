@@ -83,20 +83,24 @@ def parser(input):
                     restored_items[line] += 1
                 continue
             else:
-                for proc_name in proc_to_names:
-                    if object in proc_name:
-                        object = str(proc_name[object])
+                if isnum(amount.split()[0]):
+                    for proc_name in proc_to_names:
+                        if object in proc_name:
+                            object = str(proc_name[object])
 
-                amount = int(amount.split()[0].replace(',', ''))
+                    amount = int(amount.split()[0].replace(',', ''))
 
-                if not object in proc_items:
-                    proc_items[object] = {'count': 1, 'damage': amount}
+                    if not object in proc_items:
+                        proc_items[object] = {'count': 1, 'damage': amount}
+                    else:
+                        proc_items[object]['count'] += 1
+                        proc_items[object]['damage'] += amount
+
+                    experience['total_procs'] += 1
+                    experience['total_proc_dmg'] += amount
                 else:
-                    proc_items[object]['count'] += 1
-                    proc_items[object]['damage'] += amount
-
-                experience['total_procs'] += 1
-                experience['total_proc_dmg'] += amount
+                    syslog.syslog(line)
+                continue
 
         # Veritas dealt 44,309,515 damage! Lost 5 health. Earned 2,856 gold and 32 experience!
         # Veritas crit 173,145,219 damage! Lost 9 health. Earned 2,968 gold and 35 experience!
@@ -108,12 +112,16 @@ def parser(input):
             # is this LoTS? No credits in the DotD world
             if "credits" in line:
                 object = line.split()
+                if len(object) == 6:
                 for item in 1, 4:
-                    amount = int(object[item].replace(',', ''))
-                    if item == 1:
-                        experience['gold'] +=  amount
+                    if isnum(object.item):
+                        amount = int(object[item].replace(',', ''))
+                        if item == 1:
+                            experience['gold'] +=  amount
+                        else:
+                            experience['exp'] += amount
                     else:
-                        experience['exp'] += amount
+                        syslog.syslog(line)
             # DoTD mode
             else:
                 # watch out for: Take a Chance has granted you additional experience!
@@ -122,6 +130,44 @@ def parser(input):
                     experience['user'] = object[0]
 
                     # store damage dealt in hit_list history line #: damage
+                    if isnum(object[2]):
+                        damage = int(object[2].replace(',', ''))
+                        hit_list[num] = damage
+
+                        if "crit" in object[1]:
+                            experience['critical_hits'] += 1
+                            experience['total_crit_dmg'] += damage
+                        else:
+                            experience['regular_hits'] += 1
+                            experience['total_reg_dmg'] += damage
+
+                        for item in 5, 8, 11:
+                            if isnum(object.item):
+                                amount = int(object[item].replace(',', ''))
+                                if item == 5:
+                                    experience['health'] += amount
+                                elif item == 8:
+                                    experience['gold'] += amount
+                                else:
+                                    experience['exp'] += amount
+                            else:
+                                syslog.syslog(line)
+                    else:
+                        syslog.syslog(line)
+
+        # LoTS Mode
+        #
+        # KwanSai dealt 154,442,731 health damage! Lost 16 health.
+        # KwanSai crit 27,538,998 health damage! Lost 48 health.
+        #
+        if "health damage" in line:
+            object = line.split()
+
+            if len(object) >= 7:
+                biggest_hit_suns_mode = 1
+
+                # store damage dealt in hit_list history line #: damage
+                if isnum(object[2]):
                     damage = int(object[2].replace(',', ''))
                     hit_list[num] = damage
 
@@ -132,37 +178,16 @@ def parser(input):
                         experience['regular_hits'] += 1
                         experience['total_reg_dmg'] += damage
 
-                    for item in 5, 8, 11:
-                        amount = int(object[item].replace(',', ''))
-                        if item == 5:
-                            experience['health'] += amount
-                        elif item == 8:
-                            experience['gold'] += amount
-                        else:
-                            experience['exp'] += amount
-
-        # LoTS Mode
-        #
-        # KwanSai dealt 154,442,731 health damage! Lost 16 health.
-        # KwanSai crit 27,538,998 health damage! Lost 48 health.
-        #
-        if "health damage" in line:
-            object = line.split()
-
-            # store damage dealt in hit_list history line #: damage
-            damage = int(object[2].replace(',', ''))
-            hit_list[num] = damage
-
-            if "crit" in object[1]:
-                experience['critical_hits'] += 1
-                experience['total_crit_dmg'] += damage
+                    if isnum(object[6]):
+                        amount = int(object[6].replace(',', ''))
+                        experience['health'] += amount
+                    else:
+                        syslog.syslog(line)
+                else:
+                    syslog.syslog(line)
             else:
-                experience['regular_hits'] += 1
-                experience['total_reg_dmg'] += damage
-
-            amount = int(object[6].replace(',', ''))
-            experience['health'] += amount
-            biggest_hit_suns_mode = 1
+                syslog.syslog(line)
+            continue
 
         # Like a Book has restored some of your Health.
         # Tollo Darkgaze has restored 4 Honor.
