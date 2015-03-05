@@ -1,6 +1,9 @@
 import locale
+import syslog
 
 locale.setlocale(locale.LC_ALL, '')
+
+syslog.openlog(facility=syslog.LOG_USER)
 
 def parser(input):
     experience = {
@@ -44,6 +47,7 @@ def parser(input):
                 found_items[object] = 1
             else:
                 found_items[object] += 1
+            continue
 
         # You have obtained: Rage of Vigbjorn.
         #
@@ -55,6 +59,7 @@ def parser(input):
                 obtained_items[object] = 1
             else:
                 obtained_items[object] += 1
+            continue
 
         # Murder Sanctify (Steed) contributed 51,961,730 damage.
         #
@@ -76,6 +81,7 @@ def parser(input):
                     restored_items[line] = 1
                 else:
                     restored_items[line] += 1
+                continue
             else:
                 for proc_name in proc_to_names:
                     if object in proc_name:
@@ -98,6 +104,7 @@ def parser(input):
         # LoTS mode: Earned 10,406 credits and 29 experience!
         #
         if "experience!" in line:
+            # syslog.syslog('Something wicked this way went')
             # is this LoTS? No credits in the DotD world
             if "credits" in line:
                 object = line.split()
@@ -166,6 +173,7 @@ def parser(input):
                 restored_items[line] = 1
             else:
                 restored_items[line] += 1
+            continue
 
         # LoTS
         #
@@ -176,6 +184,7 @@ def parser(input):
                 restored_items[line] = 1
             else:
                 restored_items[line] += 1
+            continue
 
         # Crystal Sight affected boss damage.
         # Bladezz' Blades affected boss damage.
@@ -186,6 +195,7 @@ def parser(input):
                 affected_items[line] = 1
             else:
                 affected_items[line] += 1
+            continue
 
         # Master of Monsters has created a Steed of the Western Wold!
         #
@@ -195,15 +205,20 @@ def parser(input):
                 created_items[line] = 1
             else:
                 created_items[line] += 1
+            continue
 
         # Vigbjorn the Crazed says: "You believe me, Veritas, don't you? We'll hunt the blue yetis together!"
         #
         # nil
-        # if "says" in line:
+        if "says" in line:
+            continue
 
         # *DEV* Mouse applied Magic: Begone, Fiends!
         # *DEV* ryanSMASH applied Magic: Hell's Knell
-        # if "applied" in line:
+        if "applied" in line:
+            continue
+
+        # If you made it this far, it's either an unknown log line, or garbage
 
     # find the biggest hit
     biggest_hit = max(hit_list, key=hit_list.get)
@@ -226,6 +241,9 @@ def parser(input):
 
     for hits in range(previous_hit + 1, biggest_hit + 1):
         max_hit.append(log_file[hits])
+
+    # close out syslog
+    syslog.closelog()
 
     return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
            affected_items, created_items
