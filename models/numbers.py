@@ -5,8 +5,7 @@ def percentage(x, y):
     if y == 0:
         return "Divide/0 Error"
     else:
-        percentage = (float(x) / y) * 100
-    return format(percentage, ',.3f')
+        return commify( (float(x) / y) * 100)
 
 
 def commify(x):
@@ -23,3 +22,10 @@ def isnum(s):
         return False
     else:
         return True
+
+
+def safe_divide(x, y):
+    if y == 0:
+        return "Divide/0 Error"
+    else:
+        return commify( (float(x) / y) )

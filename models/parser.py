@@ -25,6 +25,7 @@ def parser(input):
     restored_items = {}
     affected_items = {}
     created_items = {}
+    triggered_items = {}
 
 
     max_hit = []
@@ -43,29 +44,27 @@ def parser(input):
         if "Found" in line:
             object = line.split('Found')[1][:-2]
 
-            if not object in found_items:
+            if object not in found_items:
                 found_items[object] = 1
             else:
                 found_items[object] += 1
-            continue
 
         # You have obtained: Rage of Vigbjorn.
         #
         # You have obtained: Orange Travel Journal.
-        if "obtained:" in line:
+        elif "obtained:" in line:
             object = line.split('obtained:')[1][:-2]
 
-            if not object in obtained_items:
+            if object not in obtained_items:
                 obtained_items[object] = 1
             else:
                 obtained_items[object] += 1
-            continue
 
         # Murder Sanctify (Steed) contributed 51,961,730 damage.
         #
         # Art of War contributed 3,618,250 damage.
         #
-        if "contributed" in line:
+        elif "contributed" in line:
             #
             # Evil! Take a Chance has contributed additional damage.
             # Evil! Take a Chance has contributed extra damage!
@@ -77,20 +76,19 @@ def parser(input):
 
             if amount in [ 'additional damage.', 'extra damage!', 'additional credits!' ]:
                 # Treat LoTS contributed events as DotD restored events
-                if not line in restored_items:
+                if line not in restored_items:
                     restored_items[line] = 1
                 else:
                     restored_items[line] += 1
-                continue
             else:
                 if isnum(amount.split()[0]):
                     for proc_name in proc_to_names:
                         if object in proc_name:
-                            object = str(proc_name[object])
+                            object = str(proc_name[object]) + ": " + object
 
                     amount = int(amount.split()[0].replace(',', ''))
 
-                    if not object in proc_items:
+                    if object not in proc_items:
                         proc_items[object] = {'count': 1, 'damage': amount}
                     else:
                         proc_items[object]['count'] += 1
@@ -100,19 +98,17 @@ def parser(input):
                     experience['total_proc_dmg'] += amount
                 else:
                     syslog.syslog(line)
-                continue
 
-        # Veritas dealt 44,309,515 damage! Lost 5 health. Earned 2,856 gold and 32 experience!
-        # Veritas crit 173,145,219 damage! Lost 9 health. Earned 2,968 gold and 35 experience!
         #
-        # LoTS mode: Earned 10,406 credits and 29 experience!
-        #
-        if "experience!" in line:
-            # syslog.syslog('Something wicked this way went')
-            # is this LoTS? No credits in the DotD world
+        elif "experience!" in line and "granted" not in line:
+            # Is this LoTS? No credits in the DotD world
+            #
+            # Earned 10,406 credits and 29 experience!
+            #
             if "credits" in line:
                 object = line.split()
-                if len(object) == 6:
+
+                if len(object) == 6 and object[0] == 'Earned':
                     for item in 1, 4:
                         if isnum(object[item]):
                             amount = int(object[item].replace(',', ''))
@@ -122,54 +118,61 @@ def parser(input):
                                 experience['exp'] += amount
                         else:
                             syslog.syslog(line)
-            # DoTD mode
+                else:
+                    syslog.syslog(line)
             else:
-                # watch out for: Take a Chance has granted you additional experience!
-                if not "has granted you" in line:
-                    object = line.split()
+                # DotD Mode
+                #
+                # Veritas dealt 44,309,515 damage! Lost 5 health. Earned 2,856 gold and 32 experience!
+                # Veritas crit 173,145,219 damage! Lost 9 health. Earned 2,968 gold and 35 experience!
+                #
+                object = line.split()
+
+                if isnum(object[2]):
                     experience['user'] = object[0]
 
+                    damage = int(object[2].replace(',', ''))
+
                     # store damage dealt in hit_list history line #: damage
-                    if isnum(object[2]):
-                        damage = int(object[2].replace(',', ''))
-                        hit_list[num] = damage
+                    hit_list[num] = damage
 
-                        if "crit" in object[1]:
-                            experience['critical_hits'] += 1
-                            experience['total_crit_dmg'] += damage
-                        else:
-                            experience['regular_hits'] += 1
-                            experience['total_reg_dmg'] += damage
-
-                        for item in 5, 8, 11:
-                            if isnum(object[item]):
-                                amount = int(object[item].replace(',', ''))
-                                if item == 5:
-                                    experience['health'] += amount
-                                elif item == 8:
-                                    experience['gold'] += amount
-                                else:
-                                    experience['exp'] += amount
-                            else:
-                                syslog.syslog(line)
+                    if "crit" in object[1]:
+                        experience['critical_hits'] += 1
+                        experience['total_crit_dmg'] += damage
                     else:
-                        syslog.syslog(line)
+                        experience['regular_hits'] += 1
+                        experience['total_reg_dmg'] += damage
+
+                    for item in 5, 8, 11:
+                        if isnum(object[item]):
+                            amount = int(object[item].replace(',', ''))
+                            if item == 5:
+                                experience['health'] += amount
+                            elif item == 8:
+                                experience['gold'] += amount
+                            else:
+                                experience['exp'] += amount
+                        else:
+                            syslog.syslog(line)
+                else:
+                    syslog.syslog(line)
 
         # LoTS Mode
         #
         # KwanSai dealt 154,442,731 health damage! Lost 16 health.
         # KwanSai crit 27,538,998 health damage! Lost 48 health.
         #
-        if "health damage" in line:
+        elif "health damage" in line:
             object = line.split()
 
             if len(object) >= 7:
                 experience['user'] = object[0]
                 biggest_hit_suns_mode = 1
 
-                # store damage dealt in hit_list history line #: damage
                 if isnum(object[2]):
                     damage = int(object[2].replace(',', ''))
+
+                    # store damage dealt in hit_list history line #: damage
                     hit_list[num] = damage
 
                     if "crit" in object[1]:
@@ -188,64 +191,121 @@ def parser(input):
                     syslog.syslog(line)
             else:
                 syslog.syslog(line)
-            continue
 
+        # DotD
+        #
         # Like a Book has restored some of your Health.
         # Tollo Darkgaze has restored 4 Honor.
         #
-        # nil
-        if "has restored" in line:
-            if not line in restored_items:
+        elif "has restored" in line:
+            if line not in restored_items:
                 restored_items[line] = 1
             else:
                 restored_items[line] += 1
-            continue
 
         # LoTS
         #
         # Take a Chance has granted you additional credits!
         # Take a Chance has granted you additional experience!
-        if "has granted you" in line:
-            if not line in restored_items:
+        #
+        elif "has granted you" in line:
+            if line not in restored_items:
                 restored_items[line] = 1
             else:
                 restored_items[line] += 1
-            continue
+
 
         # Crystal Sight affected boss damage.
         # Bladezz' Blades affected boss damage.
         #
         # nil
-        if "affected" in line:
-            if not line in affected_items:
+        elif "affected" in line:
+            if line not in affected_items:
                 affected_items[line] = 1
             else:
                 affected_items[line] += 1
-            continue
 
         # Master of Monsters has created a Steed of the Western Wold!
         #
         # Legacy Forge created a Immortal!
-        if "created" in line:
-            if not line in created_items:
+        elif "created" in line:
+            if line not in created_items:
                 created_items[line] = 1
             else:
                 created_items[line] += 1
-            continue
 
         # Vigbjorn the Crazed says: "You believe me, Veritas, don't you? We'll hunt the blue yetis together!"
         #
         # nil
-        if "says" in line:
-            continue
+        #elif "says" in line:
+        #    continue
 
         # *DEV* Mouse applied Magic: Begone, Fiends!
         # *DEV* ryanSMASH applied Magic: Hell's Knell
-        if "applied" in line:
-            continue
+        # Aura removed Magic: Blood Moon
+        #elif "applied" or "removed" in line:
+        #    continue
 
-        # If you made it this far, it's either an unknown log line, or garbage
-        syslog.syslog(line)
+        #
+        # Cooler than Being Cool (Crystal) has triggered a second attack!
+        # Haste has triggered a second attack for free!
+        elif "triggered" in line:
+            if line not in triggered_items:
+                triggered_items[line] = 1
+            else:
+                triggered_items[line] += 1
+
+        # Info from second attack proc?
+        # RikaStormwin dealt 11,590,546 damage!
+        # KwanSai dealt 123,063,260 damage!
+        elif "dealt" in line and "health" not in line:
+            object = line.split()
+
+            if len(object) == 4 and object[3] == 'damage!':
+                username = object[0].strip()
+                # this logic won't work until a second experience round comes along.
+                # need a better algorithm here
+                # oh well, 80-20 rules...
+                if username == experience['user']:
+                    if isnum(object[2]):
+                        damage = int(object[2].replace(',', ''))
+
+                        experience['regular_hits'] += 1
+                        experience['total_reg_dmg'] += damage
+                    else:
+                        syslog.syslog(line)
+                else:
+                    syslog.syslog(line)
+            else:
+                syslog.syslog(line)
+
+        # Info from second attack proc? or another user
+        # Ouryu crit 16,906,936 damage!
+        # MengaoLIGABR crit 68,156,584 damage!
+        elif "crit" in line and "health" not in line:
+            object = line.split()
+
+            if len(object) == 4 and object[3] == 'damage!':
+                username = object[0].strip()
+                # this logic won't work until a second experience round comes along.
+                # need a better algorithm here
+                # oh well, 80-20 rules...
+                if username == experience['user']:
+                    if isnum(object[2]):
+                        damage = int(object[2].replace(',', ''))
+
+                        experience['critical_hits'] += 1
+                        experience['total_crit_dmg'] += damage
+                    else:
+                        syslog.syslog(line)
+                else:
+                    syslog.syslog(line)
+            else:
+                syslog.syslog(line)
+
+        # If we made it this far, it's either an unknown log line, or garbage
+        else:
+            syslog.syslog(line)
 
     if len(hit_list):
         # find the biggest hit
@@ -274,4 +334,4 @@ def parser(input):
     syslog.closelog()
 
     return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
-           affected_items, created_items
+           affected_items, created_items, triggered_items

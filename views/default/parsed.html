@@ -1,4 +1,3 @@
-{{from __future__ import division}}
 {{extend 'layout.html'}}
 
 <script>
@@ -148,9 +147,9 @@ var chart = c3.generate({
             <td>{{=commify(base_damage)}}</td>
             <td>{{=commify(reg_hits)}}</td>
             <td>{{=commify(crit_hits)}}</td>
-            <td>{{=commify(percentage(crit_hits, total_hits))}} %</td>
+            <td>{{=percentage(crit_hits, total_hits)}} %</td>
             <td>{{=commify(tot_proc_count)}}</td>
-            <td>{{=commify((tot_proc_count / total_hits))}}</td>
+            <td>{{=safe_divide(tot_proc_count, total_hits)}}</td>
             <td>{{=commify(experience['exp'])}}</td>
             <td>{{=commify(experience['gold'])}}</td>
         </tr>
@@ -166,15 +165,17 @@ var chart = c3.generate({
         <li><a href="#restoredItemsTab">Restored</a></li>
         <li><a href="#affectedItemsTab">Affected</a></li>
         <li><a href="#createdItemsTab">Created</a></li>
+        <li><a href="#triggeredItemsTab">Triggered</a></li>
         <li><a href="#rawLogTab">Raw</a></li>
         <li><a href="#bbcodeTab">BBcode</a></li>
     </ul>
 
     <div id="mainTab">
+{{if len(proc_items):}}
         <div class="table"><table id="mainTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
-                    <th>Item</th>
+                    <th>Proc&#39;er: Proc Name</th>
                     <th>Proc Count</th>
                     <th>Proc/Hit Rate</th>
                     <th>Avg. DMG/Proc Rate</th>
@@ -188,16 +189,19 @@ var chart = c3.generate({
                 <tr>
                     <td>{{=item}}</a></td>
                     <td>{{=commify(proc_items[item]['count'])}}</td>
-                    <td>{{=commify(percentage(proc_items[item]['count'], total_hits))}}%</td>
-                    <td>{{=commify((proc_items[item]['damage'] / proc_items[item]['count']))}}</td>
-                    <td>{{=commify((proc_items[item]['damage'] / total_hits))}}</td>
+                    <td>{{=percentage(proc_items[item]['count'], total_hits)}} %</td>
+                    <td>{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'])}}</td>
+                    <td>{{=safe_divide(proc_items[item]['damage'], total_hits)}}</td>
                     <td>{{=commify(proc_items[item]['damage'])}}</td>
-                    <td>{{=commify(percentage(proc_items[item]['damage'], total_damage))}}%</td>
+                    <td>{{=percentage(proc_items[item]['damage'], total_damage)}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
         </table>
         </div>
+{{else:}}
+        <p>Nothing proc'ed during this run.</p>
+{{pass}}
     </div>
 
     <div id="bestHitTab" align=left>
@@ -207,10 +211,11 @@ var chart = c3.generate({
     </div>
 
     <div id="foundItemsTab" align="left">
+{{if len(found_items):}}
         <div class="table"><table id="foundItemsTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
-                    <th>Found Item Name</th>
+                    <th>Found Item</th>
                     <th>Count</th>
                     <th>Found/Hit Rate</th>
                 </tr>
@@ -220,20 +225,24 @@ var chart = c3.generate({
                 <tr>
                     <td>{{=key}}</td>
                     <td>{{=commify(value)}}</td>
-                    <td>{{=commify(percentage(value, total_hits))}} %</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
         </table>
         </div>
+{{else:}}
+        <p>Nothing was found during this run.</p>
+{{pass}}
     </div>
 
 
     <div id="obtainedItemsTab" align="left">
+{{if len(obtained_items):}}
         <div class="table"><table id="obtainedTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
-                    <th>Obtained Item Name</th>
+                    <th>Obtained Item</th>
                     <th>Count</th>
                     <th>Obtained/Hit Rate</th>
                 </tr>
@@ -243,19 +252,23 @@ var chart = c3.generate({
                 <tr>
                     <td>{{=key}}</td>
                     <td>{{=commify(value)}}</td>
-                    <td>{{=commify(percentage(value, total_hits))}} %</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
         </table>
         </div>
+{{else:}}
+        <p>Nothing was obtained during this run.</p>
+{{pass}}
     </div>
 
     <div id="restoredItemsTab" align="left">
+{{if len(restored_items):}}
         <div class="table"><table id="restoredTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
-                    <th>Restored Item Name</th>
+                    <th>Restored/Granted Event</th>
                     <th>Count</th>
                     <th>Restored/Hit Rate</th>
                 </tr>
@@ -265,19 +278,23 @@ var chart = c3.generate({
                 <tr>
                     <td>{{=key}}</td>
                     <td>{{=commify(value)}}</td>
-                    <td>{{=commify(percentage(value, total_hits))}} %</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
         </table>
         </div>
+{{else:}}
+        <p>Nothing was restored or granted during this run.</p>
+{{pass}}
     </div>
 
     <div id="affectedItemsTab" align="left">
+{{if len(affected_items):}}
         <div class="table"><table id="affectedTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
-                    <th>Affected Item Name</th>
+                    <th>Affected Event</th>
                     <th>Count</th>
                     <th>Affected/Hit Rate</th>
                 </tr>
@@ -287,19 +304,23 @@ var chart = c3.generate({
                 <tr>
                     <td>{{=key}}</td>
                     <td>{{=commify(value)}}</td>
-                    <td>{{=commify(percentage(value, total_hits))}} %</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
         </table>
         </div>
+{{else:}}
+        <p>Nothing was affected during this run.</p>
+{{pass}}
     </div>
 
     <div id="createdItemsTab" align="left">
+{{if len(created_items):}}
         <div class="table"><table id="createdTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
-                    <th>Created Item Name</th>
+                    <th>Created Event</th>
                     <th>Count</th>
                     <th>Created/Hit Rate</th>
                 </tr>
@@ -309,12 +330,41 @@ var chart = c3.generate({
                 <tr>
                     <td>{{=key}}</td>
                     <td>{{=commify(value)}}</td>
-                    <td>{{=commify(percentage(value, total_hits))}} %</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
         </table>
         </div>
+{{else:}}
+        <p>Nothing was created during this run.</p>
+{{pass}}
+    </div>
+
+    <div id="triggeredItemsTab" align="left">
+{{if len(triggered_items):}}
+        <div class="table"><table id="triggeredTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+            <thead>
+                <tr>
+                    <th>Triggered Event</th>
+                    <th>Count</th>
+                    <th>Triggered/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in triggered_items.iteritems():}}
+                <tr>
+                    <td>{{=key}}</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+        </table>
+        </div>
+{{else:}}
+        <p>Nothing triggered during this run.</p>
+{{pass}}
     </div>
 
     <div id="rawLogTab" align="left">
@@ -324,6 +374,7 @@ var chart = c3.generate({
     </div>
 
     <div id="bbcodeTab" align=left>
+{{if len(proc_items):}}
         <pre>
             [TABLE="class: grid, width: 800"]
                 [tr]
@@ -352,15 +403,19 @@ var chart = c3.generate({
                     [td]{{=item}}[/td]
                     [td]{{=commify(proc_items[item]['count'])}}[/td]
                     [td]{{=commify(proc_items[item]['damage'])}}[/td]
-                    [td]{{=commify(percentage(proc_items[item]['count'], total_hits))}}%[/td]
+                    [td]{{=percentage(proc_items[item]['count'], total_hits)}} %[/td]
                 [/tr]
                 {{pass}}
             [/table]
         </pre>
+{{else:}}
+        <p>Nothing proc'ed during this run.</p>
+{{pass}}
     </div>
 
 </div>
 
 
 </center>
+
 {{pass}}
