@@ -5,3 +5,6 @@
 
 * [UgUp API Borked]
   * Weapon Procs from LoTS missing translation tables from UgUp
+
+* [Parser]
+  * Biggest Hit doesn't display when it's the first one
