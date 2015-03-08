@@ -3,6 +3,7 @@
 BASE="http://ugup.5thplanetgames.com/api/"
 SLEEP=5
 SECRETS_FILE=~/.ugup.secrets
+DATA="data"
 
 exit_with_error () {
   echo
@@ -46,15 +47,15 @@ get_url () {
   # ITEM=$1, PLATFORM=$2, GAME=$3
   URL="${BASE}${1}/definition/all?apikey=${API_KEY}&platform=${2}&game=${3}"
   echo "Working on URL: ${URL}"
-  curl -o ${2}/${3}/${1}.${2}.${3}.json "${URL}"
+  curl -o ${DATA}/${2}/${3}/${1}.${2}.${3}.json "${URL}"
   echo "Sleeping for ${SLEEP} seconds..."
   sleep ${SLEEP}
 }
 
 for platform in kongregate armor facebook newgrounds; do
   for game in dawn suns; do
-    if [ ! -d ${platform}/${game} ]; then 
-      mkdir -p ${platform}/${game}
+    if [ ! -d ${DATA}/${platform}/${game} ]; then
+      mkdir -p ${DATA}/${platform}/${game}
     fi
     get_url "equipment"   "${platform}" "${game}"
     get_url "mount"       "${platform}" "${game}"

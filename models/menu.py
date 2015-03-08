@@ -12,7 +12,7 @@ response.subtitle = 'DotD/LoTS Raid Log Analyzer'
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
 response.meta.author = 'Green Dragon Systems'
-response.meta.keywords = 'Dawn of the Dragons, Legacy of a Thousand Suns, Raid Log Analyzer, 5th Planet Games'
+response.meta.keywords = 'Dawn of the Dragons, Legacy of a Thousand Suns, Raid Log Analyzer, Raid Log Parser, DotD Log Parser, DotD Log Analyzer, LoTS Log Parser, LoTS Log Analyzer, 5th Planet Games'
 response.meta.generator = 'Web2py Web Framework'
 
 ## your http://google.com/analytics id

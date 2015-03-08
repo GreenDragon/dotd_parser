@@ -2,70 +2,62 @@
 
 <script>
 $(document).ready(function() {
-    $.tablesorter.addParser({
-        id: "Comma_number",
-        is: function(s) {
-            return false;
-        },
-        format: function(s) {
-            return s.replace(/,/g,'');
-        },
-        type: 'numeric'
-    });
-
-    $("#totalsTable").tablesorter();
-
-    $("#mainTable").tablesorter({
-        headers: {
-            1: {sorter: 'Comma_number'},
-            3: {sorter: 'Comma_number'},
-            4: {sorter: 'Comma_number'},
-            5: {sorter: 'Comma_number'}
-        }
-    });
-
-    $("#foundItemsTable").tablesorter({
-        headers: {
-            1: {sorter: 'Comma_number'}
-        }
-    });
-
-    $("#obtainedTable").tablesorter({
-		headers: {
-			1: {sorter: 'Comma_number'}
-		}
-	});
-
-    $("#restoredTable").tablesorter({
-		headers: {
-			1: {sorter: 'Comma_number'}
-		}
-	});
-
-    $("#affectedTable").tablesorter({
-		headers: {
-			1: {sorter: 'Comma_number'}
-		}
-	});
-
-    $("#createdTable").tablesorter({
-		headers: {
-			1: {sorter: 'Comma_number'}
-		}
-	});
-    }
-);
+    $("#procsTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[5, "desc" ]],
+        dom:      'T<"clear">lfrtip'
+    } );
+    $("#foundTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[0, "asc" ]],
+    } );
+    $("#obtainedTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[0, "asc" ]],
+    } );
+    $("#restoredTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[0, "asc" ]],
+    } );
+    $("#affectedTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[0, "asc" ]],
+    } );
+    $("#createdTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[0, "asc" ]],
+    } );
+    $("#rantsTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[0, "asc" ]],
+    } );
+    $("#magicsTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[0, "asc" ]],
+    } );
+    $("#triggeredTable").dataTable( {
+        "paging": false,
+        "info":   false,
+        "order":  [[0, "asc" ]],
+    } );
+} );
 </script>
 
 <script>
 $(function() {
-    $( "#tabs" ).tabs({collapsible: true});
-	
+    $("#tabs").tabs();
 });
 </script>
 
 {{dotd_wiki = 'http://dotd.wikia.com/wiki/Special:Search?search='}}
-
 
 {{if not len(experience['user']):}}
 
@@ -89,7 +81,7 @@ $(function() {
 {{total_damage = tot_reg_dmg + tot_crit_dmg}}
 {{base_damage = total_damage - tot_proc_dmg}}
 
-<div id="chart"></div>
+<div id="chart" style="height: 200px; width:640px;"></div>
 <script>
 var chart = c3.generate({
     bindto: '#chart',
@@ -100,26 +92,26 @@ var chart = c3.generate({
                 ['Regular Damage', {{=tot_reg_dmg}} ],
                 ['Critical Damage', {{=tot_crit_dmg}} ]
             ],
-            type : 'bar',
+            type: 'bar',
             groups: [
                 ['Base Damage', 'Proc Damage'],
                 ['Regular Damage','Critical Damage']
             ],
-            order: null
+            order: null,
         },
-        axis : {
-            y : {
-                tick : {
+        axis: {
+            y: {
+                tick: {
                     format: d3.format(',')
                 }
             }
-        }
+        },
 });
 </script>
 
 
 <center>
-<table id="totalsTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<table id="totalsTable" class="display" border="0" cellpadding="0" cellspacing="1">
     <thead>
         <tr>
             <th>Total Hits</th>
@@ -158,36 +150,39 @@ var chart = c3.generate({
 
 <div id="tabs">
     <ul>
-        <li><a href="#mainTab">Procs</a></li>
+        <li><a href="#procsTab">Procs</a></li>
         <li><a href="#bestHitTab">Best Hit</a></li>
         <li><a href="#foundItemsTab">Found</a></li>
         <li><a href="#obtainedItemsTab">Obtained</a></li>
         <li><a href="#restoredItemsTab">Restored</a></li>
         <li><a href="#affectedItemsTab">Affected</a></li>
         <li><a href="#createdItemsTab">Created</a></li>
-        <li><a href="#triggeredItemsTab">Triggered</a></li>
-        <li><a href="#rawLogTab">Raw</a></li>
+        <li><a href="#rantsTab">Rants</a></li>
+        <li><a href="#magicsTab">Magics</a></li>
+        <li><a href="#triggeredTab">Triggered</a></li>
+        <li><a href="#hitListTab">Hit List</a></li>
+        <li><a href="#logTab">Raw</a></li>
         <li><a href="#bbcodeTab">BBcode</a></li>
     </ul>
 
-    <div id="mainTab">
+    <div id="procsTab">
 {{if len(proc_items):}}
-        <div class="table"><table id="mainTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+        <div class="table"><table id="procsTable" class="display" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
                     <th>Proc&#39;er: Proc Name</th>
                     <th>Proc Count</th>
                     <th>Proc/Hit Rate</th>
-                    <th>Avg. DMG/Proc Rate</th>
-                    <th>Avg. DMG/Hit Rate</th>
+                    <th>Avg. DMG/Proc</th>
+                    <th>Avg. DMG/Hit</th>
                     <th>Total DMG</th>
-                    <th>Proc DMG/Total DMG Rate</th>
+                    <th>Proc/Total DMG Rate</th>
                    </tr>
             </thead>
             <tbody>
                 {{for item,value in proc_items.iteritems():}}
                 <tr>
-                    <td>{{=item}}</a></td>
+                    <td>{{=item}}</td>
                     <td>{{=commify(proc_items[item]['count'])}}</td>
                     <td>{{=percentage(proc_items[item]['count'], total_hits)}} %</td>
                     <td>{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'])}}</td>
@@ -212,7 +207,7 @@ var chart = c3.generate({
 
     <div id="foundItemsTab" align="left">
 {{if len(found_items):}}
-        <div class="table"><table id="foundItemsTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+        <div class="table"><table id="foundTable" class="display" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
                     <th>Found Item</th>
@@ -236,10 +231,9 @@ var chart = c3.generate({
 {{pass}}
     </div>
 
-
     <div id="obtainedItemsTab" align="left">
 {{if len(obtained_items):}}
-        <div class="table"><table id="obtainedTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+        <div class="table"><table id="obtainedTable" class="display" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
                     <th>Obtained Item</th>
@@ -265,7 +259,7 @@ var chart = c3.generate({
 
     <div id="restoredItemsTab" align="left">
 {{if len(restored_items):}}
-        <div class="table"><table id="restoredTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+        <div class="table"><table id="restoredTable" class="display" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
                     <th>Restored/Granted Event</th>
@@ -291,7 +285,7 @@ var chart = c3.generate({
 
     <div id="affectedItemsTab" align="left">
 {{if len(affected_items):}}
-        <div class="table"><table id="affectedTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+        <div class="table"><table id="affectedTable" class="display" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
                     <th>Affected Event</th>
@@ -317,7 +311,7 @@ var chart = c3.generate({
 
     <div id="createdItemsTab" align="left">
 {{if len(created_items):}}
-        <div class="table"><table id="createdTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+        <div class="table"><table id="createdTable" class="display" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
                     <th>Created Event</th>
@@ -341,9 +335,61 @@ var chart = c3.generate({
 {{pass}}
     </div>
 
-    <div id="triggeredItemsTab" align="left">
+    <div id="rantsTab" align="left">
+{{if len(rant_items):}}
+        <div class="table"><table id="rantsTable" class="display" border="0" cellpadding="0" cellspacing="1">
+            <thead>
+                <tr>
+                    <th>Rants Overheard</th>
+                    <th>Count</th>
+                    <th>Rant Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in rant_items.iteritems():}}
+                <tr>
+                    <td>{{=key}}</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+        </table>
+        </div>
+{{else:}}
+        <p>No rants were heard on this run.</p>
+{{pass}}
+    </div>
+
+    <div id="magicsTab" align="left">
+{{if len(magic_items):}}
+        <div class="table"><table id="magicsTable" class="display" border="0" cellpadding="0" cellspacing="1">
+            <thead>
+                <tr>
+                    <th>Magic/Tactic Event</th>
+                    <th>Count</th>
+                    <th>Magic/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in magic_items.iteritems():}}
+                <tr>
+                    <td>{{=key}}</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+        </table>
+        </div>
+{{else:}}
+        <p>No magics or tactics cast/dispelled during this run.</p>
+{{pass}}
+    </div>
+
+    <div id="triggeredTab" align="left">
 {{if len(triggered_items):}}
-        <div class="table"><table id="triggeredTable" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+        <div class="table"><table id="triggeredTable" class="display" border="0" cellpadding="0" cellspacing="1">
             <thead>
                 <tr>
                     <th>Triggered Event</th>
@@ -367,50 +413,84 @@ var chart = c3.generate({
 {{pass}}
     </div>
 
-    <div id="rawLogTab" align="left">
+    <div id="hitListTab" align="left">
+{{if len(hit_list):}}
+        {{for hit in sorted(hit_list.keys()):}}
+        Log Line [{{=hit}}]: {{=log_file[hit]}}<br>
+        {{pass}}
+{{else:}}
+        <p>Error: Expected a list of hits...</p>
+{{pass}}
+    </div>
+
+    <div id="logTab" align="left">
+{{if len(log_file):}}
         {{for log in log_file:}}
         {{=log}}<br>
         {{pass}}
+{{else:}}
+        <p>Error: Expected log_file array...</p>
+{{pass}}
     </div>
 
     <div id="bbcodeTab" align=left>
-{{if len(proc_items):}}
         <pre>
-            [TABLE="class: grid, width: 800"]
-                [tr]
-                    [td]Total Hits[/td]
-                    [td]Total Reg Hits[/td]
-                    [td]Total Critical Hits[/td]
-                    [td]Total Procs[/td]
-                [/tr]
-                [tr]
-                    [td]{{=commify(total_hits)}}[/td]
-                    [td]{{=commify(reg_hits)}}[/td]
-                    [td]{{=commify(crit_hits)}}[/td]
-                    [td]{{=commify(tot_proc_count)}}[/td]
-                [/tr]
-            [/table]
-            [TABLE="class: grid, width: 800"]
-                [tr]
-                    [td]Item[/td]
-                    [td]Proc Count[/td]
-                    [td]Proc Damage[/td]
-                    [td]Proc/Hit Rate[/td]
-                [/tr]
 
-                {{for item,value in proc_items.iteritems():}}
-                [tr]
-                    [td]{{=item}}[/td]
-                    [td]{{=commify(proc_items[item]['count'])}}[/td]
-                    [td]{{=commify(proc_items[item]['damage'])}}[/td]
-                    [td]{{=percentage(proc_items[item]['count'], total_hits)}} %[/td]
-                [/tr]
-                {{pass}}
-            [/table]
-        </pre>
+[TABLE="class: grid, width: 800"]
+    [TR]
+        [TD]Total Hits[/TD]
+        [TD]Total DMG[/TD]
+        [TD]Regular DMG[/TD]
+        [TD]Crit DMG[/TD]
+        [TD]Proc DMG[/TD]
+        [TD]Base DMG[/TD]
+        [TD]Reg Hits[/TD]
+        [TD]Crit Hits[/TD]
+        [TD]Crit Rate[/TD]
+        [TD]Procs[/TD]
+        [TD]Procs/Hit[/TD]
+        [TD]Total XP[/TD]
+        [TD]Gold Gained[/TD]
+    [TR]
+    [TR]
+        [TD]{{=commify(total_hits)}}[/TD]
+        [TD]{{=commify(total_damage)}}[/TD]
+        [TD]{{=commify(tot_reg_dmg)}}[/TD]
+        [TD]{{=commify(tot_crit_dmg)}}[/TD]
+        [TD]{{=commify(tot_proc_dmg)}}[/TD]
+        [TD]{{=commify(base_damage)}}[/TD]
+        [TD]{{=commify(reg_hits)}}[/TD]
+        [TD]{{=commify(crit_hits)}}[/TD]
+        [TD]{{=percentage(crit_hits, total_hits)}} %[/TD]
+        [TD]{{=commify(tot_proc_count)}}[/TD]
+        [TD]{{=safe_divide(tot_proc_count, total_hits)}}[/TD]
+        [TD]{{=commify(experience['exp'])}}[/TD]
+        [TD]{{=commify(experience['gold'])}}[/TD]
+    [TR]
+[/TABLE]
+
+{{if len(proc_items):}}
+[TABLE="class: grid, width: 800"]
+    [TR]
+        [TD]Item[/TD]
+        [TD]Proc Count[/TD]
+        [TD]Proc Damage[/TD]
+        [TD]Proc/Hit Rate[/TD]
+    [/TR]
+
+    {{for item,value in proc_items.iteritems():}}
+    [TR]
+        [TD]{{=item}}[/td]
+        [TD]{{=commify(proc_items[item]['count'])}}[/TD]
+        [TD]{{=commify(proc_items[item]['damage'])}}[/TD]
+        [TD]{{=percentage(proc_items[item]['count'], total_hits)}} %[/TD]
+    [/TR]
+    {{pass}}
+[/TABLE]
 {{else:}}
         <p>Nothing proc'ed during this run.</p>
 {{pass}}
+        </pre>
     </div>
 
 </div>

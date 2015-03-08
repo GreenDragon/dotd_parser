@@ -6,10 +6,8 @@ errors
 sessions
 private
 uploads
-# 
-utils/get_base_data_sets/armor/
-utils/get_base_data_sets/facebook/
-utils/get_base_data_sets/kongregate/
-utils/get_base_data_sets/newgrounds/
+#
+tests/logs/ 
+utils/get_base_data_sets/data/
 #
 .idea/

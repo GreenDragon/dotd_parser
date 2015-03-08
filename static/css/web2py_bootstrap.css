@@ -118,11 +118,14 @@ td.w2p_fl,td.w2p_fc {padding:0;}
 ==============================================================*/
 
 /* because web2py handles this via js */
-textarea { width:90%}
+textarea { 
+  width: 90%;
+  width: 500px;
+}
 .hidden{visibility:visible;}
 /* right folder for bootstrap black images/icons */
 [class^="icon-"],[class*=" icon-"]{
-  background-image:url("../images/glyphicons-halflings.png")
+  background-image:url("/dotd_parser/static/images/glyphicons-halflings.png")
 }
 /* right folder for bootstrap white images/icons */
 .icon-white,
@@ -138,7 +141,7 @@ textarea { width:90%}
 .dropdown-menu > li > a:hover > [class*=" icon-"],
 .dropdown-menu > .active > a > [class^="icon-"],
 .dropdown-menu > .active > a > [class*=" icon-"] {
-  background-image:url("../images/glyphicons-halflings-white.png");
+  background-image:url("/dotd_parser/static/images/glyphicons-halflings-white.png");
 }
 /* bootstrap has a label as input's wrapper while web2py has a div */
 div>input[type="radio"],div>input[type="checkbox"]{margin:0;}

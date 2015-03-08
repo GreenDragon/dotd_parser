@@ -25,6 +25,8 @@ def parser(input):
     restored_items = {}
     affected_items = {}
     created_items = {}
+    rant_items = {}
+    magic_items = {}
     triggered_items = {}
 
 
@@ -237,16 +239,21 @@ def parser(input):
         # Vigbjorn the Crazed says: "You believe me, Veritas, don't you? We'll hunt the blue yetis together!"
         #
         # nil
-        #elif "says" in line:
-        #    continue
+        elif "says" in line:
+            if line not in rant_items:
+                rant_items[line] = 1
+            else:
+                rant_items[line] += 1
 
         # *DEV* Mouse applied Magic: Begone, Fiends!
         # *DEV* ryanSMASH applied Magic: Hell's Knell
         # Aura removed Magic: Blood Moon
-        #elif "applied" or "removed" in line:
-        #    continue
+        elif "applied" in line or "removed" in line:
+            if line not in magic_items:
+                magic_items[line] = 1
+            else:
+                magic_items[line] += 1
 
-        #
         # Cooler than Being Cool (Crystal) has triggered a second attack!
         # Haste has triggered a second attack for free!
         elif "triggered" in line:
@@ -334,4 +341,4 @@ def parser(input):
     syslog.closelog()
 
     return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
-           affected_items, created_items, triggered_items
+           affected_items, created_items, rant_items, magic_items, triggered_items
