@@ -63,6 +63,14 @@ $(function() {
 
 <div id="dataError" align="left">
     <p>Apologies. The parser did not return any valid data. Please try copying and pasting your raid again.</p>
+
+{{if len(log_file):}}
+    <p>Here is what you have entered:</p>
+    <p>&nbsp;</p>
+    {{for log in log_file:}}
+    {{=log}}<br>
+    {{pass}}
+{{pass}}
 </div>
 
 {{else:}}
