@@ -326,8 +326,8 @@ def parser(input):
         # find the previous hit before the biggest hit, or just map the current hit
         try:
             previous_hit = hit_indexes[(hit_indexes.index(biggest_hit) - 1)]
-            # it may be the first hit was the biggest
-            if previous_hit > biggest_hit:
+            # it may be the first hit was the biggest, or it was the only hit
+            if previous_hit >= biggest_hit:
                 if biggest_hit_suns_mode:
                     previous_hit = -1
                 else:
