@@ -316,32 +316,32 @@ def parser(input):
 
     if len(hit_list):
         # find the biggest hit
-        biggest_hit = max(hit_list, key=hit_list.get)
+        biggest_hit_idx = max(hit_list, key=hit_list.get)
 
-        # build out a history of biggest hit indexes
+        # build out a history of hit indexes
         hit_indexes = []
-        for a in sorted(hit_list.keys()):
-            hit_indexes.append(a)
+        hit_indexes = sorted(hit_list.keys())
 
         # find the previous hit before the biggest hit, or just map the current hit
-        try:
-            previous_hit = hit_indexes[(hit_indexes.index(biggest_hit) - 1)]
-            # it may be the first hit was the biggest, or it was the only hit
-            if previous_hit >= biggest_hit:
-                if biggest_hit_suns_mode:
-                    previous_hit = -1
-                else:
-                    previous_hit = 0
-        except ValueError:
-            previous_hit = biggest_hit
+        previous_hit_idx = hit_indexes[(hit_indexes.index(biggest_hit_idx) - 1)]
 
-        # build out the last biggest hit history
+        # it may be the first hit was the biggest, or it was the only hit
+        if previous_hit_idx >= biggest_hit_idx:
+            previous_hit_idx = 0
+
+        # determine indexes for the biggest hit history
         if biggest_hit_suns_mode:
-            previous_hit = previous_hit + 1
-            biggest_hit = biggest_hit + 1
+            biggest_hit_idx += 1
+            if previous_hit_idx != 0:
+                previous_hit_idx += 2
+        elif previous_hit_idx != 0:
+            previous_hit_idx += 1
 
-        for hits in range(previous_hit + 1, biggest_hit + 1):
-            max_hit.append(log_file[hits])
+        for hits in range(previous_hit_idx, biggest_hit_idx + 1):
+            try:
+                max_hit.append(log_file[hits])
+            except IndexError:
+                syslog.syslog("Expected one more line from the log file")
 
     # close out syslog
     syslog.closelog()

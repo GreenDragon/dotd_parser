@@ -208,9 +208,13 @@ var chart = c3.generate({
     </div>
 
     <div id="bestHitTab" align=left>
+    {{if len(max_hit):}}
         {{for item in max_hit:}}
         {{=item}}<br>
         {{pass}}
+    {{else:}}
+        <p>Unable to parse biggest hit from logs.</p>
+    {{pass}}
     </div>
 
     <div id="foundItemsTab" align="left">
@@ -424,7 +428,7 @@ var chart = c3.generate({
     <div id="hitListTab" align="left">
 {{if len(hit_list):}}
         {{for hit in sorted(hit_list.keys()):}}
-        Log Line [{{=hit}}]: {{=log_file[hit]}}<br>
+        Log Line [{{=hit+1}}]: {{=log_file[hit]}}<br>
         {{pass}}
 {{else:}}
         <p>Error: Expected a list of hits...</p>
