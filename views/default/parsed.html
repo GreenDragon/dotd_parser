@@ -57,8 +57,6 @@ $(function() {
 });
 </script>
 
-{{dotd_wiki = 'http://dotd.wikia.com/wiki/Special:Search?search='}}
-
 {{if not len(experience['user']):}}
 
 <div id="dataError" align="left">
@@ -190,7 +188,7 @@ var chart = c3.generate({
             <tbody>
                 {{for item,value in proc_items.iteritems():}}
                 <tr>
-                    <td>{{=item}}</td>
+                    <td><a href="{{=gen_wiki_url(item, log_suns_mode)}}" target="_blank">{{=item}}</a></td>
                     <td>{{=commify(proc_items[item]['count'])}}</td>
                     <td>{{=percentage(proc_items[item]['count'], total_hits)}} %</td>
                     <td>{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'])}}</td>

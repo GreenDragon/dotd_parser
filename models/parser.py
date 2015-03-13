@@ -32,7 +32,7 @@ def parser(input):
 
     max_hit = []
     hit_list = {}
-    biggest_hit_suns_mode = 0
+    log_suns_mode = 0
 
     proc_to_names = load_proc_to_names()
 
@@ -169,7 +169,7 @@ def parser(input):
 
             if len(object) >= 7:
                 experience['user'] = object[0]
-                biggest_hit_suns_mode = 1
+                log_suns_mode = 1
 
                 if isnum(object[2]):
                     damage = int(object[2].replace(',', ''))
@@ -330,7 +330,7 @@ def parser(input):
             previous_hit_idx = 0
 
         # determine indexes for the biggest hit history
-        if biggest_hit_suns_mode:
+        if log_suns_mode:
             biggest_hit_idx += 1
             if previous_hit_idx != 0:
                 previous_hit_idx += 2
@@ -347,4 +347,4 @@ def parser(input):
     syslog.closelog()
 
     return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
-           affected_items, created_items, rant_items, magic_items, triggered_items
+           affected_items, created_items, rant_items, magic_items, triggered_items, log_suns_mode

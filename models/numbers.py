@@ -1,5 +1,6 @@
 from __future__ import division
 from string import digits
+import urllib
 
 def percentage(x, y):
     if y == 0:
@@ -29,3 +30,12 @@ def safe_divide(x, y):
         return "Divide/0 Error"
     else:
         return commify( (float(x) / y) )
+
+
+def gen_wiki_url(proc_name, suns_mode):
+    dotd_wiki = 'http://dotd.wikia.com/wiki/Special:Search?search='
+    lots_wiki = 'http://zoywiki.com/index.php?search=LotS+'
+    if suns_mode:
+        return lots_wiki + str(urllib.quote_plus(proc_name)) + '&button=&title=Special%3ASearch'
+    else:
+        return dotd_wiki + str(urllib.quote_plus(proc_name)) + '&fulltext=Search'
