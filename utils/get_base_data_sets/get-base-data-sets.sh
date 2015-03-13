@@ -52,7 +52,7 @@ get_url () {
   sleep ${SLEEP}
 }
 
-for platform in kongregate armor facebook newgrounds; do
+for platform in facebook kongregate armor newgrounds; do
   for game in dawn suns; do
     if [ ! -d ${DATA}/${platform}/${game} ]; then
       mkdir -p ${DATA}/${platform}/${game}
@@ -71,5 +71,6 @@ for platform in kongregate armor facebook newgrounds; do
     get_url "pet"         "${platform}" "${game}"
     get_url "recipe"      "${platform}" "${game}"
     get_url "achievement" "${platform}" "${game}"
+    get_url "engineering" "${platform}" "${game}"
   done
 done

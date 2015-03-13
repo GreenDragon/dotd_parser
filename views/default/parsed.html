@@ -228,7 +228,7 @@ var chart = c3.generate({
             <tbody>
                 {{for key,value in found_items.iteritems():}}
                 <tr>
-                    <td>{{=key}}</td>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
                     <td>{{=commify(value)}}</td>
                     <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
@@ -254,7 +254,7 @@ var chart = c3.generate({
             <tbody>
                 {{for key,value in obtained_items.iteritems():}}
                 <tr>
-                    <td>{{=key}}</td>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
                     <td>{{=commify(value)}}</td>
                     <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
@@ -280,7 +280,7 @@ var chart = c3.generate({
             <tbody>
                 {{for key,value in restored_items.iteritems():}}
                 <tr>
-                    <td>{{=key}}</td>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
                     <td>{{=commify(value)}}</td>
                     <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
@@ -306,7 +306,7 @@ var chart = c3.generate({
             <tbody>
                 {{for key,value in affected_items.iteritems():}}
                 <tr>
-                    <td>{{=key}}</td>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
                     <td>{{=commify(value)}}</td>
                     <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
@@ -332,7 +332,7 @@ var chart = c3.generate({
             <tbody>
                 {{for key,value in created_items.iteritems():}}
                 <tr>
-                    <td>{{=key}}</td>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
                     <td>{{=commify(value)}}</td>
                     <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
@@ -358,7 +358,7 @@ var chart = c3.generate({
             <tbody>
                 {{for key,value in rant_items.iteritems():}}
                 <tr>
-                    <td>{{=key}}</td>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
                     <td>{{=commify(value)}}</td>
                     <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>
@@ -410,7 +410,7 @@ var chart = c3.generate({
             <tbody>
                 {{for key,value in triggered_items.iteritems():}}
                 <tr>
-                    <td>{{=key}}</td>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
                     <td>{{=commify(value)}}</td>
                     <td>{{=percentage(value, total_hits)}} %</td>
                 </tr>

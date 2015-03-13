@@ -356,6 +356,21 @@ db.define_table('suns_troops',
                 Field('proc_desc', 'text'),
 )
 
+# Unique to suns
+
+db.define_table('suns_engineering',
+                Field('name', 'string'),
+                Field('attack', 'integer'),
+                Field('defense', 'integer'),
+                Field('engineering', 'integer'),
+                Field('value_credits', 'integer'),
+                Field('isUnique', 'integer'),
+                Field('lore', 'text'),
+                Field('proc_name', 'string'),
+                Field('proc_desc', 'text'),
+                Field('bonus', 'json'),
+)
+
 ## after defining tables, uncomment below to enable auditing
 # Maybe not quite yet, I don't think we need to track all record changes yet
 # auth.enable_record_versioning(db)

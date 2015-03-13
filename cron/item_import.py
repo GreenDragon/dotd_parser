@@ -215,6 +215,27 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
+            if table in ['suns_engineering']:
+                attack = int(item['attack'])
+                defense = int(item['defense'])
+                engineering = int(item['engineering'])
+                value_credits = int(item['value_credits'])
+                isUnique = int(item['unique'])
+                lore = re.escape(item['lore'].strip())
+                bonus = re.escape(json.dumps(item['bonus']))
+
+                sql = "INSERT INTO %s ( id, name, attack, defense, engineering, value_credits, isUnique, lore, \
+                       proc_name, proc_desc, bonus ) \
+                       VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) \
+                       ON DUPLICATE KEY UPDATE name='%s', attack='%s', defense='%s', engineering='%s', \
+                       value_credits='%s', isUnique='%s', lore='%s', proc_name='%s', proc_desc='%s', bonus='%s';" \
+                       % ( table, id, name, attack, defense, engineering, value_credits, isUnique, lore,
+                       proc_name, proc_desc, bonus, name, attack, defense, engineering, value_credits, isUnique, lore,
+                       proc_name, proc_desc, bonus )
+
+                cursor.execute(sql)
+
+
     conn.commit()
 
 # main
@@ -232,6 +253,7 @@ ugup_request(api_call_path('general', 'suns'), 'suns_generals')
 ugup_request(api_call_path('legion', 'suns'), 'suns_legions')
 ugup_request(api_call_path('mount', 'suns'), 'suns_mounts')
 ugup_request(api_call_path('troop', 'suns'), 'suns_troops')
+ugup_request(api_call_path('engineering', 'suns'), 'suns_engineering')
 
 cursor.close()
 conn.close()
