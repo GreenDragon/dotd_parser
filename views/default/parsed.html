@@ -87,7 +87,7 @@ $(function() {
 {{total_damage = tot_reg_dmg + tot_crit_dmg}}
 {{base_damage = total_damage - tot_proc_dmg}}
 
-<div id="chart" style="height: 200px; width:640px;"></div>
+<div id="chart" style="height: 200px; width:640px;" align="center"></div>
 <script>
 var chart = c3.generate({
     bindto: '#chart',
@@ -117,40 +117,76 @@ var chart = c3.generate({
 
 
 <center>
-<table id="totalsTable" class="display" border="0" cellpadding="0" cellspacing="1">
+<table id="totalsTable" class="display" border="1" cellpadding="0" cellspacing="1">
     <thead>
-        <tr>
-            <th>Total Hits</th>
-            <th>Total DMG</th>
-            <th>Regular DMG</th>
-            <th>Crit DMG</th>
-            <th>Proc DMG</th>
-            <th>Base DMG</th>
-            <th>Reg Hits</th>
-            <th>Crit Hits</th>
-            <th>Crit Rate</th>
-            <th>Procs</th>
-            <th>Procs/Hit</th>
-            <th>Total XP</th>
-            <th>Gold Gained</th>
-        </tr>
+    <tr>
+        <th>Entry</th>
+        <th>Hits</th>
+        <th>Rate</th>
+        <th>Damage</th>
+        <th>Average</th>
+        <th>% Total</th>
+        <th>% Base</th>
+        <th>% Reg AVG</th>
+        <th>Procs</th>
+        <th>Procs/Hit</th>
+        <th>Total XP</th>
+        <th>Gold Gained</th>
+    </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>{{=commify(total_hits)}}</td>
-            <td>{{=commify(total_damage)}}</td>
-            <td>{{=commify(tot_reg_dmg)}}</td>
-            <td>{{=commify(tot_crit_dmg)}}</td>
-            <td>{{=commify(tot_proc_dmg)}}</td>
-            <td>{{=commify(base_damage)}}</td>
-            <td>{{=commify(reg_hits)}}</td>
-            <td>{{=commify(crit_hits)}}</td>
-            <td>{{=percentage(crit_hits, total_hits)}} %</td>
-            <td>{{=commify(tot_proc_count)}}</td>
-            <td>{{=safe_divide(tot_proc_count, total_hits)}}</td>
-            <td>{{=commify(experience['exp'])}}</td>
-            <td>{{=commify(experience['gold'])}}</td>
-        </tr>
+    <tr>
+        <th>Total</th>
+        <td>{{=commify(total_hits)}}</td>
+        <td>{{=percentage(total_hits, total_hits)}} %</td>
+        <td>{{=commify(total_damage)}}</td>
+        <td>{{=safe_divide(total_damage, total_hits, 0)}}</td>
+        <td>{{=percentage(total_damage, total_damage)}} %</td>
+        <td>{{=percentage(total_damage, base_damage)}} %</td>
+        <td>{{=percentage(total_damage, tot_reg_dmg)}} %</td>
+        <td>{{=commify(tot_proc_count)}}</td>
+        <td>{{=safe_divide(tot_proc_count, total_hits)}}</td>
+        <td>{{=commify(experience['exp'])}}</td>
+        <td>{{=commify(experience['gold'])}}</td>
+    </tr>
+    <tr>
+        <th>Base</th>
+        <td>{{=commify(total_hits)}}</td>
+        <td>&nbsp;</td>
+        <td>{{=commify(base_damage)}}</td>
+        <td>{{=safe_divide(base_damage, total_hits, 0)}}</td>
+        <td>{{=percentage(base_damage, total_damage)}} %</td>
+        <td>{{=percentage(base_damage, base_damage)}} %</td>
+    </tr>
+    <tr>
+        <th>Proc</th>
+        <td>{{=commify(total_hits)}}</td>
+        <td>&nbsp;</td>
+        <td>{{=commify(tot_proc_dmg)}}</td>
+        <td>{{=safe_divide(tot_proc_dmg, total_hits, 0)}}</td>
+        <td>{{=percentage(tot_proc_dmg, total_damage)}} %</td>
+        <td>{{=percentage(tot_proc_dmg, base_damage)}} %</td>
+    </tr>
+    <tr>
+        <th>Regular</th>
+        <td>{{=commify(reg_hits)}}</td>
+        <td>{{=percentage(reg_hits, total_hits)}} %</td>
+        <td>{{=commify(tot_reg_dmg)}}</td>
+        <td>{{=safe_divide(tot_reg_dmg, reg_hits, 0)}}</td>
+        <td>{{=percentage(tot_reg_dmg, total_damage)}} %</td>
+        <td>&nbsp;</td>
+        <td>{{=percentage(tot_reg_dmg, tot_reg_dmg)}} %</td>
+    </tr>
+    <tr>
+        <th>Crit</th>
+        <td>{{=commify(crit_hits)}}</td>
+        <td>{{=percentage(crit_hits, total_hits)}} %</td>
+        <td>{{=commify(tot_crit_dmg)}}</td>
+        <td>{{=safe_divide(tot_crit_dmg, crit_hits, 0)}}</td>
+        <td>{{=percentage(tot_crit_dmg, total_damage)}} %</td>
+        <td>&nbsp;</td>
+        <td>{{=percentage(tot_crit_dmg, tot_reg_dmg)}} %</td>
+    </tr>
     </tbody>
 </table>
 
@@ -182,7 +218,8 @@ var chart = c3.generate({
                     <th>Avg. DMG/Proc</th>
                     <th>Avg. DMG/Hit</th>
                     <th>Total DMG</th>
-                    <th>Proc/Total DMG Rate</th>
+                    <th>% Total</th>
+                    <th>% Base</th>
                    </tr>
             </thead>
             <tbody>
@@ -191,10 +228,11 @@ var chart = c3.generate({
                     <td><a href="{{=gen_wiki_url(item, log_suns_mode)}}" target="_blank">{{=item}}</a></td>
                     <td>{{=commify(proc_items[item]['count'])}}</td>
                     <td>{{=percentage(proc_items[item]['count'], total_hits)}} %</td>
-                    <td>{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'])}}</td>
-                    <td>{{=safe_divide(proc_items[item]['damage'], total_hits)}}</td>
+                    <td>{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'], 0)}}</td>
+                    <td>{{=safe_divide(proc_items[item]['damage'], total_hits, 0)}}</td>
                     <td>{{=commify(proc_items[item]['damage'])}}</td>
                     <td>{{=percentage(proc_items[item]['damage'], total_damage)}} %</td>
+                    <td>{{=percentage(proc_items[item]['damage'], base_damage)}} %</td>
                 </tr>
                 {{pass}}
             </tbody>
@@ -444,56 +482,100 @@ var chart = c3.generate({
     </div>
 
     <div id="bbcodeTab" align=left>
+        <p>Contains BBCode for Overall Stats, Proc Stats ( two tables )</p>
         <pre>
 
 [TABLE="class: grid, width: 800"]
     [TR]
-        [TD]Total Hits[/TD]
-        [TD]Total DMG[/TD]
-        [TD]Regular DMG[/TD]
-        [TD]Crit DMG[/TD]
-        [TD]Proc DMG[/TD]
-        [TD]Base DMG[/TD]
-        [TD]Reg Hits[/TD]
-        [TD]Crit Hits[/TD]
-        [TD]Crit Rate[/TD]
+        [TD]Entry[/TD]
+        [TD]Hits[/TD]
+        [TD]Rate[/TD]
+        [TD]Damage[/TD]
+        [TD]Average[/TD]
+        [TD]% Total[/TD]
+        [TD]% Base[/TD]
+        [TD]% Reg AVG[/TD]
         [TD]Procs[/TD]
         [TD]Procs/Hit[/TD]
         [TD]Total XP[/TD]
         [TD]Gold Gained[/TD]
+    [/TR]
     [TR]
-    [TR]
+        [TD]Total[/TD]
         [TD]{{=commify(total_hits)}}[/TD]
+        [TD]{{=percentage(total_hits, total_hits)}}[/TD]
         [TD]{{=commify(total_damage)}}[/TD]
-        [TD]{{=commify(tot_reg_dmg)}}[/TD]
-        [TD]{{=commify(tot_crit_dmg)}}[/TD]
-        [TD]{{=commify(tot_proc_dmg)}}[/TD]
-        [TD]{{=commify(base_damage)}}[/TD]
-        [TD]{{=commify(reg_hits)}}[/TD]
-        [TD]{{=commify(crit_hits)}}[/TD]
-        [TD]{{=percentage(crit_hits, total_hits)}} %[/TD]
+        [TD]{{=safe_divide(total_damage, total_hits, 0)}}[/TD]
+        [TD]{{=percentage(total_damage, total_damage)}} %[/TD]
+        [TD]{{=percentage(total_damage, base_damage)}} %[/TD]
+        [TD]{{=percentage(total_damage, tot_reg_dmg)}} %[/TD]
         [TD]{{=commify(tot_proc_count)}}[/TD]
         [TD]{{=safe_divide(tot_proc_count, total_hits)}}[/TD]
         [TD]{{=commify(experience['exp'])}}[/TD]
         [TD]{{=commify(experience['gold'])}}[/TD]
+    [/TR]
     [TR]
+        [TD]Base[/TD]
+        [TD]{{=commify(total_hits)}}[/TD]
+        [TD][/TD]
+        [TD]{{=commify(base_damage)}}[/TD]
+        [TD]{{=safe_divide(base_damage, total_hits, 0)}}[/TD]
+        [TD]{{=percentage(base_damage, total_damage)}} %[/TD]
+        [TD]{{=percentage(base_damage, base_damage)}} %[/TD]
+    [/TR]
+    [TR]
+        [TD]Proc[/TD]
+        [TD]{{=commify(total_hits)}}[/TD]
+        [TD][/TD]
+        [TD]{{=commify(tot_proc_dmg)}}[/TD]
+        [TD]{{=safe_divide(tot_proc_dmg, total_hits, 0)}}[/TD]
+        [TD]{{=percentage(tot_proc_dmg, total_damage)}} %[/TD]
+        [TD]{{=percentage(tot_proc_dmg, base_damage)}} %[/TD]
+    [/TR]
+    [TR]
+        [TD]Regular[/TD]
+        [TD]{{=commify(reg_hits)}}[/TD]
+        [TD]{{=percentage(reg_hits, total_hits)}} %[/TD]
+        [TD]{{=commify(tot_reg_dmg)}}[/TD]
+        [TD]{{=safe_divide(tot_reg_dmg, reg_hits, 0)}}[/TD]
+        [TD]{{=percentage(tot_reg_dmg, total_damage)}} %[/TD]
+        [TD][/TD]
+        [TD]{{=percentage(tot_reg_dmg, tot_reg_dmg)}} %[/TD]
+    [/TR]
+    [TR]
+        [TD]Crit[/TD]
+        [TD]{{=commify(crit_hits)}}[/TD]
+        [TD]{{=percentage(crit_hits, total_hits)}} %[/TD]
+        [TD]{{=commify(tot_crit_dmg)}}[/TD]
+        [TD]{{=safe_divide(tot_crit_dmg, crit_hits, 0)}}[/TD]
+        [TD]{{=percentage(tot_crit_dmg, total_damage)}} %[/TD]
+        [TD][/TD]
+        [TD]{{=percentage(tot_crit_dmg, tot_reg_dmg)}} %[/TD]
+    [/TR]
 [/TABLE]
 
 {{if len(proc_items):}}
 [TABLE="class: grid, width: 800"]
     [TR]
-        [TD]Item[/TD]
+        [TD]Proc&#39;er: Proc Name[/TD]
         [TD]Proc Count[/TD]
-        [TD]Proc Damage[/TD]
         [TD]Proc/Hit Rate[/TD]
+        [TD]Avg. DMG/Proc[/TD]
+        [TD]Avg. DMG/Hit[/TD]
+        [TD]Total DMG[/TD]
+        [TD]% Total[/TD]
+        [TD]% Base[/TD]
     [/TR]
-
     {{for item,value in proc_items.iteritems():}}
     [TR]
-        [TD]{{=item}}[/td]
+        [TD]{{=item}}[/TD]
         [TD]{{=commify(proc_items[item]['count'])}}[/TD]
-        [TD]{{=commify(proc_items[item]['damage'])}}[/TD]
         [TD]{{=percentage(proc_items[item]['count'], total_hits)}} %[/TD]
+        [TD]{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'], 0)}}[/TD]
+        [TD]{{=safe_divide(proc_items[item]['damage'], total_hits, 0)}}[/TD]
+        [TD]{{=commify(proc_items[item]['damage'])}}[/TD]
+        [TD]{{=percentage(proc_items[item]['damage'], total_damage)}} %[/TD]
+        [TD]{{=percentage(proc_items[item]['damage'], base_damage)}} %[/TD]
     [/TR]
     {{pass}}
 [/TABLE]
