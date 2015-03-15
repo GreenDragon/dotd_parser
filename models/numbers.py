@@ -30,9 +30,9 @@ def safe_divide(x, y, precision=2):
         return "0"
     else:
         if precision == 0:
-            return commify(int(round((float(x)/y), 0)))
+            return commify(int(round((float(x)/y), precision)))
         else:
-            return commify(round((float(x)/y), 2))
+            return commify(round((float(x)/y), precision))
 
 
 def safe_divide_no_format(x, y):

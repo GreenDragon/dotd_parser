@@ -239,7 +239,7 @@ var chart = c3.generate({
             <thead>
                 <tr>
                     <th>Proc&#39;er: Proc Name</th>
-                    <th>Proc Count</th>
+                    <th>Count</th>
                     <th>Proc/Hit Rate</th>
                     <th>Avg. DMG/Proc</th>
                     <th>Avg. DMG/Hit</th>
@@ -586,7 +586,7 @@ var chart = c3.generate({
         [TD]{{=safe_divide(tot_crit_dmg, crit_hits, 0)}}[/TD]
         [TD]{{=percentage(tot_crit_dmg, total_damage)}}%[/TD]
         [TD][/TD]
-        [TD]{{=percentage(tot_crit_dmg, tot_reg_dmg)}}%[/TD]
+        [TD]{{=percentage(safe_divide_no_format(tot_crit_dmg, crit_hits), safe_divide_no_format(tot_reg_dmg, reg_hits))}}%[/TD]
     [/TR]
 [/TABLE]
 

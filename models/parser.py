@@ -39,7 +39,7 @@ def parser(input):
     proc_to_names = load_proc_to_names()
 
     log_file = []
-    log_file = input.split('\n')
+    log_file = input.splitlines()
 
     for num, line in enumerate(list(log_file)):
         # You Found Orange Scourge Scrap!
