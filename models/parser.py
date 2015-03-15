@@ -42,6 +42,7 @@ def parser(input):
     log_file = input.splitlines()
 
     for num, line in enumerate(list(log_file)):
+        line = line.strip()
         # You Found Orange Scourge Scrap!
         #
         # nil
