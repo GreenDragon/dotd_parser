@@ -19,6 +19,8 @@ def parser(input):
         "exp": 0,
     }
 
+    # current_hit = 1
+
     obtained_items = {}
     proc_items = {}
     found_items = {}
@@ -91,10 +93,13 @@ def parser(input):
                     amount = int(amount.split()[0].replace(',', ''))
 
                     if object not in proc_items:
-                        proc_items[object] = {'count': 1, 'damage': amount}
+                        proc_items[object] = {'count': 1, 'damage': amount, 'damage_seen': [ amount ] }
+                        # 'hits_seen': [ current_hit ]}
                     else:
                         proc_items[object]['count'] += 1
                         proc_items[object]['damage'] += amount
+                        proc_items[object]['damage_seen'].append(amount)
+                        # proc_items[object]['hits_seen'].append(current_hit)
 
                     experience['total_procs'] += 1
                     experience['total_proc_dmg'] += amount
@@ -137,6 +142,7 @@ def parser(input):
 
                     # store damage dealt in hit_list history line #: damage
                     hit_list[num] = damage
+                    # current_hit += 1
 
                     if "crit" in object[1]:
                         experience['critical_hits'] += 1
@@ -176,6 +182,7 @@ def parser(input):
 
                     # store damage dealt in hit_list history line #: damage
                     hit_list[num] = damage
+                    # current_hit += 1
 
                     if "crit" in object[1]:
                         experience['critical_hits'] += 1
