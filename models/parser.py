@@ -47,7 +47,7 @@ def parser(input):
         #
         # nil
         if "Found" in line:
-            object = line.split('Found')[1][:-2]
+            object = line.split('Found')[1][:-1].strip()
 
             if object not in found_items:
                 found_items[object] = 1
@@ -58,7 +58,7 @@ def parser(input):
         #
         # You have obtained: Orange Travel Journal.
         elif "obtained:" in line:
-            object = line.split('obtained:')[1][:-2]
+            object = line.split('obtained:')[1][:-1].strip()
 
             if object not in obtained_items:
                 obtained_items[object] = 1

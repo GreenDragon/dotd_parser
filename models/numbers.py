@@ -2,6 +2,7 @@ from __future__ import division
 from string import digits
 import urllib
 
+
 def percentage(x, y):
     if y == 0:
         return "Divide/0 Error"

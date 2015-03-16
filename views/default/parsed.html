@@ -53,12 +53,6 @@ $(document).ready(function() {
 
 <script>
 $(function() {
-    $("#tabs").tabs();
-});
-</script>
-
-<script>
-$(function() {
     $('.inlinesparkline').sparkline( 'html', {type: 'box'}  );
 });
 </script>
@@ -69,6 +63,7 @@ $(function() {
     <p>Apologies. The parser did not return any valid data. Please try copying and pasting your raid again.</p>
 
 {{if len(log_file):}}
+    <p>&nbsp;</p>
     <p>Here is what you have entered:</p>
     <p>&nbsp;</p>
     {{for log in log_file:}}
@@ -93,434 +88,111 @@ $(function() {
 {{total_damage = tot_reg_dmg + tot_crit_dmg}}
 {{base_damage = total_damage - tot_proc_dmg}}
 
-<div id="chart" style="height: 200px; width:640px;" align="center"></div>
-<script>
-var chart = c3.generate({
-    bindto: '#chart',
-        data: {
-            columns: [
-                ['Base Damage', {{=base_damage}} ],
-                ['Proc Damage', {{=tot_proc_dmg}} ],
-                ['Regular Damage', {{=tot_reg_dmg}} ],
-                ['Critical Damage', {{=tot_crit_dmg}} ]
-            ],
-            type: 'bar',
-            groups: [
-                ['Base Damage', 'Proc Damage'],
-                ['Regular Damage','Critical Damage']
-            ],
-            order: null,
-        },
-        axis: {
-            y: {
-                tick: {
-                    format: d3.format(',')
-                }
-            }
-        },
-});
-</script>
 
 
-<center>
-<table id="totalsTable" class="display table table-bordered">
-    <thead>
-    <tr>
-        <th>Entry</th>
-        <th>Hits</th>
-        <th>Rate</th>
-        <th>Damage</th>
-        <th>Average</th>
-        <th>% Total</th>
-        <th>% Base</th>
-        <th>% Reg AVG</th>
-        <th>Procs</th>
-        <th>Procs/Hit</th>
-        <th>Total XP</th>
-        <th>Gold Gained</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <th>Total</th>
-        <td>{{=commify(total_hits)}}</td>
-        <td>{{=percentage(total_hits, total_hits)}} %</td>
-        <td>{{=commify(total_damage)}}</td>
-        <td>{{=safe_divide(total_damage, total_hits, 0)}}</td>
-        <td>{{=percentage(total_damage, total_damage)}} %</td>
-        <td>{{=percentage(total_damage, base_damage)}} %</td>
-        <td>{{=percentage(total_damage, tot_reg_dmg)}} %</td>
-        <td>{{=commify(tot_proc_count)}}</td>
-        <td>{{=safe_divide(tot_proc_count, total_hits)}}</td>
-        <td>{{=commify(experience['exp'])}}</td>
-        <td>{{=commify(experience['gold'])}}</td>
-    </tr>
-    <tr>
-        <th>Base</th>
-        <td>{{=commify(total_hits)}}</td>
-        <td>&nbsp;</td>
-        <td>{{=commify(base_damage)}}</td>
-        <td>{{=safe_divide(base_damage, total_hits, 0)}}</td>
-        <td>{{=percentage(base_damage, total_damage)}} %</td>
-        <td>{{=percentage(base_damage, base_damage)}} %</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <th>Proc</th>
-        <td>{{=commify(total_hits)}}</td>
-        <td>&nbsp;</td>
-        <td>{{=commify(tot_proc_dmg)}}</td>
-        <td>{{=safe_divide(tot_proc_dmg, total_hits, 0)}}</td>
-        <td>{{=percentage(tot_proc_dmg, total_damage)}} %</td>
-        <td>{{=percentage(tot_proc_dmg, base_damage)}} %</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <th>Regular</th>
-        <td>{{=commify(reg_hits)}}</td>
-        <td>{{=percentage(reg_hits, total_hits)}} %</td>
-        <td>{{=commify(tot_reg_dmg)}}</td>
-        <td>{{=safe_divide(tot_reg_dmg, reg_hits, 0)}}</td>
-        <td>{{=percentage(tot_reg_dmg, total_damage)}} %</td>
-        <td>&nbsp;</td>
-        <td>{{=percentage(tot_reg_dmg, tot_reg_dmg)}} %</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
 
-    </tr>
-    <tr>
-        <th>Crit</th>
-        <td>{{=commify(crit_hits)}}</td>
-        <td>{{=percentage(crit_hits, total_hits)}} %</td>
-        <td>{{=commify(tot_crit_dmg)}}</td>
-        <td>{{=safe_divide(tot_crit_dmg, crit_hits, 0)}}</td>
-        <td>{{=percentage(tot_crit_dmg, total_damage)}} %</td>
-        <td>&nbsp;</td>
-        <td>{{=percentage(safe_divide_no_format(tot_crit_dmg, crit_hits), safe_divide_no_format(tot_reg_dmg, reg_hits))}} %</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-    </tr>
-    </tbody>
-</table>
+<div class="tabbable">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#overviewTab" data-toggle="tab">Overview</a></li>
+    <li><a href="#overviewBBcodeTab" data-toggle="tab">Overview BBCode</a></li>
+    <li><a href="#overviewStackedGraphTab" data-toggle="tab">Overview Stacked Graph</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="overviewTab">
+      <table id="totalsTable" class="display table table-bordered">
+        <thead>
+        <tr>
+            <th>Entry</th>
+            <th>Hits</th>
+            <th>Rate</th>
+            <th>Damage</th>
+            <th>Average</th>
+            <th>% Total</th>
+            <th>% Base</th>
+            <th>% Reg AVG</th>
+            <th>Procs</th>
+            <th>Procs/Hit</th>
+            <th>Total XP</th>
+            <th>Gold Gained</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>Total</th>
+            <td>{{=commify(total_hits)}}</td>
+            <td>{{=percentage(total_hits, total_hits)}} %</td>
+            <td>{{=commify(total_damage)}}</td>
+            <td>{{=safe_divide(total_damage, total_hits, 0)}}</td>
+            <td>{{=percentage(total_damage, total_damage)}} %</td>
+            <td>{{=percentage(total_damage, base_damage)}} %</td>
+            <td>{{=percentage(total_damage, tot_reg_dmg)}} %</td>
+            <td>{{=commify(tot_proc_count)}}</td>
+            <td>{{=safe_divide(tot_proc_count, total_hits)}}</td>
+            <td>{{=commify(experience['exp'])}}</td>
+            <td>{{=commify(experience['gold'])}}</td>
+        </tr>
+        <tr>
+            <th>Base</th>
+            <td>{{=commify(total_hits)}}</td>
+            <td>&nbsp;</td>
+            <td>{{=commify(base_damage)}}</td>
+            <td>{{=safe_divide(base_damage, total_hits, 0)}}</td>
+            <td>{{=percentage(base_damage, total_damage)}} %</td>
+            <td>{{=percentage(base_damage, base_damage)}} %</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <th>Proc</th>
+            <td>{{=commify(total_hits)}}</td>
+            <td>&nbsp;</td>
+            <td>{{=commify(tot_proc_dmg)}}</td>
+            <td>{{=safe_divide(tot_proc_dmg, total_hits, 0)}}</td>
+            <td>{{=percentage(tot_proc_dmg, total_damage)}} %</td>
+            <td>{{=percentage(tot_proc_dmg, base_damage)}} %</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <th>Regular</th>
+            <td>{{=commify(reg_hits)}}</td>
+            <td>{{=percentage(reg_hits, total_hits)}} %</td>
+            <td>{{=commify(tot_reg_dmg)}}</td>
+            <td>{{=safe_divide(tot_reg_dmg, reg_hits, 0)}}</td>
+            <td>{{=percentage(tot_reg_dmg, total_damage)}} %</td>
+            <td>&nbsp;</td>
+            <td>{{=percentage(tot_reg_dmg, tot_reg_dmg)}} %</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
 
-<div id="tabs">
-    <ul>
-        <li><a href="#procsTab">Procs</a></li>
-        <li><a href="#bestHitTab">Best Hit</a></li>
-        <li><a href="#foundItemsTab">Found</a></li>
-        <li><a href="#obtainedItemsTab">Obtained</a></li>
-        <li><a href="#restoredItemsTab">Restored</a></li>
-        <li><a href="#affectedItemsTab">Affected</a></li>
-        <li><a href="#createdItemsTab">Created</a></li>
-        <li><a href="#rantsTab">Rants</a></li>
-        <li><a href="#magicsTab">Magics</a></li>
-        <li><a href="#triggeredTab">Triggered</a></li>
-        <li><a href="#hitListTab">Hit List</a></li>
-        <li><a href="#logTab">Raw</a></li>
-        <li><a href="#bbcodeTab">BBcode</a></li>
-    </ul>
-
-    <div id="procsTab">
-{{if len(proc_items):}}
-        <div class="table">
-            <table id="procsTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Proc&#39;er: Proc Name</th>
-                    <th>Count</th>
-                    <th>Proc/Hit Rate</th>
-                    <th>Avg. DMG/Proc</th>
-                    <th>Avg. DMG/Hit</th>
-                    <th>Total DMG</th>
-                    <th>% Total</th>
-                    <th>% Base</th>
-                    <th>Damage Seen</th>
-                   </tr>
-            </thead>
-            <tbody>
-                {{for item,value in proc_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(item, log_suns_mode)}}" target="_blank">{{=item}}</a></td>
-                    <td>{{=commify(proc_items[item]['count'])}}</td>
-                    <td>{{=percentage(proc_items[item]['count'], total_hits)}} %</td>
-                    <td>{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'], 0)}}</td>
-                    <td>{{=safe_divide(proc_items[item]['damage'], total_hits, 0)}}</td>
-                    <td>{{=commify(proc_items[item]['damage'])}}</td>
-                    <td>{{=percentage(proc_items[item]['damage'], total_damage)}} %</td>
-                    <td>{{=percentage(proc_items[item]['damage'], base_damage)}} %</td>
-                    <td><span class="inlinesparkline">{{=", ".join(str(x) for x in proc_items[item]['damage_seen'])}}</span></td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>Nothing proc'ed during this run.</p>
-{{pass}}
+        </tr>
+        <tr>
+            <th>Crit</th>
+            <td>{{=commify(crit_hits)}}</td>
+            <td>{{=percentage(crit_hits, total_hits)}} %</td>
+            <td>{{=commify(tot_crit_dmg)}}</td>
+            <td>{{=safe_divide(tot_crit_dmg, crit_hits, 0)}}</td>
+            <td>{{=percentage(tot_crit_dmg, total_damage)}} %</td>
+            <td>&nbsp;</td>
+            <td>{{=percentage(safe_divide_no_format(tot_crit_dmg, crit_hits), safe_divide_no_format(tot_reg_dmg, reg_hits))}} %</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
     </div>
-
-    <div id="bestHitTab" align=left>
-    {{if len(max_hit):}}
-        {{for item in max_hit:}}
-        {{=item}}<br>
-        {{pass}}
-    {{else:}}
-        <p>Unable to parse biggest hit from logs.</p>
-    {{pass}}
-    </div>
-
-    <div id="foundItemsTab" align="left">
-{{if len(found_items):}}
-        <div class="table">
-            <table id="foundTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Found Item</th>
-                    <th>Count</th>
-                    <th>Found/Hit Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for key,value in found_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>Nothing was found during this run.</p>
-{{pass}}
-    </div>
-
-    <div id="obtainedItemsTab" align="left">
-{{if len(obtained_items):}}
-        <div class="table">
-            <table id="obtainedTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Obtained Item</th>
-                    <th>Count</th>
-                    <th>Obtained/Hit Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for key,value in obtained_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>Nothing was obtained during this run.</p>
-{{pass}}
-    </div>
-
-    <div id="restoredItemsTab" align="left">
-{{if len(restored_items):}}
-        <div class="table">
-            <table id="restoredTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Restored/Granted Event</th>
-                    <th>Count</th>
-                    <th>Restored/Hit Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for key,value in restored_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>Nothing was restored or granted during this run.</p>
-{{pass}}
-    </div>
-
-    <div id="affectedItemsTab" align="left">
-{{if len(affected_items):}}
-        <div class="table">
-            <table id="affectedTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Affected Event</th>
-                    <th>Count</th>
-                    <th>Affected/Hit Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for key,value in affected_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>Nothing was affected during this run.</p>
-{{pass}}
-    </div>
-
-    <div id="createdItemsTab" align="left">
-{{if len(created_items):}}
-        <div class="table">
-            <table id="createdTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Created Event</th>
-                    <th>Count</th>
-                    <th>Created/Hit Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for key,value in created_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>Nothing was created during this run.</p>
-{{pass}}
-    </div>
-
-    <div id="rantsTab" align="left">
-{{if len(rant_items):}}
-        <div class="table">
-            <table id="rantsTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Rants Overheard</th>
-                    <th>Count</th>
-                    <th>Rant Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for key,value in rant_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>No rants were heard on this run.</p>
-{{pass}}
-    </div>
-
-    <div id="magicsTab" align="left">
-{{if len(magic_items):}}
-        <div class="table">
-            <table id="magicsTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Magic/Tactic Event</th>
-                    <th>Count</th>
-                    <th>Magic/Hit Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for key,value in magic_items.iteritems():}}
-                <tr>
-                    <td>{{=key}}</td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>No magics or tactics cast/dispelled during this run.</p>
-{{pass}}
-    </div>
-
-    <div id="triggeredTab" align="left">
-{{if len(triggered_items):}}
-        <div class="table">
-            <table id="triggeredTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Triggered Event</th>
-                    <th>Count</th>
-                    <th>Triggered/Hit Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for key,value in triggered_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <p>Nothing triggered during this run.</p>
-{{pass}}
-    </div>
-
-    <div id="hitListTab" align="left">
-{{if len(hit_list):}}
-        {{for hit in sorted(hit_list.keys()):}}
-        Log Line [{{=hit+1}}]: {{=log_file[hit]}}<br>
-        {{pass}}
-{{else:}}
-        <p>Error: Expected a list of hits...</p>
-{{pass}}
-    </div>
-
-    <div id="logTab" align="left">
-{{if len(log_file):}}
-        {{for log in log_file:}}
-        {{=log}}<br>
-        {{pass}}
-{{else:}}
-        <p>Error: Expected log_file array...</p>
-{{pass}}
-    </div>
-
-    <div id="bbcodeTab" align=left>
-        <p>Contains BBCode for Overall Stats, Proc Stats ( two tables )</p>
-        <pre>
-
+    <div class="tab-pane" id="overviewBBcodeTab">
+      <pre>
 [TABLE="class: grid, width: 800"]
     [TR]
         [TD]Entry[/TD]
@@ -589,7 +261,346 @@ var chart = c3.generate({
         [TD]{{=percentage(safe_divide_no_format(tot_crit_dmg, crit_hits), safe_divide_no_format(tot_reg_dmg, reg_hits))}}%[/TD]
     [/TR]
 [/TABLE]
+      </pre>
+    </div>
+    <div class="tab-pane" id="overviewStackedGraphTab">
+      <div id="chart"></div>
+<script>
+var chart = c3.generate({
+    bindto: '#chart',
+        data: {
+            columns: [
+                ['Base Damage', {{=base_damage}} ],
+                ['Proc Damage', {{=tot_proc_dmg}} ],
+                ['Regular Damage', {{=tot_reg_dmg}} ],
+                ['Critical Damage', {{=tot_crit_dmg}} ]
+            ],
+            type: 'bar',
+            groups: [
+                ['Base Damage', 'Proc Damage'],
+                ['Regular Damage','Critical Damage']
+            ],
+            order: null,
+        },
+        axis: {
+            y: {
+                tick: {
+                    format: d3.format(',')
+                }
+            }
+        },
+});
+</script>
+    </div>
+  </div>
+</div>
 
+<div class="tabbable">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#procsTab" data-toggle="tab">Procs</a></li>
+        <li><a href="#bestHitTab" data-toggle="tab">Best Hit</a></li>
+        <li><a href="#foundItemsTab" data-toggle="tab">Found</a></li>
+        <li><a href="#obtainedItemsTab" data-toggle="tab">Obtained</a></li>
+        <li><a href="#restoredItemsTab" data-toggle="tab">Restored</a></li>
+        <li><a href="#affectedItemsTab" data-toggle="tab">Affected</a></li>
+        <li><a href="#createdItemsTab" data-toggle="tab">Created</a></li>
+        <li><a href="#rantsTab" data-toggle="tab">Rants</a></li>
+        <li><a href="#magicsTab" data-toggle="tab">Magics</a></li>
+        <li><a href="#triggeredTab" data-toggle="tab">Triggered</a></li>
+        <li><a href="#hitListTab" data-toggle="tab">Hit List</a></li>
+        <li><a href="#logTab" data-toggle="tab">Raw</a></li>
+        <li><a href="#procsBBcodeTab" data-toggle="tab">Procs BBcode</a></li>
+    </ul>
+
+  <div class="tab-content">
+
+    <div class="tab-pane active" id="procsTab">
+{{if len(proc_items):}}
+        <div class="table">
+            <table id="procsTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Proc&#39;er: Proc Name</th>
+                    <th>Count</th>
+                    <th>Proc/Hit Rate</th>
+                    <th>Avg. DMG/Proc</th>
+                    <th>Avg. DMG/Hit</th>
+                    <th>Total DMG</th>
+                    <th>% Total</th>
+                    <th>% Base</th>
+                    <th>Damage Seen</th>
+                   </tr>
+            </thead>
+            <tbody>
+                {{for item,value in proc_items.iteritems():}}
+                <tr>
+                    <td><a href="{{=gen_wiki_url(item, log_suns_mode)}}" target="_blank">{{=item}}</a></td>
+                    <td>{{=commify(proc_items[item]['count'])}}</td>
+                    <td>{{=percentage(proc_items[item]['count'], total_hits)}} %</td>
+                    <td>{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'], 0)}}</td>
+                    <td>{{=safe_divide(proc_items[item]['damage'], total_hits, 0)}}</td>
+                    <td>{{=commify(proc_items[item]['damage'])}}</td>
+                    <td>{{=percentage(proc_items[item]['damage'], total_damage)}} %</td>
+                    <td>{{=percentage(proc_items[item]['damage'], base_damage)}} %</td>
+                    <td><span class="inlinesparkline">{{=", ".join(str(x) for x in proc_items[item]['damage_seen'])}}</span></td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>Nothing proc'ed during this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="bestHitTab">
+    {{if len(max_hit):}}
+        {{for item in max_hit:}}
+        {{=item}}<br>
+        {{pass}}
+    {{else:}}
+        <p>Unable to parse biggest hit from logs.</p>
+    {{pass}}
+    </div>
+
+    <div class="tab-pane" id="foundItemsTab">
+{{if len(found_items):}}
+        <div class="table">
+            <table id="foundTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Found Item</th>
+                    <th>Count</th>
+                    <th>Found/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in found_items.iteritems():}}
+                <tr>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>Nothing was found during this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="obtainedItemsTab">
+{{if len(obtained_items):}}
+        <div class="table">
+            <table id="obtainedTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Obtained Item</th>
+                    <th>Count</th>
+                    <th>Obtained/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in obtained_items.iteritems():}}
+                <tr>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>Nothing was obtained during this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="restoredItemsTab">
+{{if len(restored_items):}}
+        <div class="table">
+            <table id="restoredTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Restored/Granted Event</th>
+                    <th>Count</th>
+                    <th>Restored/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in restored_items.iteritems():}}
+                <tr>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>Nothing was restored or granted during this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="affectedItemsTab">
+{{if len(affected_items):}}
+        <div class="table">
+            <table id="affectedTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Affected Event</th>
+                    <th>Count</th>
+                    <th>Affected/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in affected_items.iteritems():}}
+                <tr>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>Nothing was affected during this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="createdItemsTab">
+{{if len(created_items):}}
+        <div class="table">
+            <table id="createdTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Created Event</th>
+                    <th>Count</th>
+                    <th>Created/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in created_items.iteritems():}}
+                <tr>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>Nothing was created during this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="rantsTab">
+{{if len(rant_items):}}
+        <div class="table">
+            <table id="rantsTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Rants Overheard</th>
+                    <th>Count</th>
+                    <th>Rant Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in rant_items.iteritems():}}
+                <tr>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>No rants were heard on this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="magicsTab">
+{{if len(magic_items):}}
+        <div class="table">
+            <table id="magicsTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Magic/Tactic Event</th>
+                    <th>Count</th>
+                    <th>Magic/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in magic_items.iteritems():}}
+                <tr>
+                    <td>{{=key}}</td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>No magics or tactics cast/dispelled during this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="triggeredTab">
+{{if len(triggered_items):}}
+        <div class="table">
+            <table id="triggeredTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Triggered Event</th>
+                    <th>Count</th>
+                    <th>Triggered/Hit Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for key,value in triggered_items.iteritems():}}
+                <tr>
+                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
+                    <td>{{=commify(value)}}</td>
+                    <td>{{=percentage(value, total_hits)}} %</td>
+                </tr>
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <p>Nothing triggered during this run.</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="hitListTab">
+{{if len(hit_list):}}
+        {{for hit in sorted(hit_list.keys()):}}
+        Log Line [{{=hit+1}}]: {{=log_file[hit]}}<br>
+        {{pass}}
+{{else:}}
+        <p>Error: Expected a list of hits...</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="logTab">
+{{if len(log_file):}}
+        {{for log in log_file:}}
+        {{=log}}<br>
+        {{pass}}
+{{else:}}
+        <p>Error: Expected log_file array...</p>
+{{pass}}
+    </div>
+
+    <div class="tab-pane" id="procsBBcodeTab">
+        <pre>
 {{if len(proc_items):}}
 [TABLE="class: grid, width: 800"]
     [TR]
@@ -621,9 +632,8 @@ var chart = c3.generate({
         </pre>
     </div>
 
+  </div>
+
 </div>
-
-
-</center>
 
 {{pass}}
