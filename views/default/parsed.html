@@ -57,6 +57,12 @@ $(function() {
 });
 </script>
 
+<script>
+$(function() {
+    $('.tooltip').tooltip();
+});
+</script>
+
 {{if not len(experience['user']):}}
 
 <div id="dataError" align="left">
@@ -320,7 +326,7 @@ var chart = c3.generate({
             <table id="procsTable" class="display table table-bordered">
             <thead>
                 <tr>
-                    <th>Proc&#39;er: Proc Name</th>
+                    <th>Proc&#39;er</th>
                     <th>Count</th>
                     <th>Proc/Hit Rate</th>
                     <th>Avg. DMG/Proc</th>
@@ -334,7 +340,7 @@ var chart = c3.generate({
             <tbody>
                 {{for item,value in proc_items.iteritems():}}
                 <tr>
-                    <td><a href="{{=gen_wiki_url(item, log_suns_mode)}}" target="_blank">{{=item}}</a></td>
+                    <td><a href="{{=gen_wiki_url(item, log_suns_mode)}}" target="_blank" data-toggle="tooltip" title="{{=proc_items[item]['proc_name']}}">{{=item}}</a></td>
                     <td>{{=commify(proc_items[item]['count'])}}</td>
                     <td>{{=percentage(proc_items[item]['count'], total_hits)}} %</td>
                     <td>{{=safe_divide(proc_items[item]['damage'], proc_items[item]['count'], 0)}}</td>
@@ -604,7 +610,7 @@ var chart = c3.generate({
 {{if len(proc_items):}}
 [TABLE="class: grid, width: 800"]
     [TR]
-        [TD]Proc&#39;er: Proc Name[/TD]
+        [TD]Proc&#39;er[/TD]
         [TD]Proc Count[/TD]
         [TD]Proc/Hit Rate[/TD]
         [TD]Avg. DMG/Proc[/TD]
