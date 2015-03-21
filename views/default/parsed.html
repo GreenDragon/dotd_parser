@@ -198,7 +198,7 @@ $(function() {
     </table>
     </div>
     <div class="tab-pane" id="overviewBBcodeTab">
-      <pre>
+      <textarea class="form-control" rows="10">
 [TABLE="class: grid, width: 800"]
     [TR]
         [TD]Entry[/TD]
@@ -267,7 +267,7 @@ $(function() {
         [TD]{{=percentage(safe_divide_no_format(tot_crit_dmg, crit_hits), safe_divide_no_format(tot_reg_dmg, reg_hits))}}%[/TD]
     [/TR]
 [/TABLE]
-      </pre>
+      </textarea>
     </div>
     <div class="tab-pane" id="overviewStackedGraphTab">
       <div id="chart"></div>
@@ -606,7 +606,7 @@ var chart = c3.generate({
     </div>
 
     <div class="tab-pane" id="procsBBcodeTab">
-        <pre>
+      <textarea class="form-control" rows="10">
 {{if len(proc_items):}}
 [TABLE="class: grid, width: 800"]
     [TR]
@@ -635,7 +635,7 @@ var chart = c3.generate({
 {{else:}}
         <p>Nothing proc'ed during this run.</p>
 {{pass}}
-        </pre>
+      </textarea>
     </div>
 
   </div>

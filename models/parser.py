@@ -86,30 +86,33 @@ def parser(input):
                 else:
                     restored_items[line] += 1
             else:
-                if isnum(amount.split()[0]):
-                    seen_proc_name = object
-                    for proc_name in proc_to_names:
-                        if object in proc_name:
-                            object = str(proc_name[object])
+                if len(amount):
+                    if isnum(amount.split()[0]):
+                        seen_proc_name = object
+                        for proc_name in proc_to_names:
+                            if object in proc_name:
+                                object = str(proc_name[object])
 
-                    amount = int(amount.split()[0].replace(',', ''))
+                        amount = int(amount.split()[0].replace(',', ''))
 
-                    if object not in proc_items:
-                        proc_items[object] = {'count': 1,
-                                              'damage': amount,
-                                              'damage_seen': [ amount ],
-                                              'proc_name': seen_proc_name }
-                        # 'hits_seen': [ current_hit ]}
+                        if object not in proc_items:
+                            proc_items[object] = {'count': 1,
+                                                  'damage': amount,
+                                                  'damage_seen': [ amount ],
+                                                  'proc_name': seen_proc_name }
+                            # 'hits_seen': [ current_hit ]}
+                        else:
+                            proc_items[object]['count'] += 1
+                            proc_items[object]['damage'] += amount
+                            proc_items[object]['damage_seen'].append(amount)
+                            # proc_items[object]['hits_seen'].append(current_hit)
+
+                        experience['total_procs'] += 1
+                        experience['total_proc_dmg'] += amount
                     else:
-                        proc_items[object]['count'] += 1
-                        proc_items[object]['damage'] += amount
-                        proc_items[object]['damage_seen'].append(amount)
-                        # proc_items[object]['hits_seen'].append(current_hit)
-
-                    experience['total_procs'] += 1
-                    experience['total_proc_dmg'] += amount
+                        syslog.syslog(line)
                 else:
-                    syslog.syslog(line)
+                    syslog.syslog(str(num) + ": " + line)
 
         #
         elif "experience!" in line and "granted" not in line:
@@ -140,33 +143,36 @@ def parser(input):
                 #
                 object = line.split()
 
-                if isnum(object[2]):
-                    experience['user'] = object[0]
+                if len(object) >= 12:
+                    if isnum(object[2]):
+                        experience['user'] = object[0]
 
-                    damage = int(object[2].replace(',', ''))
+                        damage = int(object[2].replace(',', ''))
 
-                    # store damage dealt in hit_list history line #: damage
-                    hit_list[num] = damage
-                    # current_hit += 1
+                        # store damage dealt in hit_list history line #: damage
+                        hit_list[num] = damage
+                        # current_hit += 1
 
-                    if "crit" in object[1]:
-                        experience['critical_hits'] += 1
-                        experience['total_crit_dmg'] += damage
-                    else:
-                        experience['regular_hits'] += 1
-                        experience['total_reg_dmg'] += damage
-
-                    for item in 5, 8, 11:
-                        if isnum(object[item]):
-                            amount = int(object[item].replace(',', ''))
-                            if item == 5:
-                                experience['health'] += amount
-                            elif item == 8:
-                                experience['gold'] += amount
-                            else:
-                                experience['exp'] += amount
+                        if "crit" in object[1]:
+                            experience['critical_hits'] += 1
+                            experience['total_crit_dmg'] += damage
                         else:
-                            syslog.syslog(line)
+                            experience['regular_hits'] += 1
+                            experience['total_reg_dmg'] += damage
+
+                        for item in 5, 8, 11:
+                            if isnum(object[item]):
+                                amount = int(object[item].replace(',', ''))
+                                if item == 5:
+                                    experience['health'] += amount
+                                elif item == 8:
+                                    experience['gold'] += amount
+                                else:
+                                    experience['exp'] += amount
+                            else:
+                                syslog.syslog(line)
+                    else:
+                        syslog.syslog(line)
                 else:
                     syslog.syslog(line)
 
