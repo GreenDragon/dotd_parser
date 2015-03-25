@@ -43,6 +43,11 @@ def parser(input):
 
     for num, line in enumerate(list(log_file)):
         line = line.strip()
+
+        # Users have singular names except Devs
+        if "damage!" in line:
+            line = line.replace("*DEV* ", "DEV_", 1)
+
         # You Found Orange Scourge Scrap!
         #
         # nil
@@ -257,7 +262,7 @@ def parser(input):
         # Vigbjorn the Crazed says: "You believe me, Veritas, don't you? We'll hunt the blue yetis together!"
         #
         # nil
-        elif "says" in line:
+        elif "says" in line or "Mira gives" in line:
             if line not in rant_items:
                 rant_items[line] = 1
             else:
@@ -299,8 +304,8 @@ def parser(input):
                         experience['total_reg_dmg'] += damage
                     else:
                         syslog.syslog(line)
-                else:
-                    syslog.syslog(line)
+                #else:
+                #    syslog.syslog(line)
             else:
                 syslog.syslog(line)
 
