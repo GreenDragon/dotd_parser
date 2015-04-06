@@ -29,5 +29,5 @@ jQuery(function(){
   }
   hoverMenu(); // first page load
   jQuery(window).resize(hoverMenu); // on resize event
-  jQuery('ul.nav li.dropdown a').click(function(){window.location=jQuery(this).attr('href');});
+  //jQuery('ul.nav li.dropdown a').click(function(){window.location=jQuery(this).attr('href');});
 });
