@@ -93,18 +93,34 @@ def parser(input):
             else:
                 if len(amount):
                     if isnum(amount.split()[0]):
-                        seen_proc_name = object
+                        seen_proc_name = seen_slot_name = object
+                        equip_type = engineering_type = 0
                         for proc_name in proc_to_names:
                             if object in proc_name:
-                                object = str(proc_name[object])
+                                seen_slot_name = str(proc_name[object]['slot'])
+                                if seen_slot_name == 'Equipment':
+                                    equip_type = proc_name[object]['equipType']
+                                if seen_slot_name == 'Engineering':
+                                    engineering_type = proc_name[object]['engineering']
+                                object = str(proc_name[object]['name'])
 
                         amount = int(amount.split()[0].replace(',', ''))
+
+                        if equip_type:
+                            if log_suns_mode:
+                                seen_slot_name = get_sun_equip_name(equip_type)
+                            else:
+                                seen_slot_name = get_dawn_equip_name(equip_type)
+
+                        if engineering_type:
+                            seen_slot_name = get_suns_engineer_name(engineering_type)
 
                         if object not in proc_items:
                             proc_items[object] = {'count': 1,
                                                   'damage': amount,
                                                   'damage_seen': [ amount ],
-                                                  'proc_name': seen_proc_name }
+                                                  'proc_name': seen_proc_name,
+                                                  'slot': seen_slot_name }
                             # 'hits_seen': [ current_hit ]}
                         else:
                             proc_items[object]['count'] += 1
