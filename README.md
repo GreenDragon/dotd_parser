@@ -232,6 +232,6 @@ Better yet, fork and offer a pull request!
 
 ### Kudos:
 
-Initial application designed and shared by https://github.com/tsunam/dotd_parser. 
+Initial application conceived by https://github.com/tsunam/dotd_parser. 
 
 Thanks!

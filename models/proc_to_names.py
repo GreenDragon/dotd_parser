@@ -25,13 +25,13 @@ def load_proc_to_names():
 
     for row in db().select(db.dawn_equipment.name, db.dawn_equipment.proc_name, db.dawn_equipment.equipType):
         if len(row.proc_name):
-            equipment_dict[row.proc_name] = { 'name':row.name, 'slot':'Equipment', 'equipType':row.equipType }
+            equipment_dict[row.proc_name] = { 'name':row.name, 'slot':get_dawn_equip_name(row.equipType) }
 
     # main hand, off hand, helmet, chest, gloves, pants, boots, trinket, sidekick, utility, tactic
     # trinket = ring?
     for row in db().select(db.suns_equipment.name, db.suns_equipment.proc_name, db.suns_equipment.equipType):
         if len(row.proc_name):
-            equipment_dict[row.proc_name] = { 'name':row.name, 'slot':'Equipment', 'equipType':row.equipType }
+            equipment_dict[row.proc_name] = { 'name':row.name, 'slot':get_sun_equip_name(row.equipType) }
 
     for row in db().select(db.dawn_troops.name, db.dawn_troops.proc_name):
         if len(row.proc_name):
@@ -59,7 +59,7 @@ def load_proc_to_names():
 
     for row in db().select(db.suns_engineering.name, db.suns_engineering.proc_name, db.suns_engineering.engineering):
         if len(row.proc_name):
-            engineering_dict[row.proc_name] = { 'name':row.name, 'slot':'Engineering', 'engineering':row.engineering }
+            engineering_dict[row.proc_name] = { 'name':row.name, 'slot':get_suns_engineer_name(row.engineering) }
 
     return [generals_dict, mounts_dict, equipment_dict, troops_dict,
             legions_dict, enchantments_dict, engineering_dict ]

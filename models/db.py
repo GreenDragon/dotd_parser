@@ -21,7 +21,7 @@ connection = 'mysql://' + config['dbuser'] + ':' + config['dbpass'] + '@' + conf
 # Otherwise, MacPorts Python wants to bind to macports mariadb buildout
 #   driver_args={'unix_socket':'/tmp/mysql.sock'},
 
-db = DAL(connection, pool_size=5)
+db = DAL(connection, pool_size=5, lazy_tables=True)
 
 # while lazy_tables is good for production, it's a PITA for development
 # lazy_tables=True
@@ -370,103 +370,6 @@ db.define_table('suns_engineering',
                 Field('proc_desc', 'text'),
                 Field('bonus', 'json'),
 )
-
-#
-
-db.define_table('dawn_achivements',
-                Field('name', 'string'),
-                Field('type', 'integer'),
-                Field('description', 'string'),
-                Field('levels', 'json'),
-)
-
-db.define_table('suns_achivements',
-                Field('name', 'string'),
-                Field('type', 'integer'),
-                Field('description', 'string'),
-                Field('levels', 'json'),
-)
-
-#
-
-db.define_table('dawn_collections',
-                Field('name', 'string'),
-                Field('rarity', 'integer'),
-                Field('useEnchant', 'integer'),
-                Field('glow', 'string'),
-                Field('tier', 'integer'),
-                Field('buffType', 'integer'),
-                Field('isUnique', 'integer'),
-                Field('lore', 'text'),
-                Field('proc_desc', 'text'),
-)
-
-db.define_table('suns_collections',
-                Field('name', 'string'),
-                Field('rarity', 'integer'),
-                Field('useEnchant', 'integer'),
-                Field('glow', 'string'),
-                Field('tier', 'integer'),
-                Field('buffType', 'integer'),
-                Field('isUnique', 'integer'),
-                Field('lore', 'text'),
-                Field('proc_desc', 'text'),
-)
-
-#
-
-db.define_table('dawn_consumables',
-                Field(),
-)
-
-db.define_table('suns_consumables',
-                Field(),
-)
-
-#
-
-db.define_table('dawn_itemsets'
-                Field(),
-)
-
-db.define_table('suns_itemsets'
-                Field(),
-)
-
-#
-
-magics
-
-#
-
-pets
-
-#
-
-recipes
-
-#
-
-tactics
-
-#
-
-raids
-
-#
-
-db.define_table('dawn_shared_raids',
-                Field('create_time'),
-                Field('link', 'string'),
-                Field('raid_id', 'integer'),
-                Field('difficulty', 'integer'),
-                Field('raid_boss', 'string'),
-                Field('hash', 'string'),
-                Field('platform', 'string'),
-                Field('server_id', 'integer'),
-)
-
-
 
 ## after defining tables, uncomment below to enable auditing
 # Maybe not quite yet, I don't think we need to track all record changes yet
