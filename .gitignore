@@ -11,3 +11,5 @@ tests/logs/
 utils/get_base_data_sets/data/
 #
 .idea/
+#
+progress.log
