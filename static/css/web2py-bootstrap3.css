@@ -314,3 +314,7 @@ input[type=checkbox], input[type=radio] {
 .btn {
     margin-right: 4px;
 }
+
+textarea {
+  width: 70%;
+}

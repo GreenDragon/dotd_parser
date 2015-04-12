@@ -5,20 +5,21 @@
 ## Customize your APP title, subtitle and menus here
 #########################################################################
 
-response.logo = A(B('web',SPAN(2),'py'),XML('&trade;&nbsp;'),
-                  _class="navbar-brand",_href="http://www.web2py.com/",
-                  _id="web2py-logo")
+#response.logo = A(B('web',SPAN(2),'py'),XML('&trade;&nbsp;'),
+#                  _class="navbar-brand",_href="http://www.web2py.com/",
+#                  _id="web2py-logo")
 response.title = request.application.replace('_',' ').title()
-response.subtitle = ''
+response.subtitle = 'DotD/LoTS Raid Log Analyzer'
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
-response.meta.author = 'Your Name <you@example.com>'
-response.meta.description = 'a cool new app'
-response.meta.keywords = 'web2py, python, framework'
+response.meta.author = 'Green Dragon Systems'
+response.meta.description = 'DotD/LoTS Raid Log Analyzer by Green Dragon Systems'
+response.meta.keywords = 'Dawn of the Dragons, Legacy of a Thousand Suns, Raid Log Analyzer, Raid Log Parser, DotD Log Parser, DotD Log Analyzer, LoTS Log Parser, LoTS Log Analyzer, 5th Planet Games'
 response.meta.generator = 'Web2py Web Framework'
 
 ## your http://google.com/analytics id
 response.google_analytics_id = None
+
 
 #########################################################################
 ## this is the main application menu add/remove items as required
@@ -28,7 +29,58 @@ response.menu = [
     (T('Home'), False, URL('default', 'index'), [])
 ]
 
-DEVELOPMENT_MENU = True
+DEVELOPMENT_MENU = False
+
+PRODUCTION_MENU = True
+
+def production_menu():
+    response.menu += [
+        ('DotD', False, None, [
+            ('', False, A('Dawn of the Dragons Game Page',
+             _href='http://www.dawnofthedragons.com/game/',
+             _target='blank')),
+            ('', False, A('Dawn of the Dragons Forums',
+             _href='http://www.dawnofthedragons.com/forums/forums/',
+             _target='blank')),
+            ('', False, A('Dawn of the Dragons Wiki',
+             _href='http://dotd.wikia.com/wiki/Dawn_of_the_Dragons_Wiki',
+             _target='blank')),
+        ]),
+        ('LoTS', False, None, [
+            ('', False,
+              A('Legacy of a Thousand Suns Game Page',
+              _href='http://www.legacyofathousandsuns.com/game/',
+              _target='blank')),
+            ('', False,
+              A('Legacy of a Thousand Suns Forums',
+              _href='http://www.legacyofathousandsuns.com/forum/',
+              _target='blank')),
+            ('', False,
+              A('Legacy of a Thousand Suns Wiki',
+              _href='http://zoywiki.com/LotS',
+              _target='blank')),
+        ]),
+        ('GitHub', False, None, [
+            ('', False,
+              A('GitHub: About/README',
+              _href='https://github.com/GreenDragon/dotd_parser/blob/master/README.md',
+              _target='blank')),
+            ('', False,
+              A('GitHub: Src/Bugs/Requests',
+              _href='https://github.com/GreenDragon/dotd_parser',
+              _target='blank')),
+            ('', False,
+              A('GitHub: Known Issues',
+              _href='https://github.com/GreenDragon/dotd_parser/blob/master/KNOWN_ISSUES.md',
+              _target='blank')),
+            ('', False,
+              A('GitHub: To Do',
+              _href='https://github.com/GreenDragon/dotd_parser/blob/master/TO-DO.md',
+              _target='blank')),
+        ]),
+    ]
+
+if PRODUCTION_MENU: production_menu()
 
 #########################################################################
 ## provide shortcuts for development. remove in production

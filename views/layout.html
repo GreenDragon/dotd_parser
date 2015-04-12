@@ -25,6 +25,11 @@
     <link rel="stylesheet" href="{{=URL('static','css/web2py-bootstrap3.css')}}"/>
     <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
+
+    <link rel="stylesheet" href="{{=URL('static','css/jquery.dataTables.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/dataTables.tableTools.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/c3.css')}}"/>
+
     <!-- All JavaScript at the bottom, except for Modernizr which enables
          HTML5 elements & feature detects -->
     <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>
@@ -33,6 +38,15 @@
         <![endif]-->
     <!-- Favicons -->
     {{include 'web2py_ajax.html'}} <!-- this includes jquery.js, calendar.js/.css and web2py.js -->
+
+    <script src="{{=URL('static', 'js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{=URL('static', 'js/dataTables.tableTools.js')}}"></script>
+
+    <script src="{{=URL('static', 'js/jquery.sparkline.js')}}"></script>
+
+    <script src="{{=URL('static', 'js/d3.min.js')}}"></script>
+    <script src="{{=URL('static', 'js/c3.min.js')}}"></script>
+
     {{block head}}{{end}}
     {{
     # using sidebars need to know what sidebar you want to use
@@ -72,6 +86,13 @@
     </nav>
     <!-- Masthead ===================================== -->    
     {{block header}}
+      {{if response.title:}}
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3>{{=response.subtitle or ''}}</h3>
+          </div>
+        </div>
+	  {{pass}}
     {{end}}
     <!-- Main ========================================= -->
     <!-- Begin page content -->
@@ -105,7 +126,7 @@
     {{block footer}} <!-- this is default footer -->      
     <footer class="footer">
       <div class="container-fluid">
-        <div class="copyright pull-left">{{=T('Copyright')}} &#169; {{=request.now.year}}</div>
+        <div class="copyright pull-left">Version: {{=current_version()}}, {{=T('Copyright')}} &#169; {{=request.now.year}}</div>
           <div id="poweredBy" class="pull-right">
             {{=T('Powered by')}}
             <a href="http://www.web2py.com/">web2py</a>

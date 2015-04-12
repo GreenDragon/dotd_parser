@@ -8,20 +8,22 @@ A Web2py web application to parse 5th Planet Games raid logs into useful statist
 ### Development/Testing Environment:
 
     * Mac OS X 10.9.5
-        * web2py Version 2.9.12-stable+timestamp.2015.01.17.06.11.03
+        * web2py Version Version 2.10.3-stable+timestamp.2015.04.02.21.42.07
         * MySQL Community Edition
             * MySQL 5.6.23, for osx10.8 (x86_64)
         * Python 2.7.9 via MacPorts
-            * python27 @2.7.9_0+ucs4
+            * python27 @2.7.9_0
             * py-mysql @1.2.3_1 (active)
                 * py27-mysql @1.2.3_1+mariadb55 (active)
             * py-requests @2.5.1_0 (active)
-                * py27-requests @2.5.1_0 (active)
+                * py27-requests @2.5.3_0 (active)
             * py-yaml @3.11_0 (active)
                 * py27-yaml @3.11_0 (active)
+
+### Production Environment:
     
-    * Debian 7.8
-        * web2py Version 2.9.12-stable+timestamp.2015.01.17.06.11.03
+    * Debian 7.8 ( https://www.linode.com/ )
+        * web2py Version 2.10.3-stable+timestamp.2015.04.02.21.42.07
         * MySQL 
             * mysql-server 5.5.41-0+wheezy1
         * Python 2.7

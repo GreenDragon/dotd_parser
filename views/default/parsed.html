@@ -59,22 +59,25 @@ $(function() {
 
 <script>
 $(function() {
-    $('.tooltip').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
 });
 </script>
 
 {{if not len(experience['user']):}}
 
-<div id="dataError" align="left">
-    <p>Apologies. The parser did not return any valid data. Please try copying and pasting your raid again.</p>
+<div class="panel panel-warning">
+    <div class="panel-heading">
+        <h3 class="panel-title">Apologies. The parser did not return any valid data. Please try copying and pasting your raid again.</h3>
+    </div>
 
 {{if len(log_file):}}
-    <p>&nbsp;</p>
-    <p>Here is what you have entered:</p>
-    <p>&nbsp;</p>
-    {{for log in log_file:}}
-    {{=log}}<br>
-    {{pass}}
+    <div class="panel-body">
+        <p>Here is what you have entered:</p>
+        <p>&nbsp;</p>
+        {{for log in log_file:}}
+        {{=log}}<br>
+        {{pass}}
+    </div>
 {{pass}}
 </div>
 
@@ -98,7 +101,7 @@ $(function() {
 
 
 <div class="tabbable">
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-pills">
     <li class="active"><a href="#overviewTab" data-toggle="tab">Overview</a></li>
     <li><a href="#overviewBBcodeTab" data-toggle="tab">Overview BBCode</a></li>
     <li><a href="#overviewStackedGraphTab" data-toggle="tab">Overview Stacked Graph</a></li>
@@ -302,7 +305,7 @@ var chart = c3.generate({
 </div>
 
 <div class="tabbable">
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-pills">
         <li class="active"><a href="#procsTab" data-toggle="tab">Procs</a></li>
         <li><a href="#bestHitTab" data-toggle="tab">Best Hit</a></li>
         <li><a href="#foundItemsTab" data-toggle="tab">Found</a></li>
@@ -350,25 +353,33 @@ var chart = c3.generate({
                     <td>{{=commify(proc_items[item]['damage'])}}</td>
                     <td>{{=percentage(proc_items[item]['damage'], total_damage)}} %</td>
                     <td>{{=percentage(proc_items[item]['damage'], base_damage)}} %</td>
-                    <td><span class="inlinesparkline">{{=", ".join(str(x) for x in proc_items[item]['damage_seen'])}}</span></td>
+                    <td width="10%"><span class="inlinesparkline">{{=", ".join(str(x) for x in proc_items[item]['damage_seen'])}}</span></td>
                 </tr>
                 {{pass}}
             </tbody>
             </table>
         </div>
 {{else:}}
-        <p>Nothing proc'ed during this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Nothing proc'ed during this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
     <div class="tab-pane" id="bestHitTab">
-    {{if len(max_hit):}}
-        {{for item in max_hit:}}
-        {{=item}}<br>
-        {{pass}}
-    {{else:}}
-        <p>Unable to parse biggest hit from logs.</p>
-    {{pass}}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{if len(max_hit):}}
+                    {{for item in max_hit:}}
+                    {{=item}}<br>
+                    {{pass}}
+                {{else:}}
+                    <p>Unable to parse biggest hit from logs.</p>
+                {{pass}}
+            </div>
+        </div>
     </div>
 
     <div class="tab-pane" id="foundItemsTab">
@@ -394,7 +405,11 @@ var chart = c3.generate({
             </table>
         </div>
 {{else:}}
-        <p>Nothing was found during this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Nothing was found during this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
@@ -421,7 +436,11 @@ var chart = c3.generate({
             </table>
         </div>
 {{else:}}
-        <p>Nothing was obtained during this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Nothing was obtained during this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
@@ -448,7 +467,11 @@ var chart = c3.generate({
             </table>
         </div>
 {{else:}}
-        <p>Nothing was restored or granted during this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Nothing was restored or granted during this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
@@ -475,7 +498,11 @@ var chart = c3.generate({
             </table>
         </div>
 {{else:}}
-        <p>Nothing was affected during this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Nothing was affected during this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
@@ -502,7 +529,11 @@ var chart = c3.generate({
             </table>
         </div>
 {{else:}}
-        <p>Nothing was created during this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Nothing was created during this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
@@ -529,7 +560,11 @@ var chart = c3.generate({
             </table>
         </div>
 {{else:}}
-        <p>No rants were heard on this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>No rants were heard on this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
@@ -556,7 +591,11 @@ var chart = c3.generate({
             </table>
         </div>
 {{else:}}
-        <p>No magics or tactics cast/dispelled during this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>No magics or tactics cast/dispelled during this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
@@ -583,11 +622,17 @@ var chart = c3.generate({
             </table>
         </div>
 {{else:}}
-        <p>Nothing triggered during this run.</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Nothing triggered during this run.</p>
+            </div>
+        </div>
 {{pass}}
     </div>
 
     <div class="tab-pane" id="hitListTab">
+        <div class="panel panel-default">
+            <div class="panel-body">
 {{if len(hit_list):}}
         {{for hit in sorted(hit_list.keys()):}}
         Log Line [{{=hit+1}}]: {{=log_file[hit]}}<br>
@@ -595,20 +640,26 @@ var chart = c3.generate({
 {{else:}}
         <p>Error: Expected a list of hits...</p>
 {{pass}}
+            </div>
+        </div>
     </div>
 
     <div class="tab-pane" id="logTab">
+        <div class="panel panel-default">
+            <div class="panel-body">
 {{if len(log_file):}}
-        {{for log in log_file:}}
-        {{=log}}<br>
-        {{pass}}
+                {{for log in log_file:}}
+                    {{=log}}<br>
+                {{pass}}
 {{else:}}
-        <p>Error: Expected log_file array...</p>
+                <p>Error: Expected log_file array...</p>
 {{pass}}
+            </div>
+        </div>
     </div>
 
     <div class="tab-pane" id="procsBBcodeTab">
-      <textarea class="form-control" rows="10">
+        <textarea class="form-control" rows="10">
 {{if len(proc_items):}}
 [TABLE="class: grid, width: 800"]
     [TR]
@@ -636,10 +687,14 @@ var chart = c3.generate({
     [/TR]
     {{pass}}
 [/TABLE]
-{{else:}}
-        <p>Nothing proc'ed during this run.</p>
-{{pass}}
       </textarea>
+{{else:}}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Nothing proc'ed during this run.</p>
+            </div>
+        </div>
+{{pass}}
     </div>
 
   </div>
