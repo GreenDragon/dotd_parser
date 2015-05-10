@@ -44,6 +44,12 @@ def parsed():
         # Leroy Jenkins! Let's do this!
         experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
            affected_items, created_items, rant_items, magic_items, triggered_items, log_suns_mode = parser(row[0].data)
+
+        related_logs = []
+        if experience['user'] != '':
+            # rows = db(query).select(*fields, orderby=..)
+            query = (db.logs.data.contains(experience['user']))&(db.logs.uuid != uuid)
+            related_logs = db(query).select(db.logs.date, db.logs.uuid, orderby = db.logs.date)
         return locals()
     else:
         session.flash = T("Expected a known or valid UUID")
