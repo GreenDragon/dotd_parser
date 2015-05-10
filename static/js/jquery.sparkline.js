@@ -2,7 +2,7 @@
 *
 * jquery.sparkline.js
 *
-* v2.1.2
+* v2.1.4 {FortesSolutions}
 * (c) Splunk, Inc
 * Contact: Gareth Watts (gareth@splunk.com)
 * http://omnipotent.net/jquery.sparkline/
@@ -63,14 +63,14 @@
 *   <p>Sparkline: <span class="sparkline">1:1,2.7:4,3.4:6,5:6,6:8,8.7:5,9:3,10:5</span></p>
 *    $('#sparkline1').sparkline([ [1,1], [2.7,4], [3.4,6], [5,6], [6,8], [8.7,5], [9,3], [10,5] ])
 *
-* By default, options should be passed in as teh second argument to the sparkline function:
+* By default, options should be passed in as the second argument to the sparkline function:
 *   $('.sparkline').sparkline([1,2,3,4], {type: 'bar'})
 *
 * Options can also be set by passing them on the tag itself.  This feature is disabled by default though
 * as there's a slight performance overhead:
 *   $('.sparkline').sparkline([1,2,3,4], {enableTagOptions: true})
 *   <p>Sparkline: <span class="sparkline" sparkType="bar" sparkBarColor="red">loading</span></p>
-* Prefix all options supplied as tag attribute with "spark" (configurable by setting tagOptionPrefix)
+* Prefix all options supplied as tag attribute with "spark" (configurable by setting tagOptionsPrefix)
 *
 * Supported options:
 *   lineColor - Color of the line used for the chart
@@ -87,7 +87,7 @@
 *           existing chart is detected.
 *   tagValuesAttribute - Name of tag attribute to check for data values - Defaults to 'values'
 *   enableTagOptions - Whether to check tags for sparkline options
-*   tagOptionPrefix - Prefix used for options supplied as tag attributes - Defaults to 'spark'
+*   tagOptionsPrefix - Prefix used for options supplied as tag attributes - Defaults to 'spark'
 *   disableHiddenCheck - If set to true, then the plugin will assume that charts will never be drawn into a
 *           hidden dom element, avoding a browser reflow
 *   disableInteraction - If set to true then all mouseover/click interaction behaviour will be disabled,
@@ -107,16 +107,25 @@
 *       to control the format of the tooltip
 *   tooltipPrefix - A string to prepend to each field displayed in a tooltip
 *   tooltipSuffix - A string to append to each field displayed in a tooltip
+*   tooltipPrefixBinLabels - An array of Bin Labels for each offset value to add as the start
+*                            of the tooltip prefix.  Example:
+*        var giants_game_results = [1,-1,1,-1,-1,-1,1,1,1,-1,1,-1,-1,1,1,1,1,1,1,1],
+*            giants_game_dates  = ["9/30", "10/1", "10/2", "10/3", "10/6", "10/7", "10/9", "10/10", "10/11", "10/14", "10/15",
+*                                  "10/17", "10/18", "10/19", "10/21", "10/22", "10/24", "10/25", "10/27", "10/28"];
+*        $('#giants').sparkline(giants_results, {type: 'tristate', tooltipPrefixBinLabels: giants_dates, tooltipPrefix: ' - '};
+*   tooltipSuffixBinLabels - An array of Bin Labels for each offset value to add as the end
+*                            of the tooltip suffix.
 *   tooltipSkipNull - If true then null values will not have a tooltip displayed (defaults to true)
 *   tooltipValueLookups - An object or range map to map field values to tooltip strings
 *       (eg. to map -1 to "Lost", 0 to "Draw", and 1 to "Win")
+*   toolTipPosition - Display tooltip to the 'left' or 'right' of the mouse - Defaults to "right"
 *   numberFormatter - Optional callback for formatting numbers in tooltips
 *   numberDigitGroupSep - Character to use for group separator in numbers "1,234" - Defaults to ","
 *   numberDecimalMark - Character to use for the decimal point when formatting numbers - Defaults to "."
 *   numberDigitGroupCount - Number of digits between group separator - Defaults to 3
 *
-* There are 7 types of sparkline, selected by supplying a "type" option of 'line' (default),
-* 'bar', 'tristate', 'bullet', 'discrete', 'pie' or 'box'
+* There are 8 types of sparkline, selected by supplying a "type" option of 'line' (default),
+* 'bar', 'tristate', 'bullet', 'discrete', 'pie', 'box' or 'stack'
 *    line - Line chart.  Options:
 *       spotColor - Set to '' to not end each line in a circular spot
 *       minSpotColor - If set, color of spot at minimum value
@@ -172,6 +181,8 @@
 *       offset - Angle in degrees to offset the first slice - Try -90 or +90
 *       borderWidth - Width of border to draw around the pie chart, in pixels - Defaults to 0 (no border)
 *       borderColor - Color to use for the pie chart border - Defaults to #000
+*   stack - Horizontal stack chart. Options:
+*       sliceColors - An array of colors to use for pie slices
 *
 *   box - Box plot. Options:
 *       raw - Set to true to supply pre-computed plot points as values
@@ -205,7 +216,7 @@
 (function(document, Math, undefined) { // performance/minified-size optimization
 (function(factory) {
     if(typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
+        define('jquery.sparkline', ['jquery'], factory);
     } else if (jQuery && !jQuery.fn.sparkline) {
         factory(jQuery);
     }
@@ -213,12 +224,14 @@
 (function($) {
     'use strict';
 
+    // CUSTOM MOD: median var added
     var UNSET_OPTION = {},
-        getDefaults, createClass, SPFormat, clipval, quartile, normalizeValue, normalizeValues,
+        getDefaults, createClass, SPFormat, clipval, median, quartile, normalizeValue, normalizeValues,
         remove, isNumber, all, sum, addCSS, ensureArray, formatNumber, RangeMap,
         MouseHandler, Tooltip, barHighlightMixin,
-        line, bar, tristate, discrete, bullet, pie, box, defaultStyles, initStyles,
+        line, bar, tristate, discrete, bullet, pie, stack, box, timeline, defaultStyles, initStyles,
         VShape, VCanvas_base, VCanvas_canvas, VCanvas_vml, pending, shapeCount = 0;
+
 
     /**
      * Default configuration settings
@@ -255,6 +268,9 @@
                 spotColor: '#f80',
                 highlightSpotColor: '#5f5',
                 highlightLineColor: '#f22',
+                refLineColor: '#f22',
+                // refLineX: null,
+                // refLineY: null,
                 spotRadius: 1.5,
                 minSpotColor: '#f80',
                 maxSpotColor: '#f80',
@@ -286,6 +302,24 @@
                 colorMap: undefined,
                 tooltipFormat: new SPFormat('<span style="color: {{color}}">&#9679;</span> {{prefix}}{{value}}{{suffix}}')
             },
+            // Defaults for timeline charts
+            timeline: {
+                width: 120,
+                height: 3,
+                lineColor: '#6792c6',
+                fillColor: '#bad7fb',
+                orientation: 'horizontal', // or 'vertical'
+                // number of minutes to modulate time markers from begin option
+                timeMarkInterval: 0,
+                // minimum date/time to show in timeline
+                begin: new Date(2000, 1, 1, 0, 0),
+                // maximum date/time to show in timeline
+                finish: new Date(2000, 1, 1, 23, 59),
+                // allow user to provide their own date parsing abilities
+                // data must provide begin, finish, title and color hash object
+                init: function (data) { return {begin: new Date(data.begin), finish: new Date(data.finish), title: data.title, color: data.color}; },
+                tooltipFormat: new SPFormat('<span style="color: {{color}}">&#9679;</span> {{title}}: {{begin}} / {{finish}}')
+            },
             // Defaults for tristate charts
             tristate: {
                 barWidth: 4,
@@ -294,7 +328,7 @@
                 negBarColor: '#f44',
                 zeroBarColor: '#999',
                 colorMap: {},
-                tooltipFormat: new SPFormat('<span style="color: {{color}}">&#9679;</span> {{value:map}}'),
+                tooltipFormat: new SPFormat('<span style="color: {{color}}">&#9679;</span> {{prefix}}{{value:map}}{{suffix}}'),
                 tooltipValueLookups: { map: { '-1': 'Loss', '0': 'Draw', '1': 'Win' } }
             },
             // Defaults for discrete charts
@@ -319,6 +353,15 @@
             },
             // Defaults for pie charts
             pie: {
+                offset: 0,
+                sliceColors: ['#3366cc', '#dc3912', '#ff9900', '#109618', '#66aa00',
+                    '#dd4477', '#0099c6', '#990099'],
+                borderWidth: 0,
+                borderColor: '#000',
+                tooltipFormat: new SPFormat('<span style="color: {{color}}">&#9679;</span> {{prefix}}{{value}} ({{percent.1}}%){{suffix}}')
+            },
+            // Defaults for stack charts
+            stack: {
                 offset: 0,
                 sliceColors: ['#3366cc', '#dc3912', '#ff9900', '#109618', '#66aa00',
                     '#dd4477', '#0099c6', '#990099'],
@@ -351,6 +394,11 @@
         };
     };
 
+    // Bootstrap adds box-sizing that messes with alignment in the tooltip.
+    var box_sizing = '-webkit-box-sizing: content-box !important;' +
+          '-moz-box-sizing: content-box !important;' +
+          'box-sizing: content-box !important;'
+
     // You can have tooltips use a css class other than jqstooltip by specifying tooltipClassname
     defaultStyles = '.jqstooltip { ' +
             'position: absolute;' +
@@ -368,11 +416,15 @@
             'padding: 5px;' +
             'border: 1px solid white;' +
             'z-index: 10000;' +
+            box_sizing +
             '}' +
             '.jqsfield { ' +
             'color: white;' +
             'font: 10px arial, san serif;' +
             'text-align: left;' +
+            '}' +
+            '.jqstooltip:before, .jqstooltip:after { ' +
+            box_sizing +
             '}';
 
     /**
@@ -475,21 +527,61 @@
         return val;
     };
 
-    quartile = function (values, q) {
-        var vl;
-        if (q === 2) {
-            vl = Math.floor(values.length / 2);
-            return values.length % 2 ? values[vl] : (values[vl-1] + values[vl]) / 2;
-        } else {
-            if (values.length % 2 ) { // odd
-                vl = (values.length * q + q) / 4;
-                return vl % 1 ? (values[Math.floor(vl)] + values[Math.floor(vl) - 1]) / 2 : values[vl-1];
-            } else { //even
-                vl = (values.length * q + 2) / 4;
-                return vl % 1 ? (values[Math.floor(vl)] + values[Math.floor(vl) - 1]) / 2 :  values[vl-1];
-
-            }
+    // CUSTOM MOD: completely new median func
+    median = function (values) {
+        var ret, idx;
+        if (!(values.length % 2)) {
+            var v1, v2;
+            idx = values.length / 2;
+            v1 = values[idx - 1];
+            v2 = values[idx];
+            ret = (v1 + v2) / 2;
         }
+        else {
+            idx = parseInt(values.length / 2)
+            ret = values[idx]
+        }
+
+        return { 'm': ret, 'idx': idx };
+    };
+
+    // CUSTOM MOD: completely rewritten quartile func
+    quartile = function (values, q) {
+        var ret, m, med;
+        m = median(values);
+
+        if (q === 2) {
+            ret = m.m;
+        }
+        else {
+            var arr = new Array();
+            med = m.m
+
+            if (med != null) {
+                var i = 0;
+                if (q === 1) {
+                    while (i < m.idx) {
+                      arr[i] = values[i];
+                      i ++;
+                    }
+                    if (!arr.length)
+                      arr = [ values[0] ]
+                }
+                else if (q === 3) {
+                    var j = values.length - 1;
+                    while (j > m.idx) {
+                        arr[i] = values[j];
+                        i ++;
+                        j --;
+                    }
+                    if (!arr.length)
+                      arr = [ values[values.length - 1] ]
+                }
+            }
+            m = median(arr);
+            ret = m.m;
+        }
+        return ret;
     };
 
     normalizeValue = function (val) {
@@ -579,17 +671,26 @@
 
     // http://paulirish.com/2008/bookmarklet-inject-new-css-rules/
     addCSS = function(css) {
-        var tag;
-        //if ('\v' == 'v') /* ie only */ {
+        var tag, iefail;
         if (document.createStyleSheet) {
-            document.createStyleSheet().cssText = css;
+            try {
+                document.createStyleSheet().cssText = css;
+                return;
+            } catch (e) {
+                // IE <= 9 maxes out at 31 stylesheets; inject into page instead.
+                iefail = true;
+            }
+        }
+        tag = document.createElement('style');
+        tag.type = 'text/css';
+        document.getElementsByTagName('head')[0].appendChild(tag);
+        if (iefail) {
+            document.styleSheets[document.styleSheets.length - 1].cssText = css;
         } else {
-            tag = document.createElement('style');
-            tag.type = 'text/css';
-            document.getElementsByTagName('head')[0].appendChild(tag);
             tag[(typeof document.body.style.WebkitAppearance == 'string') /* webkit only */ ? 'innerText' : 'innerHTML'] = css;
         }
     };
+
 
     // Provide a cross-browser interface to a few simple drawing primitives
     $.fn.simpledraw = function (width, height, useExisting, interact) {
@@ -601,7 +702,6 @@
         if ($.fn.sparkline.canvas === false) {
             // We've already determined that neither Canvas nor VML are available
             return false;
-
         } else if ($.fn.sparkline.canvas === undefined) {
             // No function defined yet -- need to see if we support Canvas or VML
             var el = document.createElement('canvas');
@@ -646,6 +746,7 @@
         }
     };
 
+
     $.RangeMapClass = RangeMap = createClass({
         init: function (map) {
             var key, range, rangelist = [];
@@ -684,6 +785,7 @@
     $.range_map = function(map) {
         return new RangeMap(map);
     };
+
 
     MouseHandler = createClass({
         init: function (el, options) {
@@ -786,9 +888,12 @@
                  spcount = splist.length,
                  needsRefresh = false,
                  offset = this.$canvas.offset(),
-                 localX = this.currentPageX - offset.left,
-                 localY = this.currentPageY - offset.top,
+                 localX = Math.round(this.currentPageX - offset.left),
+                 localY = Math.round(this.currentPageY - offset.top),
                  tooltiphtml, sp, i, result, changeEvent;
+            // localX/localY fix issue #50 with Google Chrome
+            // and subpixel rendering
+
             if (!this.over) {
                 return;
             }
@@ -835,6 +940,7 @@
             this.container = options.get('tooltipContainer') || document.body;
             this.tooltipOffsetX = options.get('tooltipOffsetX', 10);
             this.tooltipOffsetY = options.get('tooltipOffsetY', 12);
+            this.displayOnLeft  = options.get('toolTipPosition') === 'left';
             // remove any previous lingering tooltip
             $('#jqssizetip').remove();
             $('#jqstooltip').remove();
@@ -866,6 +972,9 @@
 
         getSize: function (content) {
             this.sizetip.html(content).appendTo(this.container);
+            var lpadding = parseInt(this.sizetip.css('padding-left'), 10);
+            var rpadding = parseInt(this.sizetip.css('padding-right'), 10);
+            this.padding = lpadding + rpadding + 1;
             this.width = this.sizetip.width() + 1;
             this.height = this.sizetip.height();
             this.sizetip.remove();
@@ -907,10 +1016,14 @@
             }
 
             y -= this.height + this.tooltipOffsetY;
-            x += this.tooltipOffsetX;
-
             if (y < this.scrollTop) {
                 y = this.scrollTop;
+            }
+
+            if (this.displayOnLeft) {
+                x -= this.tooltipOffsetX + this.width + this.padding;
+            } else {
+                x += this.tooltipOffsetX;
             }
             if (x < this.scrollLeft) {
                 x = this.scrollLeft;
@@ -931,6 +1044,7 @@
             $(window).unbind('resize.jqs scroll.jqs');
         }
     });
+
 
     initStyles = function() {
         addCSS(defaultStyles);
@@ -1136,6 +1250,30 @@
         },
 
         /**
+         * Setup colorMap from options
+         */
+        initColorMap: function() {
+            var colorMap = this.options.get('colorMap');
+            if ($.isFunction(colorMap)) {
+                this.colorMapFunction = colorMap;
+            } else if ($.isArray(colorMap)) {
+                this.colorMapFunction = function(sparkline, options, index, value) {
+                    if (index < colorMap.length) {
+                        return colorMap[index];
+                    }
+                    // else undefined
+                };
+            } else if (colorMap) {
+                if (colorMap.get === undefined) {
+                    colorMap = new RangeMap(colorMap); 
+                }
+                this.colorMapFunction = function(sparkline, options, index, value) {
+                    return colorMap.get(value);
+                }
+            }
+        },
+
+        /**
          * Actually render the chart to the canvas
          */
         render: function () {
@@ -1159,7 +1297,10 @@
             var currentRegion = this.currentRegion,
                 highlightEnabled = !this.options.get('disableHighlight'),
                 newRegion;
-            if (x > this.canvasWidth || y > this.canvasHeight || x < 0 || y < 0) {
+            // CUSTOM MOD: proper hover detection considering padding as well
+            var cW = $('canvas',this.el).width() + parseInt($('canvas',this.el).css('padding-left')) + parseInt($('canvas',this.el).css('padding-right'))
+            // if (x > this.canvasWidth || y > this.canvasHeight || x < 0 || y < 0) {
+            if (x > cW || y > this.canvasHeight || x < 0 || y < 0) {
                 return null;
             }
             newRegion = this.getRegion(el, x, y);
@@ -1207,7 +1348,8 @@
                 entries = [],
                 fields, formats, formatlen, fclass, text, i,
                 showFields, showFieldsKey, newFields, fv,
-                formatter, format, fieldlen, j;
+                formatter, format, fieldlen, j,
+                label_prefix, label_suffix;
             if (this.currentRegion === undefined) {
                 return '';
             }
@@ -1250,12 +1392,24 @@
                     format = new SPFormat(format);
                 }
                 fclass = format.fclass || 'jqsfield';
+
                 for (j = 0; j < fieldlen; j++) {
                     if (!fields[j].isNull || !options.get('tooltipSkipNull')) {
+                        label_prefix = '';
+                        label_suffix = '';
+                        if (options.get('tooltipPrefixBinLabels')
+                            && (options.get('tooltipPrefixBinLabels').length > fields[j].offset)) {
+                            label_prefix = options.get('tooltipPrefixBinLabels')[fields[j].offset];
+                        }
+                        if (options.get('tooltipSuffixBinLabels')
+                            && (options.get('tooltipSuffixBinLabels').length > fields[j].offset)) {
+                            label_suffix = options.get('tooltipSuffixBinLabels')[fields[j].offset];
+                        }
                         $.extend(fields[j], {
-                            prefix: options.get('tooltipPrefix'),
-                            suffix: options.get('tooltipSuffix')
+                            prefix: label_prefix + options.get('tooltipPrefix'),
+                            suffix: options.get('tooltipSuffix') + label_suffix
                         });
+
                         text = format.render(fields[j], options.get('tooltipValueLookups'), options);
                         entries.push('<div class="' + fclass + '">' + text + '</div>');
                     }
@@ -1346,6 +1500,7 @@
             target.render();
         }
     };
+
 
     /**
      * Line charts
@@ -1470,7 +1625,6 @@
             this.xvalues = xvalues;
             this.yvalues = yvalues;
             this.yminmax = yminmax;
-
         },
 
         processRangeOptions: function () {
@@ -1691,11 +1845,25 @@
                 }
             }
 
+            // explicitly compare the refLineX/Y option values with 'null' as numeric zero(0) should plot a ref-line at zero!
+            if (options.get('refLineX') != null) {
+                var y;
+                y = Math.round(this.canvasHeight - (options.get('refLineX') - this.miny) * (this.canvasHeight/rangey));
+                target.drawLine(0, y, this.canvasWidth, y, options.get('refLineColor')).append();
+            }
+
+            if (options.get('refLineY') != null) {
+                var x;
+                x = Math.round((options.get('refLineY') - this.minx) * (this.canvasWidth/rangex));
+                target.drawLine(x, this.canvasHeight, x, 0, options.get('refLineColor')).append();
+            }
+
             this.lastShapeId = target.getLastShapeId();
             this.canvasTop = canvasTop;
             target.render();
         }
     });
+
 
     /**
      * Bar charts
@@ -1711,7 +1879,7 @@
                 chartRangeClip = options.get('chartRangeClip'),
                 stackMin = Infinity,
                 stackMax = -Infinity,
-                isStackString, groupMin, groupMax, stackRanges,
+                isStackString, groupMin, groupMax, stackRanges, stackRangesNeg, stackTotals, actualMin, actualMax,
                 numValues, i, vlen, range, zeroAxis, xaxisOffset, min, max, clipMin, clipMax,
                 stacked, vlist, j, slen, svals, val, yoffset, yMaxCalc, canvasHeightEf;
             bar._super.init.call(this, el, values, options, width, height);
@@ -1742,7 +1910,9 @@
             this.barWidth = barWidth;
             this.barSpacing = barSpacing;
             this.totalBarWidth = barWidth + barSpacing;
-            this.width = width = (values.length * barWidth) + ((values.length - 1) * barSpacing);
+            var rawWidth = (values.length * barWidth) + ((values.length - 1) * barSpacing);
+            this.xScale = Math.min(1, rawWidth ? width / rawWidth : 1);
+            this.width = rawWidth * this.xScale; 
 
             this.initTarget();
 
@@ -1750,11 +1920,15 @@
                 clipMin = chartRangeMin === undefined ? -Infinity : chartRangeMin;
                 clipMax = chartRangeMax === undefined ? Infinity : chartRangeMax;
             }
+			if (stacked) {
+				actualMin = chartRangeMin === undefined ? stackMin : Math.min(stackMin, chartRangeMin);
+				actualMax = chartRangeMax === undefined ? stackMax : Math.max(stackMax, chartRangeMax);
+			}
 
             numValues = [];
             stackRanges = stacked ? [] : numValues;
-            var stackTotals = [];
-            var stackRangesNeg = [];
+            stackTotals = [];
+            stackRangesNeg = [];
             for (i = 0, vlen = values.length; i < vlen; i++) {
                 if (stacked) {
                     vlist = values[i];
@@ -1774,7 +1948,7 @@
                                     stackRanges[i] += val;
                                 }
                             } else {
-                                stackRanges[i] += Math.abs(val - (val < 0 ? stackMax : stackMin));
+                                stackRanges[i] += Math.abs(val - (val < 0 ? actualMax : actualMin));
                             }
                             numValues.push(val);
                         }
@@ -1792,17 +1966,17 @@
             this.stackMax = stackMax = stacked ? Math.max.apply(Math, stackTotals) : max;
             this.stackMin = stackMin = stacked ? Math.min.apply(Math, numValues) : min;
 
-            if (options.get('chartRangeMin') !== undefined && (options.get('chartRangeClip') || options.get('chartRangeMin') < min)) {
-                min = options.get('chartRangeMin');
+            if (chartRangeMin !== undefined && (chartRangeClip || chartRangeMin < min)) {
+                min = chartRangeMin;
             }
-            if (options.get('chartRangeMax') !== undefined && (options.get('chartRangeClip') || options.get('chartRangeMax') > max)) {
-                max = options.get('chartRangeMax');
+            if (chartRangeMax !== undefined && (chartRangeClip || chartRangeMax > max)) {
+                max = chartRangeMax;
             }
 
             this.zeroAxis = zeroAxis = options.get('zeroAxis', true);
             if (min <= 0 && max >= 0 && zeroAxis) {
                 xaxisOffset = 0;
-            } else if (zeroAxis == false) {
+            } else if (zeroAxis === false) {
                 xaxisOffset = min;
             } else if (min > 0) {
                 xaxisOffset = min;
@@ -1829,21 +2003,12 @@
             }
             this.yoffset = yoffset;
 
-            if ($.isArray(options.get('colorMap'))) {
-                this.colorMapByIndex = options.get('colorMap');
-                this.colorMapByValue = null;
-            } else {
-                this.colorMapByIndex = null;
-                this.colorMapByValue = options.get('colorMap');
-                if (this.colorMapByValue && this.colorMapByValue.get === undefined) {
-                    this.colorMapByValue = new RangeMap(this.colorMapByValue);
-                }
-            }
-
+            this.initColorMap();
             this.range = range;
         },
 
         getRegion: function (el, x, y) {
+            x /= this.xScale; 
             var result = Math.floor(x / this.totalBarWidth);
             return (result < 0 || result >= this.values.length) ? undefined : result;
         },
@@ -1866,22 +2031,22 @@
         },
 
         calcColor: function (stacknum, value, valuenum) {
-            var colorMapByIndex = this.colorMapByIndex,
-                colorMapByValue = this.colorMapByValue,
+            var colorMapFunction = this.colorMapFunction,
                 options = this.options,
                 color, newColor;
-            if (this.stacked) {
-                color = options.get('stackedBarColor');
-            } else {
-                color = (value < 0) ? options.get('negBarColor') : options.get('barColor');
-            }
-            if (value === 0 && options.get('zeroColor') !== undefined) {
-                color = options.get('zeroColor');
-            }
-            if (colorMapByValue && (newColor = colorMapByValue.get(value))) {
+
+            if (colorMapFunction && (newColor = colorMapFunction(this, options, valuenum, value))) {
                 color = newColor;
-            } else if (colorMapByIndex && colorMapByIndex.length > valuenum) {
-                color = colorMapByIndex[valuenum];
+            }
+            else {
+                if (this.stacked) {
+                    color = options.get('stackedBarColor');
+                } else {
+                    color = (value < 0) ? options.get('negBarColor') : options.get('barColor');
+                }
+                if (value === 0 && options.get('zeroColor') !== undefined) {
+                    color = options.get('zeroColor');
+                }
             }
             return $.isArray(color) ? color[stacknum % color.length] : color;
         },
@@ -1944,12 +2109,116 @@
                 if (highlight) {
                     color = this.calcHighlightColor(color, options);
                 }
-                result.push(target.drawRect(x, y, this.barWidth - 1, height - 1, color, color));
+                result.push(target.drawRect(x * this.xScale, y, (this.barWidth - 1) * this.xScale, height - 1, color, color));
             }
             if (result.length === 1) {
                 return result[0];
             }
             return result;
+        }
+    });
+
+
+    /**
+     * Stack charts
+     */
+    $.fn.sparkline.stack = stack = createClass($.fn.sparkline._base, {
+        type: 'stack',
+
+        init: function (el, values, options, width, height) {
+            var total = 0, i;
+
+            stack._super.init.call(this, el, values, options, width, height);
+
+            this.shapes = {}; // map shape ids to value offsets
+            this.valueShapes = {}; // maps value offsets to shape ids
+            this.values = values = $.map(values, Number);
+
+            if (options.get('width') === 'auto') {
+                this.width = this.height;
+            }
+
+            if (values.length > 0) {
+                for (i = values.length; i--;) {
+                    total += values[i];
+                }
+            }
+            this.total = total;
+            this.initTarget();
+            this.height = this.canvasHeight;
+            this.width = this.canvasWidth;
+        },
+
+        getRegion: function (el, x, y) {
+            var shapeid = this.target.getShapeAt(el, x, y);
+            return (shapeid !== undefined && this.shapes[shapeid] !== undefined) ? this.shapes[shapeid] : undefined;
+        },
+
+        getCurrentRegionFields: function () {
+            var currentRegion = this.currentRegion;
+            return {
+                isNull: this.values[currentRegion] === undefined,
+                value: this.values[currentRegion],
+                percent: this.values[currentRegion] / this.total * 100,
+                color: this.options.get('sliceColors')[currentRegion % this.options.get('sliceColors').length],
+                offset: currentRegion
+            };
+        },
+
+        changeHighlight: function (highlight) {
+            var currentRegion = this.currentRegion,
+                 newslice = this.renderSlice(currentRegion, highlight),
+                 shapeid = this.valueShapes[currentRegion];
+            delete this.shapes[shapeid];
+            this.target.replaceWithShape(shapeid, newslice);
+            this.valueShapes[currentRegion] = newslice.id;
+            this.shapes[newslice.id] = currentRegion;
+        },
+
+        renderSlice: function (valuenum, highlight) {
+            var target = this.target,
+                options = this.options,
+                height = this.height,
+                width = this.width,
+                values = this.values,
+                total = this.total,
+                start = 0,
+                end = 0,
+                i, vlen, color;
+
+            vlen = values.length;
+            for (i = 0; i < vlen; i++) {
+                start = end;
+                var sliceWidth = Math.round(values[i] * width / total);
+                if (valuenum === i) {
+                    color = options.get('sliceColors')[i % options.get('sliceColors').length];
+                    if (highlight) {
+                        color = this.calcHighlightColor(color, options);
+                    }
+                    return target.drawRect(start, 0, sliceWidth, height, undefined, color);
+                }
+                end += sliceWidth;
+            }
+        },
+
+        render: function () {
+            var target = this.target,
+                values = this.values,
+                options = this.options,
+                borderWidth = options.get('borderWidth'),
+                shape, i;
+
+            if (!stack._super.render.call(this)) {
+                return;
+            }
+            for (i = 0; i < values.length; i++) {
+                if (values[i]) { // don't render zero values
+                    shape = this.renderSlice(i).append();
+                    this.valueShapes[i] = shape.id; // store just the shapeid
+                    this.shapes[shape.id] = i;
+                }
+            }
+            target.render();
         }
     });
 
@@ -1969,18 +2238,11 @@
             this.barSpacing = barSpacing;
             this.totalBarWidth = barWidth + barSpacing;
             this.values = $.map(values, Number);
-            this.width = width = (values.length * barWidth) + ((values.length - 1) * barSpacing);
+            var rawWidth = (values.length * barWidth) + ((values.length - 1) * barSpacing);
+            this.xScale = Math.min(1, rawWidth ? width / rawWidth : 1);
+            this.width = rawWidth * this.xScale; 
 
-            if ($.isArray(options.get('colorMap'))) {
-                this.colorMapByIndex = options.get('colorMap');
-                this.colorMapByValue = null;
-            } else {
-                this.colorMapByIndex = null;
-                this.colorMapByValue = options.get('colorMap');
-                if (this.colorMapByValue && this.colorMapByValue.get === undefined) {
-                    this.colorMapByValue = new RangeMap(this.colorMapByValue);
-                }
-            }
+            this.initColorMap();
             this.initTarget();
         },
 
@@ -1999,19 +2261,15 @@
         },
 
         calcColor: function (value, valuenum) {
-            var values = this.values,
-                options = this.options,
-                colorMapByIndex = this.colorMapByIndex,
-                colorMapByValue = this.colorMapByValue,
+            var options = this.options,
+                colorMapFunction = this.colorMapFunction,
                 color, newColor;
 
-            if (colorMapByValue && (newColor = colorMapByValue.get(value))) {
+            if (colorMapFunction && (newColor = colorMapFunction(this, options, valuenum, value))) {
                 color = newColor;
-            } else if (colorMapByIndex && colorMapByIndex.length > valuenum) {
-                color = colorMapByIndex[valuenum];
-            } else if (values[valuenum] < 0) {
+            } else if (value < 0) {
                 color = options.get('negBarColor');
-            } else if (values[valuenum] > 0) {
+            } else if (value > 0) {
                 color = options.get('posBarColor');
             } else {
                 color = options.get('zeroBarColor');
@@ -2047,9 +2305,10 @@
             if (highlight) {
                 color = this.calcHighlightColor(color, options);
             }
-            return target.drawRect(x, y, this.barWidth - 1, height - 1, color, color);
+            return target.drawRect(x * this.xScale, y, (this.barWidth - 1) * this.xScale, height - 1, color, color);
         }
     });
+
 
     /**
      * Discrete charts
@@ -2117,6 +2376,7 @@
         }
     });
 
+
     /**
      * Bullet charts
      */
@@ -2143,6 +2403,20 @@
             this.min = min;
             this.max = max;
             this.range = max - min;
+			
+			// GRADIENT
+			var colors = options.get('rangeColors');
+			if (options.get('gradient') && colors.length > 1) {
+				var rainbow = new Rainbow();
+				rainbow.setSpectrumByArray(colors);
+				rainbow.setNumberRange(0, this.values.length);
+				
+				for (var i = 0; i < this.values.length; i++) {
+					colors[i] = rainbow.colorAt(i);
+				}
+			}
+			
+			this.rangeColors = colors;
             this.shapes = {};
             this.valueShapes = {};
             this.regiondata = {};
@@ -2192,7 +2466,7 @@
         renderRange: function (rn, highlight) {
             var rangeval = this.values[rn],
                 rangewidth = Math.round(this.canvasWidth * ((rangeval - this.min) / this.range)),
-                color = this.options.get('rangeColors')[rn - 2];
+                color = this.rangeColors[rn - 2];
             if (highlight) {
                 color = this.calcHighlightColor(color, this.options);
             }
@@ -2247,6 +2521,7 @@
             target.render();
         }
     });
+
 
     /**
      * Pie charts
@@ -2360,6 +2635,7 @@
         }
     });
 
+
     /**
      * Box plots
      */
@@ -2415,7 +2691,7 @@
                 maxValue = options.get('chartRangeMax') === undefined ? Math.max.apply(Math, values) : options.get('chartRangeMax'),
                 canvasLeft = 0,
                 lwhisker, loutlier, iqr, q1, q2, q3, rwhisker, routlier, i,
-                size, unitSize;
+                size, unitSize, unitOffset;
 
             if (!box._super.render.call(this)) {
                 return;
@@ -2466,11 +2742,16 @@
             this.loutlier = loutlier;
             this.routlier = routlier;
 
-            unitSize = canvasWidth / (maxValue - minValue + 1);
+            // Non-zero unit offset can throw off the plotting if it is not
+            // required to avoid a division by zero.
+            unitOffset = 0.0;
+            if ( ( maxValue - minValue ) == 0.0 ) { unitOffset = 1.0; }
+
+            unitSize = canvasWidth / (maxValue - minValue + unitOffset );
             if (options.get('showOutliers')) {
                 canvasLeft = Math.ceil(options.get('spotRadius'));
                 canvasWidth -= 2 * Math.ceil(options.get('spotRadius'));
-                unitSize = canvasWidth / (maxValue - minValue + 1);
+                unitSize = canvasWidth / (maxValue - minValue + unitOffset);
                 if (loutlier < lwhisker) {
                     target.drawCircle((loutlier - minValue) * unitSize + canvasLeft,
                         canvasHeight / 2,
@@ -2494,57 +2775,268 @@
                 Math.round((q3 - q1) * unitSize),
                 Math.round(canvasHeight * 0.8),
                 options.get('boxLineColor'),
-                options.get('boxFillColor')).append();
+                options.get('boxFillColor'),
+                // CUSTOM MOD: line width & corner radius
+                options.get('lineWidth'),
+                options.get('cornerRadius')).append();
             // left whisker
+            // CUSTOM MOD: strikethrough option
+            var rightEnd = q1 - minValue;
+            if (options.get('strikeThrough'))
+              rightEnd = rwhisker - minValue;
+
             target.drawLine(
                 Math.round((lwhisker - minValue) * unitSize + canvasLeft),
                 Math.round(canvasHeight / 2),
-                Math.round((q1 - minValue) * unitSize + canvasLeft),
+                Math.round(rightEnd * unitSize + canvasLeft),
                 Math.round(canvasHeight / 2),
-                options.get('lineColor')).append();
+                // CUSTOM MOD: line width added
+                options.get('lineColor'),
+                options.get('lineWidth')).append();
             target.drawLine(
                 Math.round((lwhisker - minValue) * unitSize + canvasLeft),
                 Math.round(canvasHeight / 4),
                 Math.round((lwhisker - minValue) * unitSize + canvasLeft),
                 Math.round(canvasHeight - canvasHeight / 4),
-                options.get('whiskerColor')).append();
+                options.get('whiskerColor'),
+                // CUSTOM MOD: line width added
+                options.get('lineWidth')).append();
             // right whisker
-            target.drawLine(Math.round((rwhisker - minValue) * unitSize + canvasLeft),
-                Math.round(canvasHeight / 2),
-                Math.round((q3 - minValue) * unitSize + canvasLeft),
-                Math.round(canvasHeight / 2),
-                options.get('lineColor')).append();
+            // CUSTOM MOD: strikethrough option
+            if (!options.get('strikeThrough'))
+            {
+              target.drawLine(Math.round((rwhisker - minValue) * unitSize + canvasLeft),
+                  Math.round(canvasHeight / 2),
+                  Math.round((q3 - minValue) * unitSize + canvasLeft),
+                  Math.round(canvasHeight / 2),
+                  options.get('lineColor'),
+                  // CUSTOM MOD: line width added
+                  options.get('lineWidth')).append();
+            }
             target.drawLine(
                 Math.round((rwhisker - minValue) * unitSize + canvasLeft),
                 Math.round(canvasHeight / 4),
                 Math.round((rwhisker - minValue) * unitSize + canvasLeft),
                 Math.round(canvasHeight - canvasHeight / 4),
-                options.get('whiskerColor')).append();
+                options.get('whiskerColor'),
+                // CUSTOM MOD: line width added
+                options.get('lineWidth')).append();
+
             // median line
             target.drawLine(
                 Math.round((q2 - minValue) * unitSize + canvasLeft),
                 Math.round(canvasHeight * 0.1),
                 Math.round((q2 - minValue) * unitSize + canvasLeft),
                 Math.round(canvasHeight * 0.9),
-                options.get('medianColor')).append();
-            if (options.get('target')) {
+                // CUSTOM MOD: medianwidth option
+                options.get('medianColor'),
+                options.get('medianWidth')).append();
+            if (typeof options.get('target') == 'number') {
                 size = Math.ceil(options.get('spotRadius'));
-                target.drawLine(
-                    Math.round((options.get('target') - minValue) * unitSize + canvasLeft),
-                    Math.round((canvasHeight / 2) - size),
-                    Math.round((options.get('target') - minValue) * unitSize + canvasLeft),
-                    Math.round((canvasHeight / 2) + size),
-                    options.get('targetColor')).append();
-                target.drawLine(
-                    Math.round((options.get('target') - minValue) * unitSize + canvasLeft - size),
-                    Math.round(canvasHeight / 2),
-                    Math.round((options.get('target') - minValue) * unitSize + canvasLeft + size),
-                    Math.round(canvasHeight / 2),
-                    options.get('targetColor')).append();
+                // CUSTOM MOD: circle representation of median
+                var targetVal = options.get('target');
+                var targetObj = options.get('targetObj')
+                if (!targetObj || targetObj == 'crosshair') {
+                    target.drawLine(
+                        Math.round((targetVal - minValue) * unitSize + canvasLeft),
+                        Math.round((canvasHeight / 2) - size),
+                        Math.round((targetVal - minValue) * unitSize + canvasLeft),
+                        Math.round((canvasHeight / 2) + size),
+                        options.get('targetColor')).append();
+                    target.drawLine(
+                        Math.round((targetVal - minValue) * unitSize + canvasLeft - size),
+                        Math.round(canvasHeight / 2),
+                        Math.round((targetVal - minValue) * unitSize + canvasLeft + size),
+                        Math.round(canvasHeight / 2),
+                        options.get('targetColor')).append();
+                }
+                else if (targetObj == 'circle')
+                {
+                    target.drawCircle(
+                        (targetVal - minValue) * unitSize + canvasLeft,
+                        canvasHeight / 2,
+                        options.get('spotRadius'),
+                        options.get('targetColor'),
+                        options.get('targetColor')).append();
+                }
             }
             target.render();
         }
     });
+
+
+  /*jslint nomen: true, plusplus: true, todo: true, white: true, browser: true *//**
+     * Timeline sparkline chart
+     * Given a list of events with begin/finish times, graph them vertically or horizontally by event type.
+     * let events = [
+     *  {begin:date(11a), finish:date(12a), color:'red'},
+     *  {begin:date(12a), finish:date(1p), color:'green'},
+     *  {begin:date(1p), finish:date(6p), color:'blue'}
+     * ]
+     * let 1 pixel = 1 minute
+     * let 8 am be the sparkline begin
+     * let 8 pm be the sparkline finish 
+     * let 720 pixels be the total visible duration
+     * then graph 
+     *  |white for 300 pixels||red for 60 pixels||green for 60 pixels||blue for 300 pixels||white for 120 pixels|
+     */
+;(function ($) {
+
+    "use strict";
+
+    $.fn.sparkline.timeline = timeline = createClass($.fn.sparkline._base, barHighlightMixin, {
+
+        type: 'timeline',
+
+        init: function (el, values, options, width, height) {
+            // expect a Date or the Number of milliseconds since the epoc
+            function minutes(date) {
+                return date / (60 * 1000);
+            }
+            // force positive number otherwise 0
+            function forcePositiveNumber(val) {
+                val = Math.abs(val);
+                return isNaN(val) ? 0 : val;
+            }
+            var i, data, segment, beginMinutes, finishMinutes, durationMinutes, 
+                pixelsPerMinute, userInitHandler, timeMarkPixels, isVerticalOrientation, 
+                timeMarkInterval, timeMarkOffset, timeMark, tick, tickSize;
+            timeline._super.init.call(this, el, values, options, width, height);
+            // required by barHighlightMixin
+            this.regionShapes = {};
+            // sets canvas height/width
+            this.initTarget();
+            // holds each timeline entry with x,y,w,h,lc,fc,rd values
+            this.segments = [];
+            // holds time markers entry with x1,y1,x2,y2,lc,w values
+            this.timemarks = [];
+            // paints a 1px line showing full length of timeline
+            timeMarkInterval = forcePositiveNumber(options.mergedOptions.timeMarkInterval);
+            // orient the sparkline direction, the default is horizontal
+            isVerticalOrientation = 'vertical' === options.mergedOptions.orientation;
+            // allow user to manipulate the data before segment is built
+            userInitHandler = $.isFunction(options.mergedOptions.init) ? options.mergedOptions.init : function (d) { return d; };
+            function offset(date, baseline) {
+                return Math.ceil(pixelsPerMinute * (minutes(date) - baseline));
+            }
+            // segments that fall outside of begin/finish will be clipped
+            beginMinutes = minutes(options.mergedOptions.begin);
+            finishMinutes = minutes(options.mergedOptions.finish);
+            durationMinutes = (finishMinutes - beginMinutes);
+            if (isVerticalOrientation) {
+                pixelsPerMinute = (this.canvasHeight - 1) / durationMinutes;
+            } else {
+                pixelsPerMinute = (this.canvasWidth - 1) / durationMinutes;
+            }
+            if (timeMarkInterval > 0) {
+                timeMarkPixels = timeMarkInterval * pixelsPerMinute;
+                // add tick marks based on timeMarkInterval
+                for (i = 0; i < ((durationMinutes * pixelsPerMinute) / timeMarkPixels) + 1; i++) {
+                    tick = {x1: 0, y1: 0, x2: 0, y2: 0, lc:'#ff0011', w: 1};
+                    timeMark = Math.round(i * timeMarkPixels);
+                    tickSize = Math.ceil(timeMark / pixelsPerMinute) % 60 === 0 ? 3 : 1;
+                    if (isVerticalOrientation) {
+                        tick.x2 = tickSize;
+                        tick.y1 = tick.y2 = timeMark;
+                    } else {
+                        tick.y2 = tickSize;
+                        tick.x1 = tick.x2 = timeMark;
+                    }
+                    this.timemarks.push(tick);
+                }
+                // add last tick mark and timeline
+                if (isVerticalOrientation) {
+                    this.timemarks.push({x1:0, y1:0, x2:0, y2:this.canvasHeight, lc:'#eee', w:1});
+                } else {
+                    this.timemarks.push({x1:0, y1:0, x2:this.canvasWidth, y2:0, lc:'#eee', w:1});
+                }
+            }
+            // build each segment for rendering
+            timeMarkOffset = (timeMarkInterval > 0) ? 1 : 0;
+            for (i = 0; i < values.length; i++) {
+                // TODO: determine why values has bogus length value in IE8
+                if (values[i]) {
+                    data = userInitHandler(values[i], i);
+                    if (data) {
+                        // the minus 2 is to prevent clipping the segment
+                        segment = {
+                            x: timeMarkOffset, 
+                            y: timeMarkOffset, 
+                            w: width - (timeMarkOffset + 1), 
+                            h: height - (timeMarkOffset + 1), 
+                            data: data
+                        };
+                        // TODO: adjust shape size for overlapping regions
+                        if (isVerticalOrientation) {
+                            segment.y = offset(data.begin, beginMinutes);
+                            segment.h = offset(data.finish, minutes(data.begin));
+                        } else {
+                            segment.x = offset(data.begin, beginMinutes);
+                            segment.w = offset(data.finish, minutes(data.begin));
+                        }
+                        segment.fc = data.color || options.mergedOptions.fillColor;
+                        segment.lc = data.lineColor || options.mergedOptions.lineColor;
+                        this.segments.push(segment);
+                    }
+                }
+            }
+
+            // sort the segments so all segments are visible in timeline
+            this.segments = this.segments.sort(function compare(a,b) {
+                var ab, af, bb, bf;
+                ab = Number(a.data.begin);
+                bb = Number(b.data.begin);
+                af = Number(a.data.finish);
+                bf = Number(b.data.finish);
+                // reverse order sort
+                return (bb-ab) + (bf-af);
+            });
+        },
+
+        /** return mouse coordinates on timeline */
+        getRegion: function (el, x, y) {
+            return {el: el, x: x, y: y};
+        },
+
+        /** return data used to display tooltip for the current region(s) */
+        getCurrentRegionFields: function () {
+            var i, el, x, y, segment, regions = [], left, right, top, bottom;
+            el = this.currentRegion.el;
+            x = this.currentRegion.x;
+            y = this.currentRegion.y;
+            for (i = 0; i < this.segments.length; i++) {
+                segment = this.segments[i];
+                if (segment) {
+                    left = segment.x;
+                    right = left + segment.w;
+                    top = segment.y;
+                    bottom = top + segment.h;
+                    if (x > left && x < right && y > top && y < bottom) {
+                        regions.push(segment.data);
+                    }
+                }
+            }
+            return regions;
+        },
+
+        /** render timeline segment and tickmarks */
+        renderRegion: function (valuenum, highlight) {
+            var i, tick, segment, result = [], target = this.target;
+            if (valuenum === 0) {
+                for (i = 0; i < this.timemarks.length; i++) {
+                    tick = this.timemarks[i];
+                    result.push(target.drawLine(tick.x1, tick.y1, tick.x2, tick.y2, tick.lc, tick.w));
+                }
+            }
+            segment = this.segments[valuenum];
+            if (segment) {
+                result.push(target.drawRect(segment.x, segment.y, segment.w, segment.h, segment.lc, segment.fc));
+            }
+            return result;
+        }
+    });
+}(jQuery));
+
 
     // Setup a very simple "virtual canvas" to make drawing the few shapes we need easier
     // This is accessible as $(foo).simpledraw()
@@ -2580,7 +3072,8 @@
         },
 
         drawLine: function (x1, y1, x2, y2, lineColor, lineWidth) {
-            return this.drawShape([[x1, y1], [x2, y2]], lineColor, lineWidth);
+            // CUSTOM MOD: line width added
+            return this.drawShape([[x1, y1], [x2, y2]], lineColor, null, lineWidth);
         },
 
         drawShape: function (path, lineColor, fillColor, lineWidth) {
@@ -2595,8 +3088,9 @@
             return this._genShape('PieSlice', [x, y, radius, startAngle, endAngle, lineColor, fillColor]);
         },
 
-        drawRect: function (x, y, width, height, lineColor, fillColor) {
-            return this._genShape('Rect', [x, y, width, height, lineColor, fillColor]);
+        // CUSTOM MOD: line width / radius added
+        drawRect: function (x, y, width, height, lineColor, fillColor, lineWidth, radius) {
+            return this._genShape('Rect', [x, y, width, height, lineColor, fillColor, lineWidth, radius]);
         },
 
         getElement: function () {
@@ -2639,6 +3133,9 @@
             } else {
                 this.pixelWidth = $(canvas).width();
             }
+            var ratio = window.hasOwnProperty('devicePixelRatio') ? window.devicePixelRatio : 1;
+            this.pixelWidth *= ratio;
+            this.pixelHeight *= ratio;
         },
 
         /**
@@ -2693,6 +3190,7 @@
         }
     });
 
+
     VCanvas_canvas = createClass(VCanvas_base, {
         init: function (width, height, target, interact) {
             VCanvas_canvas._super.init.call(this, width, height, target);
@@ -2700,17 +3198,24 @@
             if (target[0]) {
                 target = target[0];
             }
+            this.context = this.canvas.getContext('2d');
+
+            var devicePixelRatio = window.devicePixelRatio || 1,
+                backingStoreRatio = this.context.webkitBackingStorePixelRatio || this.context.mozBackingStorePixelRatio || this.context.msBackingStorePixelRatio || this.context.oBackingStorePixelRatio || this.context.backingStorePixelRatio || 1,
+                ratio = devicePixelRatio / backingStoreRatio;
+
             $.data(target, '_jqs_vcanvas', this);
             $(this.canvas).css({ display: 'inline-block', width: width, height: height, verticalAlign: 'top' });
             this._insert(this.canvas, target);
             this._calculatePixelDims(width, height, this.canvas);
-            this.canvas.width = this.pixelWidth;
-            this.canvas.height = this.pixelHeight;
+            this.canvas.width = this.pixelWidth * ratio;
+            this.canvas.height = this.pixelHeight * ratio;
+            this.context.scale(ratio, ratio);
             this.interact = interact;
             this.shapes = {};
             this.shapeseq = [];
             this.currentTargetShapeId = undefined;
-            $(this.canvas).css({width: this.pixelWidth, height: this.pixelHeight});
+            //$(this.canvas).css({width: this.pixelWidth, height: this.pixelHeight});
         },
 
         _getContext: function (lineColor, fillColor, lineWidth) {
@@ -2733,14 +3238,43 @@
             this.currentTargetShapeId = undefined;
         },
 
-        _drawShape: function (shapeid, path, lineColor, fillColor, lineWidth) {
+        // CUSTOM MOD: radius added
+        _drawShape: function (shapeid, path, lineColor, fillColor, lineWidth, radius) {
             var context = this._getContext(lineColor, fillColor, lineWidth),
-                i, plen;
+                i, plen, done = false;
+            if (!radius)
+              radius = 0;
             context.beginPath();
-            context.moveTo(path[0][0] + 0.5, path[0][1] + 0.5);
-            for (i = 1, plen = path.length; i < plen; i++) {
-                context.lineTo(path[i][0] + 0.5, path[i][1] + 0.5); // the 0.5 offset gives us crisp pixel-width lines
+            // CUSTOM MOD: corner radius drawing added for rectangles
+            if (path.length === 5) {
+                if ((path[1][0] - path[0][0]) < radius)
+                    radius = 0;
+                // this is a rectangle
+                if (radius > 0) {
+                    context.moveTo(path[0][0] + radius + 0.5, path[0][1] + 0.5);
+
+                    context.lineTo(path[1][0] - radius + 0.5, path[1][1] + 0.5);
+                    context.quadraticCurveTo(path[1][0] - radius + 0.5, path[1][1] + 0.5, path[1][0] + 0.5, path[1][1] + radius + 0.5);
+
+                    context.lineTo(path[2][0] + 0.5, path[2][1] - radius + 0.5);
+                    context.quadraticCurveTo(path[2][0] + 0.5, path[2][1] - radius + 0.5, path[2][0] - radius + 0.5, path[2][1] + 0.5);
+
+                    context.lineTo(path[3][0] + radius + 0.5, path[3][1] + 0.5);
+                    context.quadraticCurveTo(path[3][0] + radius + 0.5, path[3][1] + 0.5, path[3][0] + 0.5, path[3][1] - radius + 0.5);
+
+                    context.lineTo(path[4][0] + 0.5, path[4][1] + radius + 0.5);
+                    context.quadraticCurveTo(path[4][0] + 0.5, path[4][1] + radius + 0.5, path[4][0] + radius + 0.5, path[4][1] + 0.5);
+
+                    done = true;
+                }
+            } 
+            if (!done) {
+              context.moveTo(path[0][0] + 0.5, path[0][1] + 0.5);
+              for (i = 1, plen = path.length; i < plen; i++) {
+                  context.lineTo(path[i][0] + 0.5, path[i][1] + 0.5); // the 0.5 offset gives us crisp pixel-width lines
+              }
             }
+
             if (lineColor !== undefined) {
                 context.stroke();
             }
@@ -2788,8 +3322,9 @@
             }
         },
 
-        _drawRect: function (shapeid, x, y, width, height, lineColor, fillColor) {
-            return this._drawShape(shapeid, [[x, y], [x + width, y], [x + width, y + height], [x, y + height], [x, y]], lineColor, fillColor);
+        // CUSTOM MOD: radius added
+        _drawRect: function (shapeid, x, y, width, height, lineColor, fillColor, lineWidth, radius) {
+            return this._drawShape(shapeid, [[x, y], [x + width, y], [x + width, y + height], [x, y + height], [x, y]], lineColor, fillColor, null, radius);
         },
 
         appendShape: function (shape) {
@@ -2886,6 +3421,7 @@
 
     });
 
+
     VCanvas_vml = createClass(VCanvas_base, {
         init: function (width, height, target) {
             var groupel;
@@ -2908,7 +3444,7 @@
             this.prerender = '';
         },
 
-        _drawShape: function (shapeid, path, lineColor, fillColor, lineWidth) {
+        _drawShape: function (shapeid, path, lineColor, fillColor, lineWidth, radius) {
             var vpath = [],
                 initial, stroke, fill, closed, vel, plen, i;
             for (i = 0, plen = path.length; i < plen; i++) {
@@ -2986,8 +3522,8 @@
             return vel;
         },
 
-        _drawRect: function (shapeid, x, y, width, height, lineColor, fillColor) {
-            return this._drawShape(shapeid, [[x, y], [x, y + height], [x + width, y + height], [x + width, y], [x, y]], lineColor, fillColor);
+        _drawRect: function (shapeid, x, y, width, height, lineColor, fillColor, lineWidth, radius) {
+            return this._drawShape(shapeid, [[x, y], [x, y + height], [x + width, y + height], [x + width, y], [x, y]], lineColor, fillColor, lineWidth, radius);
         },
 
         reset: function () {
@@ -3051,4 +3587,7 @@
         }
     });
 
-}))}(document, Math));
+
+}));
+
+}(document, Math));
