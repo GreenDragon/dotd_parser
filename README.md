@@ -22,19 +22,18 @@ A Web2py web application to parse 5th Planet Games raid logs into useful statist
 
 ### Production Environment:
     
-    * Debian 7.8 ( https://www.linode.com/ )
+    * Debian 8.0 ( https://www.linode.com/ )
         * web2py Version 2.10.3-stable+timestamp.2015.04.02.21.42.07
-        * MySQL 
-            * mysql-server 5.5.41-0+wheezy1
+        * MariaDB 
+            * mariadb-server                       10.0.16-1
         * Python 2.7
-            * python2.7                            2.7.3-6+deb7u2
-            * python-mysqldb                       1.2.3-2
-            * python-requests                      0.12.1-1+deb7u1
-            * python-yaml                          3.10-4+deb7u1
-        * Apache 2.2.x
-            * apache2                              2.2.22-13+deb7u4
-            * apache2-mpm-prefork                  2.2.22-13+deb7u4 ( for PHP )
-            * libapache2-mod-wsgi                  3.3-4+deb7u1
+            * python2.7                            2.7.9-2
+            * python-mysqldb                       1.2.3-2.1
+            * python-requests                      2.4.3-6
+            * python-yaml                          3.11-2
+        * Apache 2.4.x
+            * apache2                              2.4.10-10
+            * libapache2-mod-wsgi                  4.3.0-1
 
 ### Requirements:
 
@@ -43,8 +42,8 @@ Prerequisites ( Unix only ):
     * Python 2.7.x
         * python-mysqldb  >= 1.2.3
         * python-requests >= 0.12.1
-    * MySQL 5.5 or newer
-    * web2py
+    * MySQL 5.5 or newer ( or equivalent MariaDB )
+    * web2py >= 2.10.3 
     * Apache 2.2 or newer + mod-wsgi 3.3 or newer
     * UgUp API Key from 5th Planet games: http://bit.ly/1jSdVoQ
 
