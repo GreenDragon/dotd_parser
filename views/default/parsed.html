@@ -48,11 +48,6 @@ $(document).ready(function() {
         "info":   false,
         "order":  [[0, "asc" ]],
     } );
-    $("#relatedLogsTable").dataTable( {
-        "paging": false,
-        "info":   false,
-        "order":  [[0, "asc" ]],
-    } );
 } );
 </script>
 
@@ -323,7 +318,6 @@ var chart = c3.generate({
         <li><a href="#triggeredTab" data-toggle="tab">Triggered</a></li>
         <li><a href="#hitListTab" data-toggle="tab">Hit List</a></li>
         <li><a href="#logTab" data-toggle="tab">Raw</a></li>
-        <li><a href="#relatedLogsTab" data-toggle="tab">Related Results</a></li>
         <li><a href="#procsBBcodeTab" data-toggle="tab">Procs BBcode</a></li>
     </ul>
 
@@ -663,36 +657,6 @@ var chart = c3.generate({
             </div>
         </div>
     </div>
-
-    <div class="tab-pane" id="relatedLogsTab">
-{{if len(related_logs):}}
-        <div class="table">
-            <table id="relatedLogsTable" class="display table table-bordered">
-            <thead>
-                <tr>
-                    <th>Date Raid Log Parsed</th>
-                    <th>URL Link</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{for log in related_logs:}}
-                <tr>
-                    <td><a href="/parsed/{{=log.uuid}}">{{=log.date}}</a></td>
-                    <td><a href="/parsed/{{=log.uuid}}">/parsed/{{=log.uuid}}</a></td>
-                </tr>
-                {{pass}}
-            </tbody>
-            </table>
-        </div>
-{{else:}}
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <p>No previous or related raid logs submitted</p>
-            </div>
-        </div>
-{{pass}}
-    </div>
-
 
     <div class="tab-pane" id="procsBBcodeTab">
         <textarea class="form-control" rows="10">

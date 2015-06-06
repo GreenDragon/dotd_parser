@@ -264,7 +264,7 @@ def parser(input):
         # Vigbjorn the Crazed says: "You believe me, Veritas, don't you? We'll hunt the blue yetis together!"
         #
         # nil
-        elif "says" in line or "Mira gives" in line:
+        elif "says" in line or "yells" in line or "Mira gives" in line:
             if line not in rant_items:
                 rant_items[line] = 1
             else:
@@ -287,53 +287,16 @@ def parser(input):
             else:
                 triggered_items[line] += 1
 
-        # Info from second attack proc?
+        # Some players concatenate multiple logs into one stream
         # RikaStormwin dealt 11,590,546 damage!
         # KwanSai dealt 123,063,260 damage!
         elif "dealt" in line and "health" not in line:
             object = line.split()
 
-            if len(object) == 4 and object[3] == 'damage!':
-                username = object[0].strip()
-                # this logic won't work until a second experience round comes along.
-                # need a better algorithm here
-                # oh well, 80-20 rules...
-                if username == experience['user']:
-                    if isnum(object[2]):
-                        damage = int(object[2].replace(',', ''))
-
-                        experience['regular_hits'] += 1
-                        experience['total_reg_dmg'] += damage
-                    else:
-                        syslog.syslog(line)
-                #else:
-                #    syslog.syslog(line)
-            else:
-                syslog.syslog(line)
-
-        # Info from second attack proc? or another user
         # Ouryu crit 16,906,936 damage!
         # MengaoLIGABR crit 68,156,584 damage!
         elif "crit" in line and "health" not in line:
             object = line.split()
-
-            if len(object) == 4 and object[3] == 'damage!':
-                username = object[0].strip()
-                # this logic won't work until a second experience round comes along.
-                # need a better algorithm here
-                # oh well, 80-20 rules...
-                if username == experience['user']:
-                    if isnum(object[2]):
-                        damage = int(object[2].replace(',', ''))
-
-                        experience['critical_hits'] += 1
-                        experience['total_crit_dmg'] += damage
-                    else:
-                        syslog.syslog(line)
-                else:
-                    syslog.syslog(line)
-            else:
-                syslog.syslog(line)
 
         # If we made it this far, it's either an unknown log line, or garbage
         else:
