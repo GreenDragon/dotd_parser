@@ -7,6 +7,8 @@ def load_proc_to_names():
     enchantments_dict = {}
     engineering_dict = {}
 
+    armaments_dict = {}
+
     for row in db().select(db.dawn_generals.name, db.dawn_generals.proc_name):
         if len(row.proc_name):
             generals_dict[row.proc_name] = { 'name':row.name, 'slot':'General' }
@@ -61,5 +63,10 @@ def load_proc_to_names():
         if len(row.proc_name):
             engineering_dict[row.proc_name] = { 'name':row.name, 'slot':get_suns_engineer_name(row.engineering) }
 
+    armaments_dict["Scream and Shout"] = { 'name':"Berserker's Horn", 'slot':'Armament'}
+    armaments_dict["Heads Up"] = { 'name':"Catapult", 'slot':'Armament'}
+    armaments_dict["Arrow'd"] = { 'name':"Ballista", 'slot':'Armament'}
+    armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament'}
+
     return [generals_dict, mounts_dict, equipment_dict, troops_dict,
-            legions_dict, enchantments_dict, engineering_dict ]
+            legions_dict, enchantments_dict, engineering_dict, armaments_dict ]

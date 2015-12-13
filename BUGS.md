@@ -1,3 +1,10 @@
+bb6a1b92-0860-11e5-8c70-f23c91963f4a
+
+	Bad concatenation of entries
+
+	Earned 24,416 credits and 38 experience!SETIRB's Super Stab Friend FIGHT! contributed 516,600 damage.
+
+
 Legion
   No mapping "An Unkindness of Angels" back to "Raven's Wing"
 
