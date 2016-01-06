@@ -35,7 +35,10 @@ def ugup_request(path, table):
         data = json.loads(request.text)
         for item in data['result']:
             if config["verbose_mode"]:
-                print table + ': ' + str(item['id']) + ': ' + item['name']
+                try:
+                    print table + ': ' + str(item['id']) + ': ' + item['name']
+                except UnicodeEncodeError:
+                    print table + ': ' + str(item['id']) + ': UnicodeEncodeError'
 
             # These json/hash fields should always be constant in all cases
             id = int(item['id'])
@@ -257,3 +260,5 @@ ugup_request(api_call_path('engineering', 'suns'), 'suns_engineering')
 
 cursor.close()
 conn.close()
+
+print "Job's Done!"

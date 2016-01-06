@@ -35,7 +35,7 @@ Filter Errant Entries from log history?
 LoTS
 suns_equipment: 1681: Maggie's Marauders Commander Device
 suns_equipment: 1682:
-suns_equipment: 1683:
+suns_equipment: 1683: *MISSING*
 suns_equipment: 1684:
 suns_equipment: 1685:
 suns_equipment: 1686: Blackpool Punk Broken Bottle

@@ -63,10 +63,19 @@ def load_proc_to_names():
         if len(row.proc_name):
             engineering_dict[row.proc_name] = { 'name':row.name, 'slot':get_suns_engineer_name(row.engineering) }
 
-    armaments_dict["Scream and Shout"] = { 'name':"Berserker's Horn", 'slot':'Armament'}
-    armaments_dict["Heads Up"] = { 'name':"Catapult", 'slot':'Armament'}
-    armaments_dict["Arrow'd"] = { 'name':"Ballista", 'slot':'Armament'}
-    armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament'}
+    # http://dotd.wikia.com/wiki/Category:Armaments
+    #
+    # Armorskin Charm: Support: Stam +25
+    armaments_dict["Arrow'd"] = { 'name':"Ballista", 'slot':'Armament::Siege'}
+    armaments_dict["Scream and Shout"] = { 'name':"Berserker's Horn", 'slot':'Armament::Relic'}
+    armaments_dict["BOOM"] = { 'name':"Black Powder", 'slot':'Armament::Siege'}
+    # Blessing of Karuss: Support: Stam +20
+    armaments_dict["Heads Up"] = { 'name':"Catapult", 'slot':'Armament::Siege'}
+    # Favor of Brough: Support: Att/Def +250
+    # Font of Elation: Relic: +40% Legion Bonus
+    armaments_dict["Witching Hour"] = { 'name':"Nightfall Orb", 'slot':'Armament::Relic'}
+    armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament::Siege'}
+
 
     return [generals_dict, mounts_dict, equipment_dict, troops_dict,
             legions_dict, enchantments_dict, engineering_dict, armaments_dict ]
