@@ -71,11 +71,23 @@ def load_proc_to_names():
     armaments_dict["BOOM"] = { 'name':"Black Powder", 'slot':'Armament::Siege'}
     # Blessing of Karuss: Support: Stam +20
     armaments_dict["Heads Up"] = { 'name':"Catapult", 'slot':'Armament::Siege'}
+    armaments_dict["I'm Back"] = { 'name':"Curse of Returning", 'slot':'Armament::Support'}
     # Favor of Brough: Support: Att/Def +250
     # Font of Elation: Relic: +40% Legion Bonus
+    armaments_dict["Climb the Wall"] = { 'name':"Grappling Lines", 'slot':'Armament::Siege'}
+    armaments_dict["Burning Bright"] = { 'name':"Holy Fire", 'slot':'Armament::Siege'}
+    armaments_dict["Bargain"] = { 'name':"Infernal Agreement", 'slot':'Armament::Support'}
+    armaments_dict["Gee Thanks"] = { 'name':"Insidious Gift", 'slot':'Armament::Siege'}
+    armaments_dict["Fight As One"] = { 'name':"Iulian Foundation", 'slot':'Armament::Siege'}
+    #armaments_dict[""] = { 'name':"Lightfoot Charm", 'slot':'Armament::Support'}
     armaments_dict["Witching Hour"] = { 'name':"Nightfall Orb", 'slot':'Armament::Relic'}
+    armaments_dict["Terrible Presence"] = { 'name':"Overwhelming Aura", 'slot':'Armament::Support'}
+    armaments_dict["Doorway"] = { 'name':"Portal Key", 'slot':'Armament::Relic'}
+    armaments_dict["Silver Bells"] = { 'name':"Saint's Chimes", 'slot':'Armament::Relic'}
+    armaments_dict["Rain Of Fire"] = { 'name':"Skyfire Launcher", 'slot':'Armament::Relic'}
+    armaments_dict["THIRTEENTH!"] = { 'name':"Standard of the 13th", 'slot':'Armament::Relic'}
     armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament::Siege'}
-
+    armaments_dict["Corner of Your Eye"] = { 'name':"Whisperdark Torch", 'slot':'Armament::Relic'}
 
     return [generals_dict, mounts_dict, equipment_dict, troops_dict,
             legions_dict, enchantments_dict, engineering_dict, armaments_dict ]

@@ -369,7 +369,7 @@ def parser(input):
         #
         # Burning Rain has inflicted additional damage to your enemy. You also sustained 8 damage from the magic.
         #
-        elif any(s in line for s in ('applied Magic', 'removed Magic', 'from the magic')):
+        elif any(s in line for s in ('applied Magic', 'removed Magic', 'from the magic', 'applied Tactic')):
             if line not in magic_items:
                 magic_items[line] = 1
             else:

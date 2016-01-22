@@ -122,7 +122,7 @@ $(function() {
             <th>Procs</th>
             <th>Procs/Hit</th>
             <th>Total XP</th>
-            <th>Gold Gained</th>
+            <th>{{=monify(log_suns_mode)}} Gained</th>
         </tr>
         </thead>
         <tbody>
@@ -215,7 +215,7 @@ $(function() {
         [TD]Procs[/TD]
         [TD]Procs/Hit[/TD]
         [TD]Total XP[/TD]
-        [TD]Gold Gained[/TD]
+        [TD]{{=monify(log_suns_mode)}} Gained[/TD]
     [/TR]
     [TR]
         [TD]Total[/TD]
@@ -314,7 +314,7 @@ var chart = c3.generate({
         <li><a href="#affectedItemsTab" data-toggle="tab">Affected</a></li>
         <li><a href="#createdItemsTab" data-toggle="tab">Created</a></li>
         <li><a href="#rantsTab" data-toggle="tab">Rants</a></li>
-        <li><a href="#magicsTab" data-toggle="tab">Magics</a></li>
+        <li><a href="#magicsTab" data-toggle="tab">{{=magify(log_suns_mode)}}</a></li>
         <li><a href="#triggeredTab" data-toggle="tab">Triggered</a></li>
         <li><a href="#hitListTab" data-toggle="tab">Hit List</a></li>
         <li><a href="#logTab" data-toggle="tab">Raw</a></li>
@@ -574,9 +574,9 @@ var chart = c3.generate({
             <table id="magicsTable" class="display table table-bordered">
             <thead>
                 <tr>
-                    <th>Magic/Tactic Event</th>
+                    <th>{{=magify_title(log_suns_mode)}} Event</th>
                     <th>Count</th>
-                    <th>Magic/Hit Rate</th>
+                    <th>{{=magify_title(log_suns_mode)}}/Hit Rate</th>
                 </tr>
             </thead>
             <tbody>
@@ -593,7 +593,7 @@ var chart = c3.generate({
 {{else:}}
         <div class="panel panel-default">
             <div class="panel-body">
-                <p>No magics or tactics cast/dispelled during this run.</p>
+                <p>No {{=magify(log_suns_mode)}} {{=magify_modes(log_suns_mode)}} during this run.</p>
             </div>
         </div>
 {{pass}}

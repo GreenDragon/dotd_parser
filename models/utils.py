@@ -21,3 +21,17 @@ def magify(suns_mode):
         return "Tactics"
     else:
         return "Magics"
+
+
+def magify_title(suns_mode):
+    if suns_mode:
+        return "Tactic"
+    else:
+        return "Magic"
+
+
+def magify_modes(suns_mode):
+    if suns_mode:
+        return "applied/removed"
+    else:
+        return "cast/dispelled"

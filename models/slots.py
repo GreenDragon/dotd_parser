@@ -39,9 +39,9 @@ def get_sun_equip_name(x):
 
 
 def get_suns_engineer_name(x):
-    engineering = { 1: 'Eng: AI',
-                    2: 'Eng: Weapons',
-                    3: 'Eng: Modules'}
+    engineering = { 1: 'Eng::AI',
+                    2: 'Eng::Weapons',
+                    3: 'Eng::Modules'}
 
     if type(x) in [ type(0), type(0L) ]:
         if x in range(1,4):
