@@ -389,5 +389,51 @@ db.define_table('suns_shared_raids',
                 Field('serverid', 'integer'),
 )
 
+# Dawn Raid Info
+# Uses name
+
+db.define_table('dawn_raids',
+                Field('classid','integer'),
+                Field('cooldowntimer','integer'),
+                Field('difficulty','json'),
+                Field('energy','integer'),
+                Field('guildraid','integer'),
+                Field('honor','integer'),
+                Field('icon','string'),
+                Field('image','string'),
+                Field('maxattackers','integer'),
+                Field('name','string'),
+                Field('numdebuffs','integer'),
+                Field('postimage','string'),
+                Field('races','string'),
+                Field('raidtimer','integer'),
+                Field('shortname','string'),
+                Field('size','integer'),
+                Field('stamina','integer'),
+)
+
+# LoTS Raid Info
+# Seems to use shortname for Raid Name, as Name is empty
+
+db.define_table('suns_raids',
+                Field('classid','integer'),
+                Field('cooldowntimer','integer'),
+                Field('difficulty','json'),
+                Field('energy','integer'),
+                Field('guildraid','integer'),
+                Field('honor','integer'),
+                Field('icon','string'),
+                Field('image','string'),
+                Field('maxattackers','integer'),
+                Field('name','string'),
+                Field('numdebuffs','integer'),
+                Field('postimage','string'),
+                Field('races','string'),
+                Field('raidtimer','integer'),
+                Field('shortname','string'),
+                Field('size','integer'),
+                Field('stamina','integer'),
+)
+
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)

@@ -43,8 +43,11 @@ def ugup_request(path, table):
             # These json/hash fields should always be constant in all cases
             id = int(item['id'])
             name = re.escape(item['name'].strip())
-            proc_name = re.escape(item['proc_name'].strip())
-            proc_desc = re.escape(item['proc_desc'].strip())
+
+            # Raid tables don't have proc info
+            if table not in ['dawn_raids', 'suns_raids']:
+                proc_name = re.escape(item['proc_name'].strip())
+                proc_desc = re.escape(item['proc_desc'].strip())
 
             if table in ['dawn_enchantments', 'suns_enchantments']:
                 sql = "INSERT INTO %s ( id, name, proc_name, proc_desc ) \
@@ -238,6 +241,39 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
+            if table in ['dawn_raids', 'suns_raids']:
+                classid = int(item['classid'])
+                cooldowntimer = int(item['cooldowntimer'])
+                difficulty = re.escape(json.dumps(item['difficulty']))
+                energy = int(item['energy'])
+                guildraid = int(item['guildraid'])
+                honor = int(item['honor'])
+                icon = re.escape(item['icon'].strip())
+                image = re.escape(item['image'].strip())
+                maxattackers = int(item['maxattackers'])
+                # name = re.escape(item['name'].strip())
+                numdebuffs = int(item['numdebuffs'])
+                postimage = str(item['postimage'].strip().split('post/')[1])
+                races = re.escape(item['races'].strip())
+                raidtimer = int(item['raidtimer'])
+                shortname = re.escape(item['shortname'].strip())
+                size = int(item['size'])
+                stamina = int(item['stamina'])
+
+                sql = "INSERT INTO %s ( id, classid, cooldowntimer, difficulty, energy, guildraid, honor, icon, \
+                       image, maxattackers, name, numdebuffs, postimage, races, raidtimer, shortname, size, stamina ) \
+                       VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', \
+                       '%s', '%s', '%s', '%s' ) \
+                       ON DUPLICATE KEY UPDATE classid='%s', cooldowntimer='%s', difficulty='%s', energy='%s', \
+                       guildraid='%s', honor='%s', icon='%s', image='%s', maxattackers='%s', name='%s', \
+                       numdebuffs='%s', postimage='%s', races='%s', raidtimer='%s', shortname='%s', size='%s', \
+                       stamina='%s';" \
+                       % ( table, id, classid, cooldowntimer, difficulty, energy, guildraid, honor, icon,
+                       image, maxattackers, name, numdebuffs, postimage, races, raidtimer, shortname, size,
+                       stamina, classid, cooldowntimer, difficulty, energy, guildraid, honor, icon, image,
+                       maxattackers, name, numdebuffs, postimage, races, raidtimer, shortname, size, stamina )
+
+                cursor.execute(sql)
 
     conn.commit()
 
@@ -249,6 +285,7 @@ ugup_request(api_call_path('general', 'dawn'), 'dawn_generals')
 ugup_request(api_call_path('legion', 'dawn'), 'dawn_legions')
 ugup_request(api_call_path('mount', 'dawn'), 'dawn_mounts')
 ugup_request(api_call_path('troop', 'dawn'), 'dawn_troops')
+ugup_request(api_call_path('raid', 'dawn'), 'dawn_raids')
 
 ugup_request(api_call_path('enchant', 'suns'), 'suns_enchantments')
 ugup_request(api_call_path('equipment', 'suns'), 'suns_equipment')
@@ -257,6 +294,7 @@ ugup_request(api_call_path('legion', 'suns'), 'suns_legions')
 ugup_request(api_call_path('mount', 'suns'), 'suns_mounts')
 ugup_request(api_call_path('troop', 'suns'), 'suns_troops')
 ugup_request(api_call_path('engineering', 'suns'), 'suns_engineering')
+ugup_request(api_call_path('raid', 'suns'), 'suns_raids')
 
 cursor.close()
 conn.close()
