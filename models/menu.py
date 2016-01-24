@@ -9,12 +9,14 @@
 #                  _class="navbar-brand",_href="http://www.web2py.com/",
 #                  _id="web2py-logo")
 #response.title = request.application.replace('_',' ').title()
+
 response.title = 'DotD/LoTS Raid Log Analyzer'
 response.subtitle = response.title
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
-response.meta.author = 'Green Dragon Systems'
-response.meta.description = 'DotD/LoTS Raid Log Analyzer by Green Dragon Systems'
+
+response.meta.author = 'Sentinel_V of Green Dragon Systems'
+response.meta.description = 'DotD/LoTS Raid Log Analyzer. Hit your Raid and click on the "Copy entire raid log to clipboad" button, then paste the log into the textarea below.'
 response.meta.keywords = 'Dawn of the Dragons, Legacy of a Thousand Suns, Raid Log Analyzer, Raid Log Parser, DotD Log Parser, DotD Log Analyzer, LoTS Log Parser, LoTS Log Analyzer, 5th Planet Games'
 response.meta.generator = 'Web2py Web Framework'
 
@@ -78,6 +80,11 @@ def production_menu():
               A('GitHub: To Do',
               _href='https://github.com/GreenDragon/dotd_parser/blob/master/TO-DO.md',
               _target='blank')),
+        ]),
+        ('Shared Raids', False, None, [
+            (T('Facebook DotD Solus'), False, URL('default', 'facebook_raids_dotd_solus')),
+            (T('Facebook DotD Kasan'), False, URL('default', 'facebook_raids_dotd_kasan')),
+            (T('Facebook LoTS'), False, URL('default', 'facebook_raids_lots')),
         ]),
     ]
 

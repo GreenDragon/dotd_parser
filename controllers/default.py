@@ -52,6 +52,18 @@ def parsed():
         redirect(URL('form'))
 
 
+def facebook_raids_dotd_solus():
+    return dict(rows = db(db.dawn_shared_raids.serverid=='1').select(orderby=~db.dawn_shared_raids.create_time,limitby=(0,500)))
+
+
+def facebook_raids_dotd_kasan():
+    return dict(rows = db(db.dawn_shared_raids.serverid=='2').select(orderby=~db.dawn_shared_raids.create_time,limitby=(0,500)))
+
+
+def facebook_raids_lots():
+    return dict(rows = db(db.suns_shared_raids).select(orderby=~db.suns_shared_raids.create_time,limitby=(0,500)))
+
+
 def user():
     redirect(URL('form'))
 #    """

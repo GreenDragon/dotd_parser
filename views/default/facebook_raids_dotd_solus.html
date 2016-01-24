@@ -1,0 +1,44 @@
+{{extend 'layout.html'}}
+
+<script>
+$(document).ready(function() {
+    $("#sharedRaids").dataTable( {
+        "paging":  false,
+        "info":    false,
+        "order":   [[1, "desc" ]],
+    } );
+} );
+</script>
+
+<script>
+$(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+
+
+{{if len(rows):}}
+<div class="table">
+<table id="sharedRaids" class="display table table-borderd">
+  <thead>
+    <tr>
+      <th>Shared Raid Boss</th>
+      <th>Difficulty</th>
+      <th>Create Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{for row in rows:}}
+    <tr>
+      <td><a href="{{=gen_facebook_raid_url(row.link_name, row.raid_id, row.difficulty, row.raid_boss, row.raid_hash, row.serverid)}}" target="_blank" data-toggle="tooltip" title="Click to Join Shared Facebook Raid">{{=row.raid_boss}}</td>
+      <td>{{=difficultize(row.difficulty)}}</td>
+      <td>{{=row.create_time}}</td>
+    </tr>
+    {{pass}}
+  </tbody>
+</table>
+</div>
+{{else:}}
+<p>Something Wicked This Way Went...</p>
+{{pass}}
+

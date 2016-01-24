@@ -35,3 +35,25 @@ def magify_modes(suns_mode):
         return "applied/removed"
     else:
         return "cast/dispelled"
+
+
+def difficultize(difficulty):
+    if difficulty == 1:
+        return "Normal"
+    elif difficulty == 2:
+        return "Hard"
+    elif difficulty == 3:
+        return "Legendary"
+    elif difficulty == 4:
+        return "Nightmare"
+    else:
+        return difficulty
+
+
+def gen_facebook_raid_url(link_name, raid_id, difficulty, raid_boss, raid_hash, serverid):
+    return "https://apps.facebook.com/dawnofthedragons/?action_type=" + link_name \
+           + "&raid_id=" + str(raid_id) \
+           + "&difficulty=" + str(difficulty) \
+           + "&raid_boss=" + str(raid_boss) \
+           + "&hash=" + str(raid_hash) \
+           + "&serverid=" + str(serverid)

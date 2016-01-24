@@ -363,5 +363,31 @@ db.define_table('suns_engineering',
                 Field('bonus', 'json'),
 )
 
+# DotD World Raids
+
+db.define_table('dawn_shared_raids',
+                Field('create_time', 'datetime'),
+                Field('platform', 'string'),
+                Field('link_name', 'string'),
+                Field('raid_id', 'integer'),
+                Field('difficulty', 'integer'),
+                Field('raid_boss', 'string'),
+                Field('raid_hash', 'string'),
+                Field('serverid', 'integer'),
+)
+
+# LoTS World Raids
+
+db.define_table('suns_shared_raids',
+                Field('create_time', 'datetime'),
+                Field('platform', 'string'),
+                Field('link_name', 'string'),
+                Field('raid_id', 'integer'),
+                Field('difficulty', 'integer'),
+                Field('raid_boss', 'string'),
+                Field('raid_hash', 'string'),
+                Field('serverid', 'integer'),
+)
+
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
