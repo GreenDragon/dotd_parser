@@ -53,6 +53,8 @@ $(document).ready(function() {
 
 <script>
 $(function() {
+    $('.inlinesparkline').sparkline();
+
     $('.inlinesparkline').sparkline( 'html', {type: 'box'}  );
 });
 </script>
@@ -353,7 +355,7 @@ var chart = c3.generate({
                     <td>{{=commify(proc_items[item]['damage'])}}</td>
                     <td>{{=percentage(proc_items[item]['damage'], total_damage)}} %</td>
                     <td>{{=percentage(proc_items[item]['damage'], base_damage)}} %</td>
-                    <td width="10%"><span class="inlinesparkline">{{=", ".join(str(x) for x in proc_items[item]['damage_seen'])}}</span></td>
+                    <td width="10%"><span class="inlinesparkline" values="{{=", ".join(str(x) for x in proc_items[item]['damage_seen'])}}"></span></td>
                 </tr>
                 {{pass}}
             </tbody>

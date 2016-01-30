@@ -27,6 +27,80 @@ def api_call_path(item, game):
            + "&platform=" + config["platform"] + "&game=" + game
     return path
 
+
+def get_dawn_img_url(id, name):
+    url = ''
+    if int(id) < 29:
+        if str(name) == 'Poison':
+            name = 'poisonspell_blue'
+        if str(name) == 'Greater Poison':
+            name = 'poisonspell_red'
+        if str(name) == 'Lesser Poison':
+            name = 'poisonspell_red'
+        if str(name) == 'Midas\' Touch':
+            name = 'midashand'
+        if str(name) == 'Lesser Impending Doom':
+            name = 'impendingdoom_green'
+        if str(name) == 'Greater Impending Doom':
+            name = 'impendingdoom_red'
+        if str(name) == 'Impending Doom':
+            name = 'impendingdoom_blue'
+        if str(name) == 'Greater Midas\' Touch':
+            name = 'greatermidas'
+        if str(name) == 'Khan\'s Gift':
+            name = 'khans_gift'
+        if str(name) == 'Nela\'s Kiss':
+            name = 'nelas_kiss'
+        url = str(name.replace(' ','',99).replace("\'",'',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
+    else:
+        if str(name) == 'Annus Mirabilis':
+            name = 'annusmirabilis'
+        if str(name) == 'Vengeance of the Immortal':
+            name = 'immortal'
+        if str(name) == 'Qwil-Killer Fury':
+            name = 'qwil_killer_fury'
+        if str(name) == 'Dark Fate Unleashed':
+            name = 'dark_fate'
+        if str(name) == 'Desiccate':
+            name = 'desicate'
+        if str(name) == 'Purify':
+            name = 'purity'
+        url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
+    return str(url)
+
+def get_sun_img_url(id, name):
+    url = ''
+    # 1:
+    if str(name) == 'It\'s a Trap!':
+            name = 'itsatrap'
+    # 2:
+    if str(name) == 'Suppressive Fire':
+            name = 'suppressivefire'
+    # 3:
+    if str(name) == 'Space Raiders':
+            name = 'spaceraiders'
+    # 4:
+    if str(name) == 'Plan 10 from Outer Space':
+            name = 'plan10'
+    # 5:
+    if str(name) == 'Flank Attack':
+            name = 'flankattack'
+    # 6:
+    if str(name) == 'Pursuit of Excellence':
+        name = 'pursuitofexcellence'
+    # 58: Trick or Treat
+    # 63:     gorgon_s_stare
+    if str(name) == 'Gorgon\'s Stare':
+            name = 'gorgon_s_stare'
+    # 78: Mercy Kill
+    # 81: Trojan Horse
+    if id not in (58,78,79,81):
+        url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
+    else:
+        url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.png'
+    return str(url)
+
+
 def ugup_request(path, table):
     request = requests.get(path)
     if not request.status_code == 200:
@@ -43,10 +117,12 @@ def ugup_request(path, table):
             # These json/hash fields should always be constant in all cases
             id = int(item['id'])
             name = re.escape(item['name'].strip())
+            raw_name = item['name'].strip()
 
-            # Raid tables don't have proc info
+            # Raid tables don't have proc info, magic tables don't have proc_name
             if table not in ['dawn_raids', 'suns_raids']:
-                proc_name = re.escape(item['proc_name'].strip())
+                if table not in ['dawn_magics', 'suns_magics']:
+                    proc_name = re.escape(item['proc_name'].strip())
                 proc_desc = re.escape(item['proc_desc'].strip())
 
             if table in ['dawn_enchantments', 'suns_enchantments']:
@@ -275,7 +351,29 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-    conn.commit()
+            if table in ['dawn_magics', 'suns_magics']:
+                lore = re.escape(item['lore'].strip())
+                questReq = int(item['questReq'])
+                rarity = int(item['rarity'])
+                value_credits = int(item['value_credits'])
+                value_gold = int(item['value_gold'])
+                if table == 'dawn_magics':
+                    img_url = str(get_dawn_img_url(id, raw_name))
+                else:
+                    img_url = str(get_sun_img_url(id, raw_name))
+
+                sql = "INSERT INTO %s ( id, lore, name, proc_desc, questReq, rarity, value_credits, value_gold, \
+                       img_url ) \
+                       VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) \
+                       ON DUPLICATE KEY UPDATE lore='%s', name='%s', proc_desc='%s', questReq='%s', \
+                       rarity='%s', value_credits='%s', value_gold='%s', img_url='%s';" \
+                       % ( table,
+                           id, lore, name, proc_desc, questReq, rarity, value_credits, value_gold, img_url,
+                           lore, name, proc_desc, questReq, rarity, value_credits, value_gold, img_url
+                         )
+
+                cursor.execute(sql)
+            conn.commit()
 
 # main
 
@@ -286,6 +384,7 @@ ugup_request(api_call_path('legion', 'dawn'), 'dawn_legions')
 ugup_request(api_call_path('mount', 'dawn'), 'dawn_mounts')
 ugup_request(api_call_path('troop', 'dawn'), 'dawn_troops')
 ugup_request(api_call_path('raid', 'dawn'), 'dawn_raids')
+ugup_request(api_call_path('magic', 'dawn'), 'dawn_magics')
 
 ugup_request(api_call_path('enchant', 'suns'), 'suns_enchantments')
 ugup_request(api_call_path('equipment', 'suns'), 'suns_equipment')
@@ -295,6 +394,7 @@ ugup_request(api_call_path('mount', 'suns'), 'suns_mounts')
 ugup_request(api_call_path('troop', 'suns'), 'suns_troops')
 ugup_request(api_call_path('engineering', 'suns'), 'suns_engineering')
 ugup_request(api_call_path('raid', 'suns'), 'suns_raids')
+ugup_request(api_call_path('magic', 'suns'), 'suns_magics')
 
 cursor.close()
 conn.close()

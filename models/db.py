@@ -374,6 +374,25 @@ db.define_table('dawn_shared_raids',
                 Field('raid_boss', 'string'),
                 Field('raid_hash', 'string'),
                 Field('serverid', 'integer'),
+                Field('update_time', 'datetime'),
+                Field('currenthealth', 'bigint'),
+                Field('enragehealth', 'bigint'),
+                Field('maxhealth', 'bigint'),
+                Field('debuff1id', 'integer'),
+                Field('debuff2id', 'integer'),
+                Field('debuff3id', 'integer'),
+                Field('debuff4id', 'integer'),
+                Field('debuff5id', 'integer'),
+                Field('debuff6id', 'integer'),
+                Field('iscomplete', 'integer'),
+                Field('nummembers', 'integer'),
+                Field('maxattackers', 'integer'),
+                Field('summonerid', 'string'),
+                Field('summoner_fname', 'string'),
+                Field('summoner_guildID', 'integer'),
+                Field('summoner_level', 'integer'),
+                Field('summoner_platform', 'integer'),
+                Field('summoner_ugupoptout', 'integer'),
 )
 
 # LoTS World Raids
@@ -387,6 +406,25 @@ db.define_table('suns_shared_raids',
                 Field('raid_boss', 'string'),
                 Field('raid_hash', 'string'),
                 Field('serverid', 'integer'),
+                Field('update_time', 'datetime'),
+                Field('currenthealth', 'bigint'),
+                Field('enragehealth', 'bigint'),
+                Field('maxhealth', 'bigint'),
+                Field('debuff1id', 'integer'),
+                Field('debuff2id', 'integer'),
+                Field('debuff3id', 'integer'),
+                Field('debuff4id', 'integer'),
+                Field('debuff5id', 'integer'),
+                Field('debuff6id', 'integer'),
+                Field('iscomplete', 'integer'),
+                Field('nummembers', 'integer'),
+                Field('maxattackers', 'integer'),
+                Field('summonerid', 'string'),
+                Field('summoner_fname', 'string'),
+                Field('summoner_guildID', 'integer'),
+                Field('summoner_level', 'integer'),
+                Field('summoner_platform', 'integer'),
+                Field('summoner_ugupoptout', 'integer'),
 )
 
 # Dawn Raid Info
@@ -434,6 +472,33 @@ db.define_table('suns_raids',
                 Field('size','integer'),
                 Field('stamina','integer'),
 )
+
+# DotD Magic
+
+db.define_table('dawn_magics',
+                Field('lore', 'text'),
+                Field('name', 'string'),
+                Field('proc_desc', 'text'),
+                Field('questReq', 'integer'),
+                Field('rarity', 'integer'),
+                Field('value_credits', 'integer'),
+                Field('value_gold', 'integer'),
+                Field('img_url', 'string'),
+)
+
+# Lots Magic/Tactics
+
+db.define_table('suns_magics',
+                Field('lore', 'text'),
+                Field('name', 'string'),
+                Field('proc_desc', 'text'),
+                Field('questReq', 'integer'),
+                Field('rarity', 'integer'),
+                Field('value_credits', 'integer'),
+                Field('value_gold', 'integer'),
+                Field('img_url', 'string'),
+)
+
 
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
