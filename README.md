@@ -1,9 +1,13 @@
-Dawn of the Dragons Log Parser
+Dawn of the Dragons and Legacy of a Thousand Suns Log Analyzer/Parser && Raid Cache Utility
 ===
 
 ### About:
 
-A Web2py web application to parse 5th Planet Games raid logs into useful statistical information.
+A Web2py web application to parse 5th Planet Games raid logs into useful statistical information as well as caching shared raid info using the UgUp API.
+
+### TL;DR;
+
+Production site is located at http://green-dragon.systems/
 
 ### Development/Testing Environment:
 
