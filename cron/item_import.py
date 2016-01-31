@@ -92,9 +92,10 @@ def get_sun_img_url(id, name):
     # 63:     gorgon_s_stare
     if str(name) == 'Gorgon\'s Stare':
             name = 'gorgon_s_stare'
+    # 75: The Dutch Defense
     # 78: Mercy Kill
     # 81: Trojan Horse
-    if id not in (58,78,79,81):
+    if id not in (58,75,78,79,81):
         url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
     else:
         url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.png'
@@ -399,4 +400,5 @@ ugup_request(api_call_path('magic', 'suns'), 'suns_magics')
 cursor.close()
 conn.close()
 
-print "Job's Done!"
+if config["verbose_mode"]:
+    print "Job's Done!"

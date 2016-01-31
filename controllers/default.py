@@ -53,19 +53,19 @@ def parsed():
 
 
 def facebook_raids_dotd_solus():
-    rows = db((db.dawn_shared_raids.serverid=='1') & (db.dawn_shared_raids.iscomplete=='0')).select(orderby=~db.dawn_shared_raids.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids.serverid=='1') & (db.dawn_shared_raids.iscomplete=='0') & (db.dawn_shared_raids.update_time!=None)).select(orderby=~db.dawn_shared_raids.create_time,limitby=(0,500))
     magics_map = load_magics_map()
     return locals()
 
 
 def facebook_raids_dotd_kasan():
-    rows = db((db.dawn_shared_raids.serverid=='2') & (db.dawn_shared_raids.iscomplete=='0')).select(orderby=~db.dawn_shared_raids.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids.serverid=='2') & (db.dawn_shared_raids.iscomplete=='0') & (db.dawn_shared_raids.update_time!=None)).select(orderby=~db.dawn_shared_raids.create_time,limitby=(0,500))
     magics_map = load_magics_map()
     return locals()
 
 
 def facebook_raids_lots():
-    rows = db(db.suns_shared_raids.iscomplete=='0').select(orderby=~db.suns_shared_raids.create_time,limitby=(0,500))
+    rows = db((db.suns_shared_raids.iscomplete=='0') & (db.suns_shared_raids.update_time!=None)).select(orderby=~db.suns_shared_raids.create_time,limitby=(0,500))
     tactics_map = load_tactics_map()
     return locals()
 
