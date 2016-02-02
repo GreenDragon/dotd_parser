@@ -70,31 +70,33 @@ def get_dawn_img_url(id, name):
 
 def get_sun_img_url(id, name):
     url = ''
-    # 1:
+    #  1:
     if str(name) == 'It\'s a Trap!':
             name = 'itsatrap'
-    # 2:
+    #  2:
     if str(name) == 'Suppressive Fire':
             name = 'suppressivefire'
-    # 3:
+    #  3:
     if str(name) == 'Space Raiders':
             name = 'spaceraiders'
-    # 4:
+    #  4:
     if str(name) == 'Plan 10 from Outer Space':
             name = 'plan10'
-    # 5:
+    #  5:
     if str(name) == 'Flank Attack':
             name = 'flankattack'
-    # 6:
+    #  6:
     if str(name) == 'Pursuit of Excellence':
         name = 'pursuitofexcellence'
-    # 58: Trick or Treat
+    #  9: I Have a Cunning Plan... ( ??? )
+    # 58: Trick or Treat ( png )
     # 63:     gorgon_s_stare
     if str(name) == 'Gorgon\'s Stare':
             name = 'gorgon_s_stare'
-    # 75: The Dutch Defense
-    # 78: Mercy Kill
-    # 81: Trojan Horse
+    # 73: Smythe Procedure ( ??? )
+    # 75: The Dutch Defense ( png )
+    # 78: Mercy Kill ( png )
+    # 81: Trojan Horse ( png )
     if id not in (58,75,78,79,81):
         url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
     else:

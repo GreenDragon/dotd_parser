@@ -49,7 +49,7 @@ def production_menu():
              _href='http://dotd.wikia.com/wiki/Dawn_of_the_Dragons_Wiki',
              _target='blank')),
         ]),
-        ('LoTS', False, None, [
+        ('LoTS (Deprecated!)', False, None, [
             ('', False,
               A('Legacy of a Thousand Suns Game Page',
               _href='http://www.legacyofathousandsuns.com/game/',
@@ -66,7 +66,7 @@ def production_menu():
         ('Shared Raids', False, None, [
             (T('Facebook DotD Solus'), False, URL('default', 'facebook_raids_dotd_solus')),
             (T('Facebook DotD Kasan'), False, URL('default', 'facebook_raids_dotd_kasan')),
-            (T('Facebook LoTS'), False, URL('default', 'facebook_raids_lots')),
+            (T('Facebook LoTS (Deprecated!)'), False, URL('default', 'facebook_raids_lots')),
         ]),
         ('GitHub', False, None, [
             ('', False,

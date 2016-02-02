@@ -99,7 +99,10 @@ $(function() {
 {{total_damage = tot_reg_dmg + tot_crit_dmg}}
 {{base_damage = total_damage - tot_proc_dmg}}
 
-
+{{if log_suns_mode:}}
+<h3 class="bg-danger">Deprecation Warning! LoTS Last Days!</h3>
+<h3 class="bg-danger">LoTS Raid Log Parsing Service Will Be Removed On 2016/02/29!</h3>
+{{pass}}
 
 
 <div class="tabbable">

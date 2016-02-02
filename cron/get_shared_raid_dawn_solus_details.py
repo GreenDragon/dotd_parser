@@ -21,10 +21,6 @@ conn = mdb.connect(host=config['dbhost'],
                    charset='utf8',
                    use_unicode=True)
 
-bosses_dict = {}
-
-summoner_cache = {}
-
 cursor = conn.cursor()
 
 def str2bool(s):
@@ -32,23 +28,6 @@ def str2bool(s):
         return 1
     else:
         return 0
-
-
-def build_dictionaries():
-    dawn_query = ("SELECT name, postimage FROM dawn_raids")
-    cursor.execute(dawn_query)
-    for (name, postimage) in cursor:
-        if len(name) and len(postimage):
-            bosses_dict[postimage] = name
-
-    suns_query = ("SELECT shortname, postimage FROM suns_raids")
-    cursor.execute(suns_query)
-    for (shortname, postimage) in cursor:
-        if len(shortname) and len(postimage):
-            bosses_dict[postimage] = shortname
-
-    if not bosses_dict.has_key('war_damned_shade'):
-        bosses_dict['war_damned_shade'] = "War Damned Shade"
 
 
 def set_raid_info():
@@ -75,17 +54,6 @@ def set_raid_info():
     return raid_info
 
 
-def set_summoner_info():
-    summoner_info = {
-        'summoner_fname': '',
-        'summoner_guildID': 0,
-        'summoner_level': 0,
-        'summoner_platform': 0,
-        'summoner_ugupoptout': 0,
-    }
-    return summoner_info
-
-
 def get_var(var, type):
     v = var.split("'")
     if type == "str":
@@ -107,11 +75,21 @@ def get_raid_info_url(raid_id, raid_hash, platform, game, serverid=None):
 
 
 def get_raid_details(raid_url, raid_info):
-    request = requests.get(raid_url)
+    try:
+        request = requests.get(raid_url)
+    except requests.exceptions.ConnectionError:
+        if config["verbose_mode"]:
+            print "Connection error for RaidID: " + str(raid_url)
+        return
     if not request.status_code == 200:
         request.raise_for_status()
     else:
         data = json.loads(request.text)
+        if data['code'] != 200:
+            if config["verbose_mode"]:
+                print "Bad Request for RaidID: " + str(raid_url)
+            raid_info['iscomplete'] = 1
+            return
         for item, val in data['result'].iteritems():
             # If it's a nested json result, then it loops through?
             if item not in ('definition', 'hash'):
@@ -131,20 +109,19 @@ def ugup_request(table, game, serverid=None, platform='facebook'):
     if serverid is None:
         serverid = 1
 
-    sql_query = ("SELECT id, platform, raid_id, raid_hash, serverid FROM %s WHERE serverid=%s AND iscomplete is NULL OR iscomplete!=1;" % ( table, serverid))
+    query = "SELECT id, platform, raid_id, raid_hash FROM %s WHERE serverid=%s \
+             AND (iscomplete is NULL OR iscomplete=0) ORDER by raid_id DESC;" \
+            % ( table, serverid)
 
-    cursor.execute(sql_query)
+    cursor.execute(query)
 
-    for (id, platform, raid_id, raid_hash, serverid) in cursor:
+    for (id, platform, raid_id, raid_hash) in cursor:
         if config["verbose_mode"]:
             print 'Table: '+ table + ': Raid ID: ' + str(id)
 
         raid_info = set_raid_info()
         get_raid_details(get_raid_info_url(raid_id, raid_hash, platform, game, serverid), raid_info)
 
-        # summoner_info = set_summoner_info()
-
-        #
         update_time = str(datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
 
         sql = "UPDATE %s SET update_time='%s', currenthealth='%s', enragehealth='%s', maxhealth='%s', debuff1id='%s', \
@@ -161,8 +138,6 @@ def ugup_request(table, game, serverid=None, platform='facebook'):
         conn.commit()
 
 # main
-
-build_dictionaries()
 
 ugup_request('dawn_shared_raids', 'dawn')
 

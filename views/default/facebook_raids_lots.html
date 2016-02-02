@@ -17,9 +17,12 @@ $(function() {
 </script>
 
 {{if len(rows):}}
+<h3 class="bg-danger">Deprecation Warning! LoTS Last Days!</h3>
+<h3 class="bg-danger">LoTS Shared Raid Caching Service Will Be Removed On 2016/02/29!</h3>
+
 <h4>Found {{=len(rows)}} active shared raids for Facebook LoTS Server.</h4>
 
-<h6>Shared Raid Information is updated every 20 minutes. This utility shows all active raids ordered by Create Date Descending since last scan ( max 500 ).</h6>
+<h6>Shared Raid Information is updated every 10 minutes. This utility shows all active raids ordered by Create Date Descending since last scan ( max 500 ).</h6>
 <h6>Clicking on Table Headers will change the sort order. Typing text in the Search field will filter results. Click the Raid Name to Join.</h6>
 
 <div class="table">
@@ -31,7 +34,8 @@ $(function() {
       <th>Created (MM/DD)</th>
       <th>Updated (MM/DD)</th>
       <th>Health</th>
-      <th># Members</th>
+      <th># Attackers</th>
+      <th>Max Attackers</th>
       <th>Tactics</th>
     </tr>
   </thead>
@@ -42,8 +46,9 @@ $(function() {
       <td>{{=difficultize(row.difficulty)}}</td>
       <td>{{=row.create_time.strftime('%m/%d %H:%M:%S')}}</td>
       <td>{{=row.update_time.strftime('%m/%d %H:%M:%S')}}</td>
-      <td>{{=percentage(row.currenthealth, row.maxhealth)}} %</td>
-      <td>{{=row.nummembers}} / {{=row.maxattackers}}</td>
+      <td>{{=lots_percentage(row.currenthealth, row.maxhealth)}} %</td>
+      <td>{{=row.nummembers}}</td>
+      <td>{{=row.maxattackers}}</td>
       <td>{{=XML(gen_tactics_url(row, tactics_map))}}</td>
     </tr>
     {{pass}}

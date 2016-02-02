@@ -7,6 +7,12 @@ def percentage(x, y):
     else:
         return commify((float(x)/y) * 100)
 
+def lots_percentage(x, y):
+    if y == 0:
+        return "Infinite Health Raid"
+    else:
+        return commify((float(x)/y) * 100)
+
 
 def commify(x):
     if type(x) in [ type(0), type(0L) ]:
