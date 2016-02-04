@@ -41,7 +41,7 @@ $(function() {
   </thead>
   <tbody>
     {{for row in rows:}}
-      {{if not len(row.raid_boss_human):}}
+      {{if not row.raid_boss_human:}}
         {{row.raid_boss_human = row.raid_boss}}
       {{pass}}
     <tr>

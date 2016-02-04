@@ -198,4 +198,4 @@ def gen_lots_raid_url(link_name, raid_id, difficulty, raid_boss, raid_hash, plat
 
 
 def gen_short_raid_link(raid_id, raid_hash):
-    return "?raid_id=" + str(raid_id) + "&hash=" + str(raid_hash)
+    return "http://127.0.0.1/?raid_id=" + str(raid_id) + "&hash=" + str(raid_hash)
