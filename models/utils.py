@@ -90,18 +90,112 @@ def difficultize(difficulty):
         return difficulty
 
 
-def gen_facebook_dotd_raid_url(link_name, raid_id, difficulty, raid_boss, raid_hash, serverid):
-    return "https://apps.facebook.com/dawnofthedragons/?action_type=" + link_name \
-           + "&raid_id=" + str(raid_id) \
-           + "&difficulty=" + str(difficulty) \
-           + "&raid_boss=" + str(raid_boss) \
-           + "&hash=" + str(raid_hash) \
-           + "&serverid=" + str(serverid)
+# armor
+# facebook
+# kongregate
+# newgrounds
+def get_platform_server_name(platform, serverid):
+    p = str(platform).capitalize()
+    if platform == 'armor':
+        if serverid == 1:
+            return p + " Roland"
+        else:
+            return p + " Kasan (World)"
+    elif platform == 'facebook':
+        if serverid == 1:
+            return p + " Solus"
+        else:
+            return p + " Kasan (World)"
+    elif platform == 'kongregate':
+        if serverid == 1:
+            return p + " Elyssa"
+        else:
+            return p + " Kasan (World)"
+    elif platform == 'newgrounds':
+        if serverid == 1:
+            return p + " Roland"
+        else:
+            return p + " Kasan (World)"
+    else:
+        return "Wicked!"
 
 
-def gen_facebook_lots_raid_url(link_name, raid_id, difficulty, raid_boss, raid_hash):
-    return "https://apps.facebook.com/legacythousandsuns/?action_type=" + link_name \
+def gen_dotd_raid_url(link_name, raid_id, difficulty, raid_boss, raid_hash, platform, serverid):
+    if platform == 'armor':
+        return "https://armorgames.com/dawn-of-the-dragons-game/13509?ar_action_type=" + link_name \
+            + "&ar_raid_id=" + str(raid_id) \
+            + "&ar_difficulty=" + str(difficulty) \
+            + "&ar_raid_boss=" + str(raid_boss) \
+            + "&ar_hash=" + str(raid_hash) \
+            + "&ar_serverid=" + str(serverid)
+    elif platform == 'facebook':
+        return "https://apps.facebook.com/dawnofthedragons/?action_type=" + link_name \
+            + "&raid_id=" + str(raid_id) \
+            + "&difficulty=" + str(difficulty) \
+            + "&raid_boss=" + str(raid_boss) \
+            + "&hash=" + str(raid_hash) \
+            + "&serverid=" + str(serverid)
+    elif platform == 'kongregate':
+        return "https://www.kongregate.com/games/5thPlanetGames/dawn-of-the-dragons?kv_action_type=" + link_name \
+            + "&kv_raid_id=" + str(raid_id) \
+            + "&kv_difficulty=" + str(difficulty) \
+            + "&kv_raid_boss=" + str(raid_boss) \
+            + "&kv_hash=" + str(raid_hash) \
+            + "&kv_serverid=" + str(serverid)
+    elif platform == 'newgrounds':
+        return "https://newgrounds.com/portal/view/609826?ng_action_type=" + link_name \
+            + "&ng_raid_id=" + str(raid_id) \
+            + "&ng_difficulty=" + str(difficulty) \
+            + "&ng_raid_boss=" + str(raid_boss) \
+            + "&ng_hash=" + str(raid_hash) \
+            + "&ng_serverid=" + str(serverid)
+    else:
+        return "https://localhost/bad_platform"
+
+
+def gen_lots_raid_url(link_name, raid_id, difficulty, raid_boss, raid_hash, platform):
+    # std maps to all servers?
+    # http://www.legacyofathousandsuns.com/game/?action_type=raidhelp&raid_id=19327366&hash=2175qs6irx
+    #
+    # ar_action_type=raidhelp&ar_raid_id=19327289&ar_hash=654c24v6YK
+    # https://armorgames.com/legacy-of-a-thousand-suns-game/13510?ar_action_type=raidhelp&ar_raid_id=19327365&ar_hash=02Z8WkMpF6
+    if platform == 'armor':
+        return "https://armorgames.com/legacy-of-a-thousand-suns-game/13510?ar_action_type=" + link_name \
+            + "&ar_raid_id=" + str(raid_id) \
+            + "&ar_hash=" + str(raid_hash)
+            # + "&ar_difficulty=" + str(difficulty) \
+            # + "&ar_raid_boss=" + str(raid_boss) \
+            # + "&ar_hash=" + str(raid_hash)
+    # action_type=raidhelp&raid_id=19327331&hash=0sb9CtpHEo
+    # https://apps.facebook.com/legacythousandsuns/?action_type=raidhelp&raid_id=19327369&hash=wnzMd8kxeb
+    elif platform == 'facebook':
+        return "https://apps.facebook.com/legacythousandsuns/?action_type=" + link_name \
            + "&raid_id=" + str(raid_id) \
-           + "&difficulty=" + str(difficulty) \
-           + "&raid_boss=" + str(raid_boss) \
            + "&hash=" + str(raid_hash)
+           # + "&difficulty=" + str(difficulty) \
+           # + "&raid_boss=" + str(raid_boss) \
+           # + "&hash=" + str(raid_hash)
+    # kv_action_type=raidhelp&kv_raid_id=19327289&kv_hash=654c24v6YK
+    # https://www.kongregate.com/games/5thplanetgames/legacy-of-a-thousand-suns?kv_action_type=raidhelp&kv_raid_id=19327365&kv_hash=02Z8WkMpF6
+    elif platform == 'kongregate':
+        return "https://www.kongregate.com/games/5thplanetgames/legacy-of-a-thousand-suns?kv_action_type=" + link_name \
+            + "&kv_raid_id=" + str(raid_id) \
+            + "&kv_hash=" + str(raid_hash)
+            # + "&kv_difficulty=" + str(difficulty) \
+            # + "&kv_raid_boss=" + str(raid_boss) \
+            # + "&kv_hash=" + str(raid_hash)
+    # ng_action_type=raidhelp&ng_raid_id=19327331&ng_hash=0sb9CtpHEo
+    # https://www.newgrounds.com/portal/view/608877?ng_action_type=raidhelp&ng_raid_id=19327389&ng_hash=Y9CGQI6hzf
+    elif platform == 'newgrounds':
+        return "https://www.newgrounds.com/portal/view/608877?ng_action_type=" + link_name \
+            + "&ng_raid_id=" + str(raid_id) \
+            + "&ng_hash=" + str(raid_hash)
+            # + "&ng_difficulty=" + str(difficulty) \
+            # + "&ng_raid_boss=" + str(raid_boss) \
+            # + "&ng_hash=" + str(raid_hash)
+    else:
+        return "https://localhost/bad_platform"
+
+
+def gen_short_raid_link(raid_id, raid_hash):
+    return "?raid_id=" + str(raid_id) + "&hash=" + str(raid_hash)

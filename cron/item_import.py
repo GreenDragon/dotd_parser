@@ -57,6 +57,8 @@ def get_dawn_img_url(id, name):
             name = 'annusmirabilis'
         if str(name) == 'Vengeance of the Immortal':
             name = 'immortal'
+        if str(name) == 'Melody and Massacre':
+            name = 'melody_of_massacre'
         if str(name) == 'Qwil-Killer Fury':
             name = 'qwil_killer_fury'
         if str(name) == 'Dark Fate Unleashed':
@@ -65,6 +67,8 @@ def get_dawn_img_url(id, name):
             name = 'desicate'
         if str(name) == 'Purify':
             name = 'purity'
+        if str(name) == 'Britton Triumphant':
+            name = 'best_that_ever_was'
         url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
     return str(url)
 

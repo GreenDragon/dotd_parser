@@ -1,2 +1,2 @@
 def current_version():
-    return "1.9.7"
+    return "1.10.0"
