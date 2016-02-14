@@ -65,33 +65,41 @@ def load_proc_to_names():
 
     # http://dotd.wikia.com/wiki/Category:Armaments
     #
-    # Armorskin Charm: Support: Stam +25
+    # armaments_dict[""] = { 'name':"Armorskin Charm", 'slot':'Armament::Support'}
     armaments_dict["Arrow'd"] = { 'name':"Ballista", 'slot':'Armament::Siege'}
+    armaments_dict["Who's There"] = { 'name':"Battering Ram", 'slot':'Armament::Siege'}
     armaments_dict["Scream and Shout"] = { 'name':"Berserker's Horn", 'slot':'Armament::Relic'}
     armaments_dict["BOOM"] = { 'name':"Black Powder", 'slot':'Armament::Siege'}
-    # Blessing of Karuss: Support: Stam +20
+    # armaments_dict[""] = { 'name':"Blessing of Karuss", 'slot':'Armament::Support'}
     armaments_dict["Heads Up"] = { 'name':"Catapult", 'slot':'Armament::Siege'}
+    armaments_dict["Fervor"] = { 'name':"Cermarina's Blade", 'slot':'Armament::Relic'}
     armaments_dict["I'm Back"] = { 'name':"Curse of Returning", 'slot':'Armament::Support'}
     armaments_dict["Biological Warfare"] = { 'name':"Diseased Corpses", 'slot':'Armament::Siege'}
-    # Favor of Brough: Support: Att/Def +250
+    armaments_dict["Reap What You Sow"] = { 'name':"Extinction Seeds", 'slot':'Armament:: Relic'}
+    # armaments_dict[""] = { 'name':"Favor of Brough", 'slot':'Armament::Suport'}
     armaments_dict["Pyromaniac"] = { 'name':"Flamethrower", 'slot':'Armament::Siege'}
-    # Font of Elation: Relic: +40% Legion Bonus
+    # armaments_dict[""] = { 'name':"Font of Elation", 'slot':'Armament::Relic'}
     armaments_dict["Climb the Wall"] = { 'name':"Grappling Lines", 'slot':'Armament::Siege'}
+    # armaments_dict[""] = { 'name':"Hallowed Ground", 'slot':'Armament::Support'}
     armaments_dict["Burning Bright"] = { 'name':"Holy Fire", 'slot':'Armament::Siege'}
     armaments_dict["Bargain"] = { 'name':"Infernal Agreement", 'slot':'Armament::Support'}
     armaments_dict["Gee Thanks"] = { 'name':"Insidious Gift", 'slot':'Armament::Siege'}
     armaments_dict["Fight As One"] = { 'name':"Iulian Foundation", 'slot':'Armament::Siege'}
     #armaments_dict[""] = { 'name':"Lightfoot Charm", 'slot':'Armament::Support'}
+    # armaments_dict[""] = { 'name':"Martyr's Faith", 'slot':'Armament::Support'}
     armaments_dict["Witching Hour"] = { 'name':"Nightfall Orb", 'slot':'Armament::Relic'}
     armaments_dict["Terrible Presence"] = { 'name':"Overwhelming Aura", 'slot':'Armament::Support'}
     armaments_dict["Doorway"] = { 'name':"Portal Key", 'slot':'Armament::Relic'}
+    armaments_dict["Ashes to Ashes"] = { 'name':"Sabirah's Ashes", 'slot':'Armament::Relic'}
     armaments_dict["Silver Bells"] = { 'name':"Saint's Chimes", 'slot':'Armament::Relic'}
-    armaments_dict["Bad Crop"] = { 'name':"Shroud of the Blight", 'slot':'Armament::Support'}
+    armaments_dict["Bad Crop"] = { 'name':"Shroud of Blight", 'slot':'Armament::Support'}
+    armaments_dict["Sweet Ride"] = { 'name':"Siege Tower", 'slot':'Armament::Siege'}
     armaments_dict["Rain Of Fire"] = { 'name':"Skyfire Launcher", 'slot':'Armament::Relic'}
     armaments_dict["THIRTEENTH!"] = { 'name':"Standard of the 13th", 'slot':'Armament::Relic'}
     armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament::Siege'}
-    # Turn Undead: Support: Att/Def +200
+    # armaments_dict[""] = { 'name':"Turn Undead", 'slot':'Armament::Support'}
     armaments_dict["Corner of Your Eye"] = { 'name':"Whisperdark Torch", 'slot':'Armament::Relic'}
+    # armaments_dict[""] = { 'name':"Withering Touch", 'slot':'Armament::Support'}
 
     return [generals_dict, mounts_dict, equipment_dict, troops_dict,
             legions_dict, enchantments_dict, engineering_dict, armaments_dict ]

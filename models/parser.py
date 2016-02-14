@@ -82,6 +82,11 @@ def parser(input):
         #
         elif "contributed" in line:
             #
+            # Astral Supremacy contributed 10,250,000 damage.
+            # Astral Supremacy contributed 779,000 damage.
+            # From Money (Diamond Gun) contributed 5,945,000 damage.
+            # Alea Iacta Sunt contributed 9,409 damage.
+            #
             # Variants
             #
             # Take a Chance has contributed additional damage.

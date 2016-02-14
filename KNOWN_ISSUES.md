@@ -8,6 +8,6 @@
 * Bad LoTS Image URLs
   * Cunning Plan...
   * Smythe Procedure
+  * Lightning Assault
 
 * Bad DotD Image URLs
-  * Britton Triumphant

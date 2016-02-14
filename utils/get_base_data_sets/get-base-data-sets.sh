@@ -72,5 +72,6 @@ for platform in facebook kongregate armor newgrounds; do
     get_url "recipe"      "${platform}" "${game}"
     get_url "achievement" "${platform}" "${game}"
     get_url "engineering" "${platform}" "${game}"
+    get_url "raid"        "${platform}" "${game}"
   done
 done

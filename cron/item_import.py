@@ -51,7 +51,7 @@ def get_dawn_img_url(id, name):
             name = 'khans_gift'
         if str(name) == 'Nela\'s Kiss':
             name = 'nelas_kiss'
-        url = str(name.replace(' ','',99).replace("\'",'',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
+        url = str(name.replace(' ','').replace("\'",'').replace(".",'').replace("!",'').replace("?",'').replace(",",'').lower()) + '.jpg'
     else:
         if str(name) == 'Annus Mirabilis':
             name = 'annusmirabilis'
@@ -69,7 +69,7 @@ def get_dawn_img_url(id, name):
             name = 'purity'
         if str(name) == 'Britton Triumphant':
             name = 'best_that_ever_was'
-        url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
+        url = str(name.replace(' ','_').replace('\'','').replace(".",'').replace("!",'').replace("?",'').replace(",",'').lower()) + '.jpg'
     return str(url)
 
 def get_sun_img_url(id, name):
@@ -101,10 +101,11 @@ def get_sun_img_url(id, name):
     # 75: The Dutch Defense ( png )
     # 78: Mercy Kill ( png )
     # 81: Trojan Horse ( png )
-    if id not in (58,75,78,79,81):
-        url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.jpg'
+    # 82: Virus ( png )
+    if id not in (58,75,78,79,81,82):
+        url = str(name.replace(' ','_').replace('\'','').replace(".",'').replace("!",'').replace("?",'').replace(",",'').lower()) + '.jpg'
     else:
-        url = str(name.replace(' ','_',99).replace('\'','',99).replace(".",'',99).replace("!",'',99).replace("?",'',99).replace(",",'',99).lower()) + '.png'
+        url = str(name.replace(' ','_').replace('\'','').replace(".",'').replace("!",'').replace("?",'').replace(",",'').lower()) + '.png'
     return str(url)
 
 
