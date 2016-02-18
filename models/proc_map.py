@@ -1,4 +1,4 @@
-def load_proc_to_names():
+def build_proc_name_map():
     generals_dict = {}
     mounts_dict = {}
     equipment_dict = {}

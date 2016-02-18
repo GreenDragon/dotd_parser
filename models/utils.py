@@ -55,7 +55,7 @@ def gen_magics_url(row, magic_map):
     sorted_a = magify_array(row.debuff1id,row.debuff2id,row.debuff3id,row.debuff4id,row.debuff5id,row.debuff6id)
     img_urls = ''
     for x in sorted_a:
-        if magic_map.has_key(x):
+        if x in magic_map:
             img_urls += u1 + str(magic_map[x]['name']) + u2 + str(magic_map[x]['img_url']) + u3 + ' '
     if len(img_urls):
         return img_urls
@@ -71,7 +71,7 @@ def gen_tactics_url(row, tactics_map):
     sorted_a = magify_array(row.debuff1id,row.debuff2id,row.debuff3id,row.debuff4id,row.debuff5id,row.debuff6id)
     img_urls = ''
     for x in sorted_a:
-        if tactics_map.has_key(x):
+        if x in tactics_map:
             img_urls += u1 + str(tactics_map[x]['name']) + u2 + str(tactics_map[x]['img_url']) + u3 + ' '
     if len(img_urls):
         return img_urls

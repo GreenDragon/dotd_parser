@@ -13,6 +13,10 @@ $(document).ready(function() {
         "info":   false,
         "order":  [[0, "asc" ]],
     } );
+    $("#multiProcersTable").dataTable( {
+        "paging": false,
+        "info":   false,
+    } );
     $("#obtainedTable").dataTable( {
         "paging": false,
         "info":   false,
@@ -313,6 +317,7 @@ var chart = c3.generate({
     <ul class="nav nav-pills">
         <li class="active"><a href="#procsTab" data-toggle="tab">Procs</a></li>
         <li><a href="#bestHitTab" data-toggle="tab">Best Hit</a></li>
+        <li><a href="#multiProcersTab" data-toggle="tab">Multi-Procers</a></li>
         <li><a href="#foundItemsTab" data-toggle="tab">Found</a></li>
         <li><a href="#obtainedItemsTab" data-toggle="tab">Obtained</a></li>
         <li><a href="#restoredItemsTab" data-toggle="tab">Restored</a></li>
@@ -386,6 +391,64 @@ var chart = c3.generate({
             </div>
         </div>
     </div>
+
+    <div class="tab-pane" id="multiProcersTab">
+{{if multi_procs_found and len(multi_proc_items):}}
+        <div class="table">
+            <table id="multiProcersTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>Proc&#39;er</th>
+                    <th>Total Hits</th>
+                    <th>Total Procs</th>
+                    <th>Multi-Proc Rate</th>
+                    <th>Hit Sequence</th>
+                    <th>Proc Order</th>
+                    <th>Damage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for proc in sorted(multi_proc_items.keys()):}}
+                    {{header_seen=0}}
+                    {{for hit in sorted(multi_proc_items[proc]['hits']):}}
+                        {{hit_count=1}}
+                        {{if len(multi_proc_items[proc]['hits'][hit]) > 1:}}
+                            {{mp_total_hits_active=len(multi_proc_items[proc]['hits'].keys())}}
+                            {{mp_total_procs=multi_proc_items[proc]['proc_count']}}
+                            {{for this_hit in multi_proc_items[proc]['hits'][hit]:}}
+                <tr>
+                    <td>{{=proc}}</td>
+                                {{if not header_seen:}}
+                    <td>{{=mp_total_hits_active}}</td>
+                    <td>{{=mp_total_procs}}</td>
+                    <td>{{=percentage( (mp_total_procs - mp_total_hits_active), mp_total_hits_active)}} %</td>
+                                    {{header_seen = 1}}
+                                {{else:}}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                                {{pass}}
+                    <td>{{=hit}}</td>
+                    <td>{{=hit_count}}</td>
+                    <td>{{=commify(this_hit)}}</td>
+                                {{hit_count += 1}}
+                </tr>
+                            {{pass}}
+                        {{pass}}
+                    {{pass}}
+                {{pass}}
+            </tbody>
+            </table>
+        </div>
+{{else:}}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>No multi-proc'ing agents found this run.</p>
+            </div>
+        </div>
+{{pass}}
+    </div>
+
 
     <div class="tab-pane" id="foundItemsTab">
 {{if len(found_items):}}
@@ -707,3 +770,4 @@ var chart = c3.generate({
 </div>
 
 {{pass}}
+

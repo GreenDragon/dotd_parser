@@ -28,6 +28,7 @@ def parser(input):
 
     obtained_items = {}
     proc_items = {}
+    multi_proc_items = {}
     found_items = {}
     restored_items = {}
     affected_items = {}
@@ -40,8 +41,11 @@ def parser(input):
     max_hit = []
     hit_list = {}
     log_suns_mode = 0
+    multi_procs_found = 0
 
-    proc_to_names = load_proc_to_names()
+    current_hit_count = 1
+
+    proc_name_map = build_proc_name_map()
 
     log_file = []
     log_file = input.splitlines()
@@ -99,6 +103,15 @@ def parser(input):
 
             if amount in [ 'additional damage.', 'extra damage!', 'additional credits!' ]:
                 # Treat LoTS contributed events as DotD restored events
+                # DotD
+                #
+                # Burning Rain has inflicted additional damage to your enemy. You also sustained 8 damage from the magic.
+                #
+                # LoTS
+                #
+                # Scorched Earth has inflicted additional damage to your enemy. You also sustained some damage.
+                # Take a Chance has contributed extra damage!
+                #
                 if line not in restored_items:
                     restored_items[line] = 1
                 else:
@@ -108,7 +121,8 @@ def parser(input):
                     if isnum(amount.split()[0]):
                         seen_proc_name = object
                         seen_slot_name = 'Unmapped'
-                        for proc_name in proc_to_names:
+
+                        for proc_name in proc_name_map:
                             if object in proc_name:
                                 seen_slot_name = str(proc_name[object]['slot'])
                                 object = str(proc_name[object]['name'])
@@ -125,6 +139,20 @@ def parser(input):
                             proc_items[object]['count'] += 1
                             proc_items[object]['damage'] += amount
                             proc_items[object]['damage_seen'].append(amount)
+
+                        # build multiproc table
+                        if object not in multi_proc_items:
+                            multi_proc_items[object] = {}
+                            multi_proc_items[object]['proc_count'] = 1
+                            multi_proc_items[object]['hits'] = {}
+                            multi_proc_items[object]['hits'][current_hit_count] = [amount]
+                        else:
+                            multi_proc_items[object]['proc_count'] += 1
+                            if current_hit_count not in multi_proc_items[object]['hits']:
+                                multi_proc_items[object]['hits'][current_hit_count] = [amount]
+                            else:
+                                multi_proc_items[object]['hits'][current_hit_count].append(amount)
+                                multi_procs_found += 1
 
                         experience['total_procs'] += 1
                         experience['total_proc_dmg'] += amount
@@ -172,6 +200,7 @@ def parser(input):
 
                         # store damage dealt in hit_list history line #: damage
                         hit_list[num] = damage
+                        current_hit_count += 1
 
                         if "crit" in object[1]:
                             experience['critical_hits'] += 1
@@ -199,7 +228,7 @@ def parser(input):
                 # Gwenduin missed! Lost 18 health. Earned 2,250 gold and 27 experience!
                 # Fugue missed! Lost 8 health. Earned 1,933 gold and 20 experience!
                 #
-                elif len(object) == 11:
+                elif len(object) == 11 and "missed!" in line:
                     if isnum(object[3]):
                         experience['user'] = object[0]
                         experience['missed_hits'] += 1
@@ -221,7 +250,7 @@ def parser(input):
                 # length = 16
                 # Dantro dealt 99,863 damage! Lost 11 health. Earned 2,067 gold, 4 adventurer experience, and 32 experience!
                 #
-                elif len(object) == 16:
+                elif len(object) == 16 and "adventure experience" in line:
                     if isnum(object[2]):
                         experience['user'] = object[0]
 
@@ -268,6 +297,7 @@ def parser(input):
 
                     # store damage dealt in hit_list history line #: damage
                     hit_list[num] = damage
+                    current_hit_count += 1
 
                     if "crit" in object[1]:
                         experience['critical_hits'] += 1
@@ -452,4 +482,5 @@ def parser(input):
     syslog.closelog()
 
     return experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
-           affected_items, created_items, rant_items, magic_items, triggered_items, log_suns_mode
+           affected_items, created_items, rant_items, magic_items, triggered_items, log_suns_mode, \
+           multi_procs_found, multi_proc_items

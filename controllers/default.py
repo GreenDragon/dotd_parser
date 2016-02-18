@@ -44,7 +44,8 @@ def parsed():
             redirect(URL('form'))
         # Leroy Jenkins! Let's do this!
         experience, obtained_items, proc_items, found_items, log_file, max_hit, hit_list, restored_items, \
-           affected_items, created_items, rant_items, magic_items, triggered_items, log_suns_mode = parser(row[0].data)
+           affected_items, created_items, rant_items, magic_items, triggered_items, log_suns_mode, \
+           multi_procs_found, multi_proc_items = parser(row[0].data)
 
         return locals()
     else:
