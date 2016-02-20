@@ -1,8 +1,11 @@
+# Yout UgUp API Key
 apikey: <Super_Secret>
+# Platform to query for items, basically, they are all the same
 platform: facebook
-game: dawn
+# Database connection parameters
 dbhost: localhost
 dbuser: root
 dbpass: password
 db: dotd_parser
+# Enable verbose error output
 verbose_mode: 0
