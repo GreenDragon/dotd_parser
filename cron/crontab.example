@@ -1,7 +1,21 @@
 # /etc/cron.d/dotd-parser
-00   */2 * * * www-data /${DOTD_HOME}/dotd-parser-update-items.sh
+#
+# DOTD_HOME = /content/${FQDN}/web2py/application/dotd_parser
+#
+# Update Items Every Two Hours
+#
 
-*    *   * * * www-data /${DOTD_HOME}/dotd-parser-get-shared-raids.sh
+00   */2 * * * www-data /${DOTD_HOME}/sbin/dotd-parser-update-items.sh
 
-*/10 *   * * * www-data /${DOTD_HOME}/dotd-parser-update-shared-raids-dotd.sh
-*/10 *   * * * www-data /${DOTD_HOME}/dotd-parser-update-shared-raids-lots.sh
+#
+# Grab shared raids every minute
+#
+
+*    *   * * * www-data /${DOTD_HOME}/sbin/dotd-parser-get-shared-raids.sh
+
+#
+# Grab shared raid details every ten minutes and retire expired raids
+#
+
+*/10 *   * * * www-data /${DOTD_HOME}/sbin/dotd-parser-update-shared-raids-dotd.sh
+*/10 *   * * * www-data /${DOTD_HOME}/sbon/dotd-parser-update-shared-raids-lots.sh

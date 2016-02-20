@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /${WEB2PY_HOME}/web2py/applications/dotd_parser/cron
+cd /${WEB2PY_HOME}/applications/dotd_parser/cron
 
 #echo "Updating LoTS Facebook"
 ./get_shared_raid_details.py suns_shared_raids       suns facebook 1
