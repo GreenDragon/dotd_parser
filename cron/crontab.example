@@ -18,4 +18,4 @@
 #
 
 */10 *   * * * www-data /${DOTD_HOME}/sbin/dotd-parser-update-shared-raids-dotd.sh
-*/10 *   * * * www-data /${DOTD_HOME}/sbon/dotd-parser-update-shared-raids-lots.sh
+*/10 *   * * * www-data /${DOTD_HOME}/sbin/dotd-parser-update-shared-raids-lots.sh
