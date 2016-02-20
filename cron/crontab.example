@@ -1,1 +1,7 @@
-#crontab
+# /etc/cron.d/dotd-parser
+00   */2 * * * www-data /${DOTD_HOME}/dotd-parser-update-items.sh
+
+*    *   * * * www-data /${DOTD_HOME}/dotd-parser-get-shared-raids.sh
+
+*/10 *   * * * www-data /${DOTD_HOME}/dotd-parser-update-shared-raids-dotd.sh
+*/10 *   * * * www-data /${DOTD_HOME}/dotd-parser-update-shared-raids-lots.sh
