@@ -10,14 +10,14 @@
 #                  _id="web2py-logo")
 #response.title = request.application.replace('_',' ').title()
 
-response.title = "Sentinel_V's DotD/LoTS Raid Log Analyzer & Shared Raids Cache Utility"
+response.title = "Sentinel_V's DotD Raid Log Analyzer & Shared Raids Cache Utility"
 response.subtitle = response.title
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
 
 response.meta.author = 'Sentinel_V of Green Dragon Systems'
-response.meta.description = 'DotD/LoTS Raid Log Analyzer and Shared Raids Cache Utility. Hit your Raid and click on the "Copy entire raid log to clipboad" button, then paste the log into the textarea below.'
-response.meta.keywords = 'Dawn of the Dragons, DotD, Legacy of a Thousand Suns, LoTS, DotD Raid Log Parser, DotD Raid Log Analyzer, DotD Log Parser, DotD Log Analyzer, LoTS Log Parser, LoTS Log Analyzer, LoTS Raid Log Parser, LoTS Raid Log Analyzer, 5th Planet Games, DoTD Shared Raid Cache, LoTS Shared Raid Cache, Armorgames, Kongregate, Newgrounds'
+response.meta.description = 'Dawn of the Dragons Raid Log Analyzer and Shared Raids Cache Utility. Hit your Raid and click on the "Copy entire raid log to clipboad" button, then paste the log into the textarea below.'
+response.meta.keywords = 'Dawn of the Dragons, DotD, Raid Log Parser, Raid Log Analyzer, Log Parser, Log Analyzer, 5th Planet Games, Shared Raid Cache, Armorgames, Facebook, Kongregate, Newgrounds'
 response.meta.generator = 'Web2py Web Framework'
 
 ## your http://google.com/analytics id
@@ -59,33 +59,6 @@ def production_menu():
              _href='http://dotd.wikia.com/wiki/Dawn_of_the_Dragons_Wiki',
              _target='blank')),
         ]),
-        ('LoTS (Deprecated!)', False, None, [
-            ('', False,
-              A('Legacy of a Thousand Suns: Forums',
-              _href='http://www.legacyofathousandsuns.com/forum/',
-              _target='blank')),
-            ('', False,
-              A('Legacy of a Thousand Suns: Game Page: Armor Games',
-              _href='https://armorgames.com/legacy-of-a-thousand-suns-game/13510',
-              _target='blank')),
-            # really, no TLS layer? Lazy gits!
-            ('', False,
-              A('Legacy of a Thousand Suns: Game Page: Facebook',
-              _href='http://www.legacyofathousandsuns.com/game/',
-              _target='blank')),
-            ('', False,
-              A('Legacy of a Thousand Suns: Game Page: Kongregate',
-              _href='https://www.kongregate.com/games/5thplanetgames/legacy-of-a-thousand-suns',
-              _target='blank')),
-            ('', False,
-              A('Legacy of a Thousand Suns: Game Page: Newgrounds',
-              _href='https://www.newgrounds.com/portal/view/608877',
-              _target='blank')),
-            ('', False,
-              A('Legacy of a Thousand Suns: Wiki',
-              _href='http://zoywiki.com/LotS',
-              _target='blank')),
-        ]),
         ('Shared Raids Cache', False, None, [
             (T('DotD: Armor Games: Roland'),        False, URL('default', 'armorgames_raids_dotd_roland')),
             (T('DotD: Armor Games: Kasan (World)'), False, URL('default', 'armorgames_raids_dotd_kasan_world')),
@@ -95,10 +68,6 @@ def production_menu():
             (T('DotD: Kongregate: Kasan (World)'),  False, URL('default', 'kongregate_raids_dotd_kasan_world')),
             (T('DotD: Newgrounds: Roland'),         False, URL('default', 'newgrounds_raids_dotd_roland')),
             (T('DotD: Newgrounds: Kasan (World)'),  False, URL('default', 'newgrounds_raids_dotd_kasan_world')),
-            (T('LoTS: Armor Games: (Deprecated!)'), False, URL('default', 'armorgames_raids_lots')),
-            (T('LoTS: Facebook: (Deprecated!)'),    False, URL('default', 'facebook_raids_lots')),
-            (T('LoTS: Kongregate: (Deprecated!)'),  False, URL('default', 'kongregate_raids_lots')),
-            (T('LoTS: Newgrounds: (Deprecated!)'),  False, URL('default', 'newgrounds_raids_lots')),
         ]),
         ('GitHub', False, None, [
             ('', False,

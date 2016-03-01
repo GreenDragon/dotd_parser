@@ -76,7 +76,6 @@ Edit the apikey settings to reflect your environment
 ```
     apikey: <Super_Secret>
     platform: facebook
-    game: dawn
     dbhost: localhost
     dbuser: root
     dbpass: password
@@ -84,12 +83,11 @@ Edit the apikey settings to reflect your environment
     verbose_mode: 0
 ```
 Replace the hash variables to the appropriate values you're using.
-    game can be:        dawn or suns
     platform can be:    armor, facebook, kongegate, or newgrounds
     
     Platforms have been observed to be equal across games during testing
     
-    verbose_mode makes item_import.py chatty
+    verbose_mode makes utility scripts provide more info about what's happening
 
 Create the application database:
 ```
@@ -133,7 +131,7 @@ Go to your local instance and start testing:
 
 Prep the *dotd_parser* for your production server:
 ```
-    Open a browser to http://127.0.0.1:800/
+    Open a browser to http://127.0.0.1:8000/
     Switch to the admin mode
     Compile add working code
 ```
@@ -217,16 +215,35 @@ Access your VHost site via a browser.
 ```
 
 Populate the production server database with UgUp API content
+
+*NOTE* You will need to replace the ${WEB2PY_HOME} in the scripts with your local dir info
+
+*Example* WEB2PY_HOME=/content/${PROD.SERVER.TLD}/web2py
+
 ```
-    $ cd /content/${PROD.SERVER.TLD}/web2py/applications/dotd_parser/cron
-    $ ./item_import.py
+    $ cd /content/${PROD.SERVER.TLD}/web2py/applications/dotd_parser/sbin
+    $ ./dotd-parser-update-items.sh
+```
+
+Populate the production server database with UpUp Shared Raids
+
+*NOTE* You will need to replace the ${WEB2PY_HOME} in the scripts with your local dir info
+
+*Example* WEB2PY_HOME=/content/${PROD.SERVER.TLD}/web2py
+
+```
+    $ cd /content/${PROD.SERVER.TLD}/web2py/applications/dotd_parser/sbin
+    $ ./dotd-parser-get-shared-raids.sh
+    $ ./dotd-parser-update-shared-raids-dotd.sh
 ```
 
 Go to your server instance and start testing:
 ```
     Open a browser to http://${PROD.SERVER.TLD}/
     Enter some log data and submit
-    You should see a report
+        You should see a report
+    Click on the Shared Raids Cache
+        You should see shared raid info
 ```
 
 ### Bugs/Issues/Requests...:
@@ -238,5 +255,14 @@ Better yet, fork and offer a pull request!
 ### Kudos:
 
 Initial application conceived by https://github.com/tsunam/dotd_parser. 
+
+### Coding History:
+
+2015/02/21:    First commit to tsunam's code base
+Version 1.5.2: Project forked away from tsunam's code base
+
+### RIP:
+
+2016/02/29:    Legacy of a Thousand Suns
 
 Thanks!

@@ -111,6 +111,8 @@ def get_raid_details(raid_url, raid_info):
                 for s, v in data['result']['definition'].iteritems():
                     if s == 'maxattackers':
                         raid_info[str(s)] = int(v)
+                        if int(v) == 0:
+                            raid_info['iscomplete'] = 1
                     if s == 'shortname':
                         raid_info['raid_boss_human'] = re.escape(str(v).strip())
 

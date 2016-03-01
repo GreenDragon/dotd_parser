@@ -22,9 +22,9 @@ conn = mdb.connect(host=config['dbhost'],
 
 cursor = conn.cursor()
 
-def api_call_path(item, game):
+def api_call_path(item):
     path = base + item + "/definition/all?apikey=" + config["apikey"] \
-           + "&platform=" + config["platform"] + "&game=" + game
+           + "&platform=" + config["platform"] + "&game=dawn"
     return path
 
 
@@ -72,42 +72,6 @@ def get_dawn_img_url(id, name):
         url = str(name.replace(' ','_').replace('\'','').replace(".",'').replace("!",'').replace("?",'').replace(",",'').lower()) + '.jpg'
     return str(url)
 
-def get_sun_img_url(id, name):
-    url = ''
-    #  1:
-    if str(name) == 'It\'s a Trap!':
-            name = 'itsatrap'
-    #  2:
-    if str(name) == 'Suppressive Fire':
-            name = 'suppressivefire'
-    #  3:
-    if str(name) == 'Space Raiders':
-            name = 'spaceraiders'
-    #  4:
-    if str(name) == 'Plan 10 from Outer Space':
-            name = 'plan10'
-    #  5:
-    if str(name) == 'Flank Attack':
-            name = 'flankattack'
-    #  6:
-    if str(name) == 'Pursuit of Excellence':
-        name = 'pursuitofexcellence'
-    #  9: I Have a Cunning Plan... ( ??? )
-    # 58: Trick or Treat ( png )
-    # 63:     gorgon_s_stare
-    if str(name) == 'Gorgon\'s Stare':
-            name = 'gorgon_s_stare'
-    # 73: Smythe Procedure ( ??? )
-    # 75: The Dutch Defense ( png )
-    # 78: Mercy Kill ( png )
-    # 81: Trojan Horse ( png )
-    # 82: Virus ( png )
-    if id not in (58,75,78,79,81,82):
-        url = str(name.replace(' ','_').replace('\'','').replace(".",'').replace("!",'').replace("?",'').replace(",",'').lower()) + '.jpg'
-    else:
-        url = str(name.replace(' ','_').replace('\'','').replace(".",'').replace("!",'').replace("?",'').replace(",",'').lower()) + '.png'
-    return str(url)
-
 
 def ugup_request(path, table):
     request = requests.get(path)
@@ -128,12 +92,12 @@ def ugup_request(path, table):
             raw_name = item['name'].strip()
 
             # Raid tables don't have proc info, magic tables don't have proc_name
-            if table not in ['dawn_raids', 'suns_raids']:
-                if table not in ['dawn_magics', 'suns_magics']:
+            if table not in ['dawn_raids']:
+                if table not in ['dawn_magics']:
                     proc_name = re.escape(item['proc_name'].strip())
                 proc_desc = re.escape(item['proc_desc'].strip())
 
-            if table in ['dawn_enchantments', 'suns_enchantments']:
+            if table in ['dawn_enchantments']:
                 sql = "INSERT INTO %s ( id, name, proc_name, proc_desc ) \
                     VALUES ( '%s', '%s', '%s', '%s') \
                     ON DUPLICATE KEY UPDATE name='%s',proc_name='%s',proc_desc='%s';" \
@@ -141,7 +105,7 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table in ['dawn_equipment', 'suns_equipment']:
+            if table in ['dawn_equipment']:
                 attack = int(item['attack'])
                 defense = int(item['defense'])
                 perception = int(item['perception'])
@@ -181,7 +145,7 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table in ['dawn_generals', 'suns_generals']:
+            if table in ['dawn_generals']:
                 attack = int(item['attack'])
                 defense = int(item['defense'])
                 race = int(item['race'])
@@ -207,7 +171,7 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table in ['dawn_legions', 'suns_legions']:
+            if table in ['dawn_legions']:
                 num_gen = int(item['num_gen'])
                 num_trp = int(item['num_trp'])
                 bonus = int(item['bonus'])
@@ -241,7 +205,7 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table in ['dawn_mounts', 'suns_mounts']:
+            if table in ['dawn_mounts']:
                 attack = int(item['attack'])
                 defense = int(item['defense'])
                 perception = int(item['perception'])
@@ -277,7 +241,7 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table in ['dawn_troops', 'suns_troops']:
+            if table in ['dawn_troops']:
                 attack = int(item['attack'])
                 defense = int(item['defense'])
                 race = int(item['race'])
@@ -305,27 +269,27 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table in ['suns_engineering']:
-                attack = int(item['attack'])
-                defense = int(item['defense'])
-                engineering = int(item['engineering'])
-                value_credits = int(item['value_credits'])
-                isUnique = int(item['unique'])
-                lore = re.escape(item['lore'].strip())
-                bonus = re.escape(json.dumps(item['bonus']))
+            #if table in ['suns_engineering']:
+            #    attack = int(item['attack'])
+            #    defense = int(item['defense'])
+            #    engineering = int(item['engineering'])
+            #    value_credits = int(item['value_credits'])
+            #    isUnique = int(item['unique'])
+            #    lore = re.escape(item['lore'].strip())
+            #    bonus = re.escape(json.dumps(item['bonus']))
 
-                sql = "INSERT INTO %s ( id, name, attack, defense, engineering, value_credits, isUnique, lore, \
-                       proc_name, proc_desc, bonus ) \
-                       VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) \
-                       ON DUPLICATE KEY UPDATE name='%s', attack='%s', defense='%s', engineering='%s', \
-                       value_credits='%s', isUnique='%s', lore='%s', proc_name='%s', proc_desc='%s', bonus='%s';" \
-                       % ( table, id, name, attack, defense, engineering, value_credits, isUnique, lore,
-                       proc_name, proc_desc, bonus, name, attack, defense, engineering, value_credits, isUnique, lore,
-                       proc_name, proc_desc, bonus )
+            #    sql = "INSERT INTO %s ( id, name, attack, defense, engineering, value_credits, isUnique, lore, \
+            #           proc_name, proc_desc, bonus ) \
+            #           VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) \
+            #           ON DUPLICATE KEY UPDATE name='%s', attack='%s', defense='%s', engineering='%s', \
+            #           value_credits='%s', isUnique='%s', lore='%s', proc_name='%s', proc_desc='%s', bonus='%s';" \
+            #           % ( table, id, name, attack, defense, engineering, value_credits, isUnique, lore,
+            #           proc_name, proc_desc, bonus, name, attack, defense, engineering, value_credits, isUnique, lore,
+            #           proc_name, proc_desc, bonus )
 
-                cursor.execute(sql)
+            #    cursor.execute(sql)
 
-            if table in ['dawn_raids', 'suns_raids']:
+            if table in ['dawn_raids']:
                 classid = int(item['classid'])
                 cooldowntimer = int(item['cooldowntimer'])
                 difficulty = re.escape(json.dumps(item['difficulty']))
@@ -359,16 +323,13 @@ def ugup_request(path, table):
 
                 cursor.execute(sql)
 
-            if table in ['dawn_magics', 'suns_magics']:
+            if table in ['dawn_magics']:
                 lore = re.escape(item['lore'].strip())
                 questReq = int(item['questReq'])
                 rarity = int(item['rarity'])
                 value_credits = int(item['value_credits'])
                 value_gold = int(item['value_gold'])
-                if table == 'dawn_magics':
-                    img_url = str(get_dawn_img_url(id, raw_name))
-                else:
-                    img_url = str(get_sun_img_url(id, raw_name))
+                img_url = str(get_dawn_img_url(id, raw_name))
 
                 sql = "INSERT INTO %s ( id, lore, name, proc_desc, questReq, rarity, value_credits, value_gold, \
                        img_url ) \
@@ -385,24 +346,14 @@ def ugup_request(path, table):
 
 # main
 
-ugup_request(api_call_path('enchant', 'dawn'), 'dawn_enchantments')
-ugup_request(api_call_path('equipment', 'dawn'), 'dawn_equipment')
-ugup_request(api_call_path('general', 'dawn'), 'dawn_generals')
-ugup_request(api_call_path('legion', 'dawn'), 'dawn_legions')
-ugup_request(api_call_path('mount', 'dawn'), 'dawn_mounts')
-ugup_request(api_call_path('troop', 'dawn'), 'dawn_troops')
-ugup_request(api_call_path('raid', 'dawn'), 'dawn_raids')
-ugup_request(api_call_path('magic', 'dawn'), 'dawn_magics')
-
-ugup_request(api_call_path('enchant', 'suns'), 'suns_enchantments')
-ugup_request(api_call_path('equipment', 'suns'), 'suns_equipment')
-ugup_request(api_call_path('general', 'suns'), 'suns_generals')
-ugup_request(api_call_path('legion', 'suns'), 'suns_legions')
-ugup_request(api_call_path('mount', 'suns'), 'suns_mounts')
-ugup_request(api_call_path('troop', 'suns'), 'suns_troops')
-ugup_request(api_call_path('engineering', 'suns'), 'suns_engineering')
-ugup_request(api_call_path('raid', 'suns'), 'suns_raids')
-ugup_request(api_call_path('magic', 'suns'), 'suns_magics')
+ugup_request(api_call_path('enchant'),   'dawn_enchantments')
+ugup_request(api_call_path('equipment'), 'dawn_equipment')
+ugup_request(api_call_path('general'),   'dawn_generals')
+ugup_request(api_call_path('legion'),    'dawn_legions')
+ugup_request(api_call_path('mount'),     'dawn_mounts')
+ugup_request(api_call_path('troop'),     'dawn_troops')
+ugup_request(api_call_path('raid'),      'dawn_raids')
+ugup_request(api_call_path('magic'),     'dawn_magics')
 
 cursor.close()
 conn.close()

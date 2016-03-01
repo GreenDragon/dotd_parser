@@ -101,27 +101,6 @@ def newgrounds_raids_dotd_kasan_world():
     return locals()
 
 
-def facebook_raids_lots():
-    rows = db((db.suns_shared_raids.iscomplete=='0') & (db.suns_shared_raids.update_time!=None)).select(orderby=~db.suns_shared_raids.create_time,limitby=(0,500))
-    tactics_map = load_tactics_map()
-    return locals()
-
-def armorgames_raids_lots():
-    rows = db((db.suns_shared_raids_armor.iscomplete=='0') & (db.suns_shared_raids_armor.update_time!=None)).select(orderby=~db.suns_shared_raids_armor.create_time,limitby=(0,500))
-    tactics_map = load_tactics_map()
-    return locals()
-
-def kongregate_raids_lots():
-    rows = db((db.suns_shared_raids_kong.iscomplete=='0') & (db.suns_shared_raids_kong.update_time!=None)).select(orderby=~db.suns_shared_raids_kong.create_time,limitby=(0,500))
-    tactics_map = load_tactics_map()
-    return locals()
-
-def newgrounds_raids_lots():
-    rows = db((db.suns_shared_raids_ng.iscomplete=='0') & (db.suns_shared_raids_ng.update_time!=None)).select(orderby=~db.suns_shared_raids_ng.create_time,limitby=(0,500))
-    tactics_map = load_tactics_map()
-    return locals()
-
-
 def user():
     redirect(URL('form'))
 #    """

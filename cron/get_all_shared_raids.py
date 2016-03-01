@@ -32,12 +32,6 @@ def build_dictionaries():
         if len(shortname) and len(postimage):
             bosses_dict[postimage] = shortname
 
-    suns_query = ("SELECT shortname, postimage FROM suns_raids")
-    cursor.execute(suns_query)
-    for (shortname, postimage) in cursor:
-        if len(shortname) and len(postimage):
-            bosses_dict[postimage] = shortname
-
     if 'war_damned_shade' not in bosses_dict:
         bosses_dict['war_damned_shade'] = "War Damned Shade"
 
@@ -97,6 +91,7 @@ def get_var(var, type):
             i = re.findall(r'\d+', v[1])
             return int(i[0])
 
+
 def ugup_request(path, table, platform):
     try:
         request = requests.get(path)
@@ -146,26 +141,14 @@ build_dictionaries()
 ugup_request(shared_api_call_path('raid', 'facebook', 'dawn', 1),   'dawn_shared_raids_fb_s1',    'facebook')
 ugup_request(shared_api_call_path('raid', 'facebook', 'dawn', 2),   'dawn_shared_raids_fb_s2',    'facebook')
 #
-ugup_request(shared_api_call_path('raid', 'facebook', 'suns'),      'suns_shared_raids',          'facebook')
-
-
 ugup_request(shared_api_call_path('raid', 'armor', 'dawn', 1),      'dawn_shared_raids_armor_s1', 'armor')
 ugup_request(shared_api_call_path('raid', 'armor', 'dawn', 2),      'dawn_shared_raids_armor_s2', 'armor')
 #
-ugup_request(shared_api_call_path('raid', 'armor', 'suns'),         'suns_shared_raids_armor',    'armor')
-
-
 ugup_request(shared_api_call_path('raid', 'kongregate', 'dawn', 1), 'dawn_shared_raids_kong_s1',  'kongregate')
 ugup_request(shared_api_call_path('raid', 'kongregate', 'dawn', 2), 'dawn_shared_raids_kong_s2',  'kongregate')
 #
-ugup_request(shared_api_call_path('raid', 'kongregate', 'suns'),    'suns_shared_raids_kong',     'kongregate')
-
-
 ugup_request(shared_api_call_path('raid', 'newgrounds', 'dawn', 1), 'dawn_shared_raids_ng_s1',    'newgrounds')
 ugup_request(shared_api_call_path('raid', 'newgrounds', 'dawn', 2), 'dawn_shared_raids_ng_s2',    'newgrounds')
-#
-ugup_request(shared_api_call_path('raid', 'newgrounds', 'suns'),    'suns_shared_raids_ng',       'newgrounds')
-
 #
 
 cursor.close()

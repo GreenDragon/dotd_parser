@@ -81,6 +81,7 @@ def build_proc_name_map():
     # armaments_dict[""] = { 'name':"Font of Elation", 'slot':'Armament::Relic'}
     armaments_dict["Climb the Wall"] = { 'name':"Grappling Lines", 'slot':'Armament::Siege'}
     # armaments_dict[""] = { 'name':"Hallowed Ground", 'slot':'Armament::Support'}
+    armaments_dict["Guidance"] = { 'name':"Hero's Teachings", 'slot':'Armament::Support'}
     armaments_dict["Burning Bright"] = { 'name':"Holy Fire", 'slot':'Armament::Siege'}
     armaments_dict["Bargain"] = { 'name':"Infernal Agreement", 'slot':'Armament::Support'}
     armaments_dict["Gee Thanks"] = { 'name':"Insidious Gift", 'slot':'Armament::Siege'}
