@@ -19,7 +19,7 @@ $(function() {
 {{if len(rows):}}
 <h4>Found {{=len(rows)}} active shared raids for the {{=get_platform_server_name(rows[0].platform, rows[0].serverid)}} Server.</h4>
 
-<h6>Shared Raid Information is updated every 10 minutes. This utility shows all active raids ordered by Create Date ( UTC Time ) Descending since last scan ( max 500 ).</h6>
+<h6>Shared Raid Information is updated every 10 minutes. This utility shows all active raids ordered by Create Date ( UTC Time ) Descending since last scan ( max 750 ).</h6>
 <h6>Clicking on Table Headers will change the sort order. Typing text in the Search field will filter results. Click the Raid Name to Join.</h6>
 
 {{if rows[0].platform == 'newgrounds':}}

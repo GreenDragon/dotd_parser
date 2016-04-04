@@ -399,9 +399,10 @@ var chart = c3.generate({
             <thead>
                 <tr>
                     <th>Proc&#39;er</th>
-                    <th>Total Hits</th>
-                    <th>Total Procs</th>
-                    <th>Multi-Proc Rate</th>
+                    <th>Hits Seen</th>
+                    <th>Procs Seen</th>
+                    <th>Multi-Proc Rate to Self</th>
+                    <th>Multi-Proc Rate to Total Hits</th>
                     <th>Hit Sequence</th>
                     <th>Proc Order</th>
                     <th>Damage</th>
@@ -422,8 +423,10 @@ var chart = c3.generate({
                     <td>{{=mp_total_hits_active}}</td>
                     <td>{{=mp_total_procs}}</td>
                     <td>{{=percentage( (mp_total_procs - mp_total_hits_active), mp_total_hits_active)}} %</td>
+                    <td>{{=percentage(mp_total_hits_active, total_hits)}} %</td>
                                     {{header_seen = 1}}
                                 {{else:}}
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

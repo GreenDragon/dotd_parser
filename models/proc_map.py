@@ -65,7 +65,10 @@ def build_proc_name_map():
 
     # http://dotd.wikia.com/wiki/Category:Armaments
     #
+    armaments_dict["Stay"] = { 'name':"Anchor of the Grimval", 'slot':'Armament::Relic'}
     # armaments_dict[""] = { 'name':"Armorskin Charm", 'slot':'Armament::Support'}
+    armaments_dict["Alone Time"] = { 'name':"Aura of Isolation", 'slot':'Armament::Support'}
+    armaments_dict["Scented"] = { 'name':"Azar's Candle", 'slot':'Armament::Relic'}
     armaments_dict["Arrow'd"] = { 'name':"Ballista", 'slot':'Armament::Siege'}
     armaments_dict["Who's There"] = { 'name':"Battering Ram", 'slot':'Armament::Siege'}
     armaments_dict["Scream and Shout"] = { 'name':"Berserker's Horn", 'slot':'Armament::Relic'}
@@ -82,7 +85,9 @@ def build_proc_name_map():
     armaments_dict["Climb the Wall"] = { 'name':"Grappling Lines", 'slot':'Armament::Siege'}
     # armaments_dict[""] = { 'name':"Hallowed Ground", 'slot':'Armament::Support'}
     armaments_dict["Guidance"] = { 'name':"Hero's Teachings", 'slot':'Armament::Support'}
+    armaments_dict["Swarm"] = { 'name':"Hive Mind Hex", 'slot':'Armament::Support'}
     armaments_dict["Burning Bright"] = { 'name':"Holy Fire", 'slot':'Armament::Siege'}
+    armaments_dict["And Sinker"] = { 'name':"Hook Lines", 'slot':'Armament::Siege'}
     armaments_dict["Bargain"] = { 'name':"Infernal Agreement", 'slot':'Armament::Support'}
     armaments_dict["Gee Thanks"] = { 'name':"Insidious Gift", 'slot':'Armament::Siege'}
     armaments_dict["Fight As One"] = { 'name':"Iulian Foundation", 'slot':'Armament::Siege'}
@@ -96,9 +101,11 @@ def build_proc_name_map():
     armaments_dict["Bad Crop"] = { 'name':"Shroud of Blight", 'slot':'Armament::Support'}
     armaments_dict["Sweet Ride"] = { 'name':"Siege Tower", 'slot':'Armament::Siege'}
     armaments_dict["Rain Of Fire"] = { 'name':"Skyfire Launcher", 'slot':'Armament::Relic'}
+    armaments_dict["Flap in the Night"] = { 'name':"Smoke Screen", 'slot':'Armament::Siege'}
     armaments_dict["THIRTEENTH!"] = { 'name':"Standard of the 13th", 'slot':'Armament::Relic'}
     armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament::Siege'}
     # armaments_dict[""] = { 'name':"Turn Undead", 'slot':'Armament::Support'}
+    armaments_dict["Gillyweed"] = { 'name':"Waterbreathing Charm", 'slot':'Armament::Support'}
     armaments_dict["Corner of Your Eye"] = { 'name':"Whisperdark Torch", 'slot':'Armament::Relic'}
     # armaments_dict[""] = { 'name':"Withering Touch", 'slot':'Armament::Support'}
 

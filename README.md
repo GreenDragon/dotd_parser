@@ -16,11 +16,11 @@ Production site is located at http://green-dragon.systems/
         * MySQL Community Edition
             * MySQL 5.7.9, for osx10.10 (x86_64)
         * Python 2.7.11 via MacPorts
-            * python27 @2.7.11_0
+            * python27 @2.7.11_2
             * py-mysql @1.2.3_1 (active)
                 * py27-mysql @1.2.3_1+mariadb55 (active)
             * py-requests @2.9.0_0 (active)
-                * py27-requests @2.9.0_0 (active)
+                * py27-requests @2.9.1_0 (active)
             * py-yaml @3.11_0 (active)
                 * py27-yaml @3.11_0 (active)
 
@@ -259,10 +259,11 @@ Initial application conceived by https://github.com/tsunam/dotd_parser.
 ### Coding History:
 
 2015/02/21:    First commit to tsunam's code base
+
 Version 1.5.2: Project forked away from tsunam's code base
 
 ### RIP:
 
 2016/02/29:    Legacy of a Thousand Suns
 
-Thanks!
+### Thanks!

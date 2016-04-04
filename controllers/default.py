@@ -54,49 +54,49 @@ def parsed():
 
 
 def armorgames_raids_dotd_roland():
-    rows = db((db.dawn_shared_raids_armor_s1.iscomplete=='0') & (db.dawn_shared_raids_armor_s1.update_time!=None)).select(orderby=~db.dawn_shared_raids_armor_s1.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids_armor_s1.iscomplete=='0') & (db.dawn_shared_raids_armor_s1.update_time!=None)).select(orderby=~db.dawn_shared_raids_armor_s1.create_time,limitby=(0,750))
     magics_map = load_magics_map()
     return locals()
 
 
 def armorgames_raids_dotd_kasan_world():
-    rows = db((db.dawn_shared_raids_armor_s2.iscomplete=='0') & (db.dawn_shared_raids_armor_s2.update_time!=None)).select(orderby=~db.dawn_shared_raids_armor_s2.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids_armor_s2.iscomplete=='0') & (db.dawn_shared_raids_armor_s2.update_time!=None)).select(orderby=~db.dawn_shared_raids_armor_s2.create_time,limitby=(0,750))
     magics_map = load_magics_map()
     return locals()
 
 
 def facebook_raids_dotd_solus():
-    rows = db((db.dawn_shared_raids_fb_s1.iscomplete=='0') & (db.dawn_shared_raids_fb_s1.update_time!=None)).select(orderby=~db.dawn_shared_raids_fb_s1.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids_fb_s1.iscomplete=='0') & (db.dawn_shared_raids_fb_s1.update_time!=None)).select(orderby=~db.dawn_shared_raids_fb_s1.create_time,limitby=(0,750))
     magics_map = load_magics_map()
     return locals()
 
 
 def facebook_raids_dotd_kasan_world():
-    rows = db((db.dawn_shared_raids_fb_s2.iscomplete=='0') & (db.dawn_shared_raids_fb_s2.update_time!=None)).select(orderby=~db.dawn_shared_raids_fb_s2.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids_fb_s2.iscomplete=='0') & (db.dawn_shared_raids_fb_s2.update_time!=None)).select(orderby=~db.dawn_shared_raids_fb_s2.create_time,limitby=(0,750))
     magics_map = load_magics_map()
     return locals()
 
 
 def kongregate_raids_dotd_elyssa():
-    rows = db((db.dawn_shared_raids_kong_s1.iscomplete=='0') & (db.dawn_shared_raids_kong_s1.update_time!=None)).select(orderby=~db.dawn_shared_raids_kong_s1.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids_kong_s1.iscomplete=='0') & (db.dawn_shared_raids_kong_s1.update_time!=None)).select(orderby=~db.dawn_shared_raids_kong_s1.create_time,limitby=(0,750))
     magics_map = load_magics_map()
     return locals()
 
 
 def kongregate_raids_dotd_kasan_world():
-    rows = db((db.dawn_shared_raids_kong_s2.iscomplete=='0') & (db.dawn_shared_raids_kong_s2.update_time!=None)).select(orderby=~db.dawn_shared_raids_kong_s2.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids_kong_s2.iscomplete=='0') & (db.dawn_shared_raids_kong_s2.update_time!=None)).select(orderby=~db.dawn_shared_raids_kong_s2.create_time,limitby=(0,750))
     magics_map = load_magics_map()
     return locals()
 
 
 def newgrounds_raids_dotd_roland():
-    rows = db((db.dawn_shared_raids_ng_s1.iscomplete=='0') & (db.dawn_shared_raids_ng_s1.update_time!=None)).select(orderby=~db.dawn_shared_raids_ng_s1.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids_ng_s1.iscomplete=='0') & (db.dawn_shared_raids_ng_s1.update_time!=None)).select(orderby=~db.dawn_shared_raids_ng_s1.create_time,limitby=(0,750))
     magics_map = load_magics_map()
     return locals()
 
 
 def newgrounds_raids_dotd_kasan_world():
-    rows = db((db.dawn_shared_raids_ng_s2.iscomplete=='0') & (db.dawn_shared_raids_ng_s2.update_time!=None)).select(orderby=~db.dawn_shared_raids_ng_s2.create_time,limitby=(0,500))
+    rows = db((db.dawn_shared_raids_ng_s2.iscomplete=='0') & (db.dawn_shared_raids_ng_s2.update_time!=None)).select(orderby=~db.dawn_shared_raids_ng_s2.create_time,limitby=(0,750))
     magics_map = load_magics_map()
     return locals()
 
