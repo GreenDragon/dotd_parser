@@ -73,9 +73,12 @@ def build_proc_name_map():
     armaments_dict["Who's There"] = { 'name':"Battering Ram", 'slot':'Armament::Siege'}
     armaments_dict["Scream and Shout"] = { 'name':"Berserker's Horn", 'slot':'Armament::Relic'}
     armaments_dict["BOOM"] = { 'name':"Black Powder", 'slot':'Armament::Siege'}
+    armaments_dict["Unsinkable"] = {'name': "Blessing of Bouyancy", 'slot': 'Armament::Support'}
     # armaments_dict[""] = { 'name':"Blessing of Karuss", 'slot':'Armament::Support'}
+    armaments_dict["Memory of Melops"] = {'name': "Callissa's Sail", 'slot': 'Armament::Relic'}
     armaments_dict["Heads Up"] = { 'name':"Catapult", 'slot':'Armament::Siege'}
     armaments_dict["Fervor"] = { 'name':"Cermarina's Blade", 'slot':'Armament::Relic'}
+    armaments_dict["The Sound of War"] = {'name': "Conquest Drums", 'slot': 'Armament::Relic'}
     armaments_dict["I'm Back"] = { 'name':"Curse of Returning", 'slot':'Armament::Support'}
     armaments_dict["Biological Warfare"] = { 'name':"Diseased Corpses", 'slot':'Armament::Siege'}
     armaments_dict["Reap What You Sow"] = { 'name':"Extinction Seeds", 'slot':'Armament:: Relic'}
@@ -91,10 +94,13 @@ def build_proc_name_map():
     armaments_dict["Bargain"] = { 'name':"Infernal Agreement", 'slot':'Armament::Support'}
     armaments_dict["Gee Thanks"] = { 'name':"Insidious Gift", 'slot':'Armament::Siege'}
     armaments_dict["Fight As One"] = { 'name':"Iulian Foundation", 'slot':'Armament::Siege'}
+    armaments_dict["War of Angels"] = {'name': "Lerilith's Cry", 'slot': 'Armament::Support'}
     #armaments_dict[""] = { 'name':"Lightfoot Charm", 'slot':'Armament::Support'}
     # armaments_dict[""] = { 'name':"Martyr's Faith", 'slot':'Armament::Support'}
+    armaments_dict["Someone Your Own Size"] = {'name': "Might of Terracles", 'slot': 'Armament::Support'}
     armaments_dict["Witching Hour"] = { 'name':"Nightfall Orb", 'slot':'Armament::Relic'}
     armaments_dict["Terrible Presence"] = { 'name':"Overwhelming Aura", 'slot':'Armament::Support'}
+    armaments_dict["Corrupt Water"] = {'name': "Poison", 'slot': 'Armament::Siege'}
     armaments_dict["Doorway"] = { 'name':"Portal Key", 'slot':'Armament::Relic'}
     armaments_dict["Ashes to Ashes"] = { 'name':"Sabirah's Ashes", 'slot':'Armament::Relic'}
     armaments_dict["Silver Bells"] = { 'name':"Saint's Chimes", 'slot':'Armament::Relic'}
@@ -103,9 +109,12 @@ def build_proc_name_map():
     armaments_dict["Rain Of Fire"] = { 'name':"Skyfire Launcher", 'slot':'Armament::Relic'}
     armaments_dict["Flap in the Night"] = { 'name':"Smoke Screen", 'slot':'Armament::Siege'}
     armaments_dict["THIRTEENTH!"] = { 'name':"Standard of the 13th", 'slot':'Armament::Relic'}
+    armaments_dict["Ground Supremacy"] = {'name': "Tactical Map", 'slot': 'Armament::Siege'}
+    armaments_dict["Half Shell of a Hero"] = {'name': "The Shell of Solus", 'slot': 'Armament::Relic'}
     armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament::Siege'}
     # armaments_dict[""] = { 'name':"Turn Undead", 'slot':'Armament::Support'}
     armaments_dict["Gillyweed"] = { 'name':"Waterbreathing Charm", 'slot':'Armament::Support'}
+    armaments_dict["Trouble the Water"] = {'name': "Waterwalking Charm", 'slot': 'Armament::Support'}
     armaments_dict["Corner of Your Eye"] = { 'name':"Whisperdark Torch", 'slot':'Armament::Relic'}
     # armaments_dict[""] = { 'name':"Withering Touch", 'slot':'Armament::Support'}
 

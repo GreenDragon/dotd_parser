@@ -72,8 +72,12 @@ def parser(input):
         # You have obtained: Rage of Vigbjorn.
         #
         # You have obtained: Orange Travel Journal.
-        elif "obtained:" in line:
-            object = line.split('obtained:')[1][:-1].strip()
+        # Guster has apologized and given you a Box of Guilt
+        elif "obtained:" in line or "given you a" in line:
+            if "obtained:" in line:
+                object = line.split('obtained:')[1][:-1].strip()
+            else:
+                object = line.split('given you a')[1].strip()
 
             if object not in obtained_items:
                 obtained_items[object] = 1
@@ -141,17 +145,24 @@ def parser(input):
                             proc_items[object]['damage_seen'].append(amount)
 
                         # build multiproc table
+                        # A New Procer with first hit ever
                         if object not in multi_proc_items:
                             multi_proc_items[object] = {}
                             multi_proc_items[object]['proc_count'] = 1
+                            multi_proc_items[object]['multi_hit_counter'] = 0
                             multi_proc_items[object]['hits'] = {}
                             multi_proc_items[object]['hits'][current_hit_count] = [amount]
+                        # Known procer with a repeat hit
                         else:
                             multi_proc_items[object]['proc_count'] += 1
+                            # If new hit sequence
                             if current_hit_count not in multi_proc_items[object]['hits']:
                                 multi_proc_items[object]['hits'][current_hit_count] = [amount]
+                            # Else continuing a hit sequence with multi-procs
                             else:
                                 multi_proc_items[object]['hits'][current_hit_count].append(amount)
+                                if len(multi_proc_items[object]['hits'][current_hit_count]) == 2:
+                                    multi_proc_items[object]['multi_hit_counter'] += 1
                                 multi_procs_found += 1
 
                         experience['total_procs'] += 1
@@ -371,9 +382,10 @@ def parser(input):
 
         # Crystal Sight affected boss damage.
         # Bladezz' Blades affected boss damage.
+        # Guster has helped you deal some serious damage!
         #
         # nil
-        elif "affected" in line:
+        elif any(s in line for s in ('affected', 'has helped you')):
             if line not in affected_items:
                 affected_items[line] = 1
             else:

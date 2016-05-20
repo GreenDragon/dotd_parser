@@ -399,42 +399,51 @@ var chart = c3.generate({
             <thead>
                 <tr>
                     <th>Proc&#39;er</th>
-                    <th>Hits Seen</th>
-                    <th>Procs Seen</th>
-                    <th>Multi-Proc Rate to Self</th>
-                    <th>Multi-Proc Rate to Total Hits</th>
+                    <th>Total Hits Seen</th>
+                    <th>Multi-Proc Hits</th>
+                    <th>Extra Procs</th>
+                    <th>Multi-Proc % to Self</th>
+                    <th>Multi-Proc % to Total Hits</th>
+                    <th>Extra Procs to Multi-Proc %</th>
                     <th>Hit Sequence</th>
                     <th>Proc Order</th>
                     <th>Damage</th>
                 </tr>
             </thead>
             <tbody>
-                {{for proc in sorted(multi_proc_items.keys()):}}
+                {{for procer in sorted(multi_proc_items.keys()):}}
                     {{header_seen=0}}
-                    {{for hit in sorted(multi_proc_items[proc]['hits']):}}
-                        {{hit_count=1}}
-                        {{if len(multi_proc_items[proc]['hits'][hit]) > 1:}}
-                            {{mp_total_hits_active=len(multi_proc_items[proc]['hits'].keys())}}
-                            {{mp_total_procs=multi_proc_items[proc]['proc_count']}}
-                            {{for this_hit in multi_proc_items[proc]['hits'][hit]:}}
+                    {{for hit_sequence in sorted(multi_proc_items[procer]['hits']):}}
+                        {{proc_count=1}}
+                        {{if len(multi_proc_items[procer]['hits'][hit_sequence]) > 1:}}
+                            <!-- Proc count/hit sequence = len(multi_proc_items[proc_name]['hits'][current_hit_sequence]) -->
+                            {{mp_total_hits_seen=len(multi_proc_items[procer]['hits'].keys())}}
+                            {{mp_total_hits_that_mprocd=multi_proc_items[procer]['multi_hit_counter']}}
+                            {{mp_total_procs=multi_proc_items[procer]['proc_count']}}
+                            {{mp_extra_procs=mp_total_procs - mp_total_hits_seen}}
+                            {{for cur_dmg in multi_proc_items[procer]['hits'][hit_sequence]:}}
                 <tr>
-                    <td>{{=proc}}</td>
+                    <td>{{=procer}}</td>
                                 {{if not header_seen:}}
-                    <td>{{=mp_total_hits_active}}</td>
-                    <td>{{=mp_total_procs}}</td>
-                    <td>{{=percentage( (mp_total_procs - mp_total_hits_active), mp_total_hits_active)}} %</td>
-                    <td>{{=percentage(mp_total_hits_active, total_hits)}} %</td>
+                    <td>{{=mp_total_hits_seen}}</td>
+                    <td>{{=mp_total_hits_that_mprocd}}</td>
+                    <td>{{=mp_extra_procs}}</td>
+                    <td>{{=percentage( mp_total_hits_that_mprocd, mp_total_hits_seen)}} %</td>
+                    <td>{{=percentage( mp_total_hits_that_mprocd, total_hits)}} %</td>
+                    <td>{{=percentage( mp_extra_procs, mp_total_hits_that_mprocd )}} %</td>
                                     {{header_seen = 1}}
                                 {{else:}}
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
+                    <td></td>
                                 {{pass}}
-                    <td>{{=hit}}</td>
-                    <td>{{=hit_count}}</td>
-                    <td>{{=commify(this_hit)}}</td>
-                                {{hit_count += 1}}
+                    <td>{{=hit_sequence}}</td>
+                    <td>{{=proc_count}}</td>
+                    <td>{{=commify(cur_dmg)}}</td>
+                                {{proc_count += 1}}
                 </tr>
                             {{pass}}
                         {{pass}}
