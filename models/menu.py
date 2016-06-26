@@ -10,14 +10,14 @@
 #                  _id="web2py-logo")
 #response.title = request.application.replace('_',' ').title()
 
-response.title = "Sentinel_V's DotD Raid Log Analyzer & Shared Raids Cache Utility"
+response.title = "Sentinel_V's DotD Raid Log Analyzer"
 response.subtitle = response.title
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
 
 response.meta.author = 'Sentinel_V of Green Dragon Systems'
-response.meta.description = 'Dawn of the Dragons Raid Log Analyzer and Shared Raids Cache Utility. Hit your Raid and click on the "Copy entire raid log to clipboad" button, then paste the log into the textarea below.'
-response.meta.keywords = 'Dawn of the Dragons, DotD, Raid Log Parser, Raid Log Analyzer, Log Parser, Log Analyzer, 5th Planet Games, Shared Raid Cache, Armorgames, Facebook, Kongregate, Newgrounds'
+response.meta.description = 'Dawn of the Dragons Raid Log Analyzer. Hit your Raid and click on the "Copy entire raid log to clipboad" button, then paste the log into the textarea below.'
+response.meta.keywords = 'Dawn of the Dragons, DotD, Raid Log Parser, Raid Log Analyzer, Log Parser, Log Analyzer, 5th Planet Games, Armorgames, Facebook, Kongregate, Newgrounds'
 response.meta.generator = 'Web2py Web Framework'
 
 ## your http://google.com/analytics id
@@ -58,16 +58,6 @@ def production_menu():
             ('', False, A('Dawn of the Dragons: Wiki',
              _href='http://dotd.wikia.com/wiki/Dawn_of_the_Dragons_Wiki',
              _target='blank')),
-        ]),
-        ('Shared Raids Cache', False, None, [
-            (T('DotD: Armor Games: Roland'),        False, URL('default', 'armorgames_raids_dotd_roland')),
-            (T('DotD: Armor Games: Kasan (World)'), False, URL('default', 'armorgames_raids_dotd_kasan_world')),
-            (T('DotD: Facebook: Solus'),            False, URL('default', 'facebook_raids_dotd_solus')),
-            (T('DotD: Facebook: Kasan (World)'),    False, URL('default', 'facebook_raids_dotd_kasan_world')),
-            (T('DotD: Kongregate: Elyssa'),         False, URL('default', 'kongregate_raids_dotd_elyssa')),
-            (T('DotD: Kongregate: Kasan (World)'),  False, URL('default', 'kongregate_raids_dotd_kasan_world')),
-            (T('DotD: Newgrounds: Roland'),         False, URL('default', 'newgrounds_raids_dotd_roland')),
-            (T('DotD: Newgrounds: Kasan (World)'),  False, URL('default', 'newgrounds_raids_dotd_kasan_world')),
         ]),
         ('GitHub', False, None, [
             ('', False,

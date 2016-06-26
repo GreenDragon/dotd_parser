@@ -93,13 +93,18 @@ def build_proc_name_map():
     armaments_dict["And Sinker"] = { 'name':"Hook Lines", 'slot':'Armament::Siege'}
     armaments_dict["Bargain"] = { 'name':"Infernal Agreement", 'slot':'Armament::Support'}
     armaments_dict["Gee Thanks"] = { 'name':"Insidious Gift", 'slot':'Armament::Siege'}
+    armaments_dict["Cold Iron"] = {'name': "Iron Barricade", 'slot': 'Armament::Siege'}
     armaments_dict["Fight As One"] = { 'name':"Iulian Foundation", 'slot':'Armament::Siege'}
+    armaments_dict["Lay to Rest"] = {'name': "Last Rites", 'slot': 'Armament::Support'}
     armaments_dict["War of Angels"] = {'name': "Lerilith's Cry", 'slot': 'Armament::Support'}
     #armaments_dict[""] = { 'name':"Lightfoot Charm", 'slot':'Armament::Support'}
+    armaments_dict["Give It"] = {'name': "Magic Magnet", 'slot': 'Armament::Relic'}
     # armaments_dict[""] = { 'name':"Martyr's Faith", 'slot':'Armament::Support'}
     armaments_dict["Someone Your Own Size"] = {'name': "Might of Terracles", 'slot': 'Armament::Support'}
     armaments_dict["Witching Hour"] = { 'name':"Nightfall Orb", 'slot':'Armament::Relic'}
+    armaments_dict["Word is Bond"] = {'name': "Oath", 'slot': 'Armament::Support'}
     armaments_dict["Terrible Presence"] = { 'name':"Overwhelming Aura", 'slot':'Armament::Support'}
+    armaments_dict["One False Step"] = {'name': "Pit Trap", 'slot': 'Armament::Siege'}
     armaments_dict["Corrupt Water"] = {'name': "Poison", 'slot': 'Armament::Siege'}
     armaments_dict["Doorway"] = { 'name':"Portal Key", 'slot':'Armament::Relic'}
     armaments_dict["Ashes to Ashes"] = { 'name':"Sabirah's Ashes", 'slot':'Armament::Relic'}
@@ -110,6 +115,7 @@ def build_proc_name_map():
     armaments_dict["Flap in the Night"] = { 'name':"Smoke Screen", 'slot':'Armament::Siege'}
     armaments_dict["THIRTEENTH!"] = { 'name':"Standard of the 13th", 'slot':'Armament::Relic'}
     armaments_dict["Ground Supremacy"] = {'name': "Tactical Map", 'slot': 'Armament::Siege'}
+    armaments_dict["Catchy Tune"] = {'name': "The Pan Pipe of Liven", 'slot': 'Armament::Relic'}
     armaments_dict["Half Shell of a Hero"] = {'name': "The Shell of Solus", 'slot': 'Armament::Relic'}
     armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament::Siege'}
     # armaments_dict[""] = { 'name':"Turn Undead", 'slot':'Armament::Support'}
