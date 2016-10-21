@@ -126,10 +126,14 @@ def parser(input):
                         seen_proc_name = object
                         seen_slot_name = 'Unmapped'
 
+                        # This needs to stop descending the tree when proc first found.
+                        # Otherwise, the proc_name could map to another object
+                        # Memento Mori vs Tuora the Philospher
                         for proc_name in proc_name_map:
                             if object in proc_name:
                                 seen_slot_name = str(proc_name[object]['slot'])
                                 object = str(proc_name[object]['name'])
+                                break
 
                         amount = int(amount.split()[0].replace(',', ''))
 

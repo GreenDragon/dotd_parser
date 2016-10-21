@@ -301,7 +301,10 @@ def ugup_request(path, table):
                 maxattackers = int(item['maxattackers'])
                 # name = re.escape(item['name'].strip())
                 numdebuffs = int(item['numdebuffs'])
-                postimage = str(item['postimage'].strip().split('post/')[1])
+                try:
+                    postimage = str(item['postimage'].strip().split('post/')[1])
+                except IndexError:
+                    postimage = str("index_error.png")
                 races = re.escape(item['races'].strip())
                 raidtimer = int(item['raidtimer'])
                 shortname = re.escape(item['shortname'].strip())
