@@ -543,12 +543,22 @@ var chart = c3.generate({
                 </tr>
             </thead>
             <tbody>
-                {{for key,value in restored_items.iteritems():}}
-                <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
-                </tr>
+                {{if log_suns_mode:}}
+                    {{for key,value in restored_items.iteritems():}}
+                    <tr>
+                        <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
+                        <td>{{=commify(value)}}</td>
+                        <td>{{=percentage(value, total_hits)}} %</td>
+                    </tr>
+                    {{pass}}
+                {{else:}}
+                    {{for item,value in restored_items.iteritems():}}
+                    <tr>
+                        <td><a href="{{=gen_wiki_url(restored_items[item]['proc_owner'], log_suns_mode)}}" target="_blank" data-toggle="tooltip" title="{{=restored_items[item]['proc_name']}}">{{=restored_items[item]['desc']}}</a></td>
+                        <td>{{=commify(restored_items[item]['count'])}}</td>
+                        <td>{{=percentage(restored_items[item]['count'], total_hits)}} %</td>
+                    </tr>
+                    {{pass}}
                 {{pass}}
             </tbody>
             </table>
@@ -574,11 +584,11 @@ var chart = c3.generate({
                 </tr>
             </thead>
             <tbody>
-                {{for key,value in affected_items.iteritems():}}
+                {{for item,value in affected_items.iteritems():}}
                 <tr>
-                    <td><a href="{{=gen_wiki_url(key, log_suns_mode)}}" target="_blank">{{=key}}</a></td>
-                    <td>{{=commify(value)}}</td>
-                    <td>{{=percentage(value, total_hits)}} %</td>
+                    <td><a href="{{=gen_wiki_url(affected_items[item]['proc_owner'], log_suns_mode)}}" target="_blank" data-toggle="tooltip" title="{{=affected_items[item]['proc_name']}}">{{=affected_items[item]['desc']}}</a></td>
+                    <td>{{=commify(affected_items[item]['count'])}}</td>
+                    <td>{{=percentage(affected_items[item]['count'], total_hits)}} %</td>
                 </tr>
                 {{pass}}
             </tbody>

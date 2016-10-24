@@ -65,6 +65,9 @@ def build_proc_name_map():
 
     # http://dotd.wikia.com/wiki/Category:Armaments
     #
+    armaments_dict["Tiny Bubbles"] = {'name': "Acid", 'slot': 'Armament::Siege'}
+    armaments_dict["The Ride"] = {'name': "Air Support", 'slot': 'Armament::Siege'}
+    armaments_dict["Opposite Day"] = {'name': "Amulet of Inversion", 'slot': 'Armament::Relic'}
     armaments_dict["Stay"] = { 'name':"Anchor of the Grimval", 'slot':'Armament::Relic'}
     # armaments_dict[""] = { 'name':"Armorskin Charm", 'slot':'Armament::Support'}
     armaments_dict["Alone Time"] = { 'name':"Aura of Isolation", 'slot':'Armament::Support'}
@@ -77,10 +80,13 @@ def build_proc_name_map():
     # armaments_dict[""] = { 'name':"Blessing of Karuss", 'slot':'Armament::Support'}
     armaments_dict["Memory of Melops"] = {'name': "Callissa's Sail", 'slot': 'Armament::Relic'}
     armaments_dict["Heads Up"] = { 'name':"Catapult", 'slot':'Armament::Siege'}
+    armaments_dict["Advanced Warfare"] = {'name': "Catapult Catapult", 'slot': 'Armament::Siege'}
     armaments_dict["Fervor"] = { 'name':"Cermarina's Blade", 'slot':'Armament::Relic'}
     armaments_dict["The Sound of War"] = {'name': "Conquest Drums", 'slot': 'Armament::Relic'}
     armaments_dict["I'm Back"] = { 'name':"Curse of Returning", 'slot':'Armament::Support'}
+    # armaments_dict[""] = { 'name':"Decoys", 'slot':'Armament::Siege'}
     armaments_dict["Biological Warfare"] = { 'name':"Diseased Corpses", 'slot':'Armament::Siege'}
+    armaments_dict["Ultimate Power, Possibly"] = { 'name':"Evelyn's Urn", 'slot':'Armament::Relic'}
     armaments_dict["Reap What You Sow"] = { 'name':"Extinction Seeds", 'slot':'Armament:: Relic'}
     # armaments_dict[""] = { 'name':"Favor of Brough", 'slot':'Armament::Suport'}
     armaments_dict["Pyromaniac"] = { 'name':"Flamethrower", 'slot':'Armament::Siege'}
@@ -97,9 +103,10 @@ def build_proc_name_map():
     armaments_dict["Fight As One"] = { 'name':"Iulian Foundation", 'slot':'Armament::Siege'}
     armaments_dict["Lay to Rest"] = {'name': "Last Rites", 'slot': 'Armament::Support'}
     armaments_dict["War of Angels"] = {'name': "Lerilith's Cry", 'slot': 'Armament::Support'}
-    #armaments_dict[""] = { 'name':"Lightfoot Charm", 'slot':'Armament::Support'}
+    # armaments_dict[""] = { 'name':"Lightfoot Charm", 'slot':'Armament::Support'}
     armaments_dict["Give It"] = {'name': "Magic Magnet", 'slot': 'Armament::Relic'}
     # armaments_dict[""] = { 'name':"Martyr's Faith", 'slot':'Armament::Support'}
+    # armaments_dict[""] = { 'name':"Men of Kruna", 'slot':'Armament::Support'}
     armaments_dict["Someone Your Own Size"] = {'name': "Might of Terracles", 'slot': 'Armament::Support'}
     armaments_dict["Witching Hour"] = { 'name':"Nightfall Orb", 'slot':'Armament::Relic'}
     armaments_dict["Word is Bond"] = {'name': "Oath", 'slot': 'Armament::Support'}
@@ -107,6 +114,7 @@ def build_proc_name_map():
     armaments_dict["One False Step"] = {'name': "Pit Trap", 'slot': 'Armament::Siege'}
     armaments_dict["Corrupt Water"] = {'name': "Poison", 'slot': 'Armament::Siege'}
     armaments_dict["Doorway"] = { 'name':"Portal Key", 'slot':'Armament::Relic'}
+    #armaments_dict[""] = { 'name':"Ramis' Retriever", 'slot':'Armament::Relic'}
     armaments_dict["Ashes to Ashes"] = { 'name':"Sabirah's Ashes", 'slot':'Armament::Relic'}
     armaments_dict["Silver Bells"] = { 'name':"Saint's Chimes", 'slot':'Armament::Relic'}
     armaments_dict["Bad Crop"] = { 'name':"Shroud of Blight", 'slot':'Armament::Support'}
@@ -114,11 +122,14 @@ def build_proc_name_map():
     armaments_dict["Rain Of Fire"] = { 'name':"Skyfire Launcher", 'slot':'Armament::Relic'}
     armaments_dict["Flap in the Night"] = { 'name':"Smoke Screen", 'slot':'Armament::Siege'}
     armaments_dict["THIRTEENTH!"] = { 'name':"Standard of the 13th", 'slot':'Armament::Relic'}
+    armaments_dict["Consume All"] = { 'name':"Swarmcaller Staff", 'slot':'Armament::Relic'}
     armaments_dict["Ground Supremacy"] = {'name': "Tactical Map", 'slot': 'Armament::Siege'}
     armaments_dict["Catchy Tune"] = {'name': "The Pan Pipe of Liven", 'slot': 'Armament::Relic'}
     armaments_dict["Half Shell of a Hero"] = {'name': "The Shell of Solus", 'slot': 'Armament::Relic'}
     armaments_dict["Up and Over"] = { 'name':"Trebuchet", 'slot':'Armament::Siege'}
     # armaments_dict[""] = { 'name':"Turn Undead", 'slot':'Armament::Support'}
+    # armaments_dict[""] = { 'name':"Valkyries's Blessing", 'slot':'Armament::Support'}
+    # armaments_dict[""] = { 'name':"Warrior's Prayer", 'slot':'Armament::Support'}
     armaments_dict["Gillyweed"] = { 'name':"Waterbreathing Charm", 'slot':'Armament::Support'}
     armaments_dict["Trouble the Water"] = {'name': "Waterwalking Charm", 'slot': 'Armament::Support'}
     armaments_dict["Corner of Your Eye"] = { 'name':"Whisperdark Torch", 'slot':'Armament::Relic'}

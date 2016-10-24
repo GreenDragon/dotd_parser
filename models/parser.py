@@ -367,10 +367,25 @@ def parser(input):
         # Tollo Darkgaze has restored 4 Honor.
         #
         elif "has restored" in line:
+            restorer, restored = line.split('has restored')
+            restorer = restorer.strip()
+            restored = restored.strip()
+            seen_proc_name = restorer
+
+            for proc_name in proc_name_map:
+                if restorer in proc_name:
+                    seen_proc_name = str(proc_name[restorer]['name'])
+                    break
+
+            mod_line = seen_proc_name + ' has restored ' + restored
+
             if line not in restored_items:
-                restored_items[line] = 1
+                restored_items[line] = { 'count': 1,
+                                         'desc': mod_line,
+                                         'proc_name': restorer,
+                                         'proc_owner': seen_proc_name }
             else:
-                restored_items[line] += 1
+                restored_items[line]['count'] += 1
 
         # LoTS
         #
@@ -378,6 +393,7 @@ def parser(input):
         # Take a Chance has granted you additional experience!
         #
         elif "has granted you" in line:
+            log_suns_mode = 1
             if line not in restored_items:
                 restored_items[line] = 1
             else:
@@ -390,10 +406,45 @@ def parser(input):
         #
         # nil
         elif any(s in line for s in ('affected', 'has helped you')):
-            if line not in affected_items:
-                affected_items[line] = 1
+            if "has helped you" in line:
+                affector, affected = line.split('has helped you')
+                affector = affector.strip()
+                affected = affected.strip()
+                seen_proc_name = affector
+
+                if "Guster has helped you" in line:
+                    # Magic:: Guster's Fault
+                    seen_proc_name = "Guster's Fault"
+                    affector = seen_proc_name
+                else:
+                    for proc_name in proc_name_map:
+                        if affector in proc_name:
+                            seen_proc_name = str(proc_name[affector]['name'])
+                            break
+
+                mod_line = seen_proc_name + ' has helped you ' + affected
+
             else:
-                affected_items[line] += 1
+                affector, affected = line.split('affected')
+                affector = affector.strip()
+                affected = affected.strip()
+                seen_proc_name = affector
+
+                for proc_name in proc_name_map:
+                    if affector in proc_name:
+                        seen_proc_name = str(proc_name[affector]['name'])
+                        break
+
+                mod_line = seen_proc_name + ' affected ' + affected
+
+            if line not in affected_items:
+                affected_items[line] = {'count': 1,
+                                        'desc': mod_line,
+                                        'proc_name': affector,
+                                        'proc_owner': seen_proc_name}
+            else:
+                affected_items[line]['count'] += 1
+
 
         # Master of Monsters has created a Steed of the Western Wold!
         #
