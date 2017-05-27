@@ -10,14 +10,14 @@
 #                  _id="web2py-logo")
 #response.title = request.application.replace('_',' ').title()
 
-response.title = "ONE_Veritas's DotD Raid Log Analyzer"
+response.title = "Sentinel_V's DotD Raid Log Analyzer"
 response.subtitle = response.title
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
 
-response.meta.author = '0NE_Veritas of Green Dragon Systems'
+response.meta.author = 'Sentinel_V of Green Dragon Systems'
 response.meta.description = 'Dawn of the Dragons Raid Log Analyzer. Hit your Raid and click on the "Copy entire raid log to clipboad" button, then paste the log into the textarea below.'
-response.meta.keywords = 'Dawn of the Dragons, DotD, Raid Log Parser, Raid Log Analyzer, Log Parser, Log Analyzer, 5th Planet Games, Armorgames, Facebook, Kongregate, Newgrounds, Sentinel_V'
+response.meta.keywords = 'Dawn of the Dragons, DotD, Raid Log Parser, Raid Log Analyzer, Log Parser, Log Analyzer, 5th Planet Games, Armorgames, Facebook, Kongregate, Newgrounds'
 response.meta.generator = 'Web2py Web Framework'
 
 ## your http://google.com/analytics id
