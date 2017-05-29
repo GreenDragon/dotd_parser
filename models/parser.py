@@ -124,7 +124,7 @@ def parser(input):
                 if len(amount):
                     if isnum(amount.split()[0]):
                         seen_proc_name = object
-                        seen_slot_name = 'Unmapped'
+                        seen_slot_name = '_UgUp::MissingRecord'
 
                         # This needs to stop descending the tree when proc first found.
                         # Otherwise, the proc_name could map to another object
